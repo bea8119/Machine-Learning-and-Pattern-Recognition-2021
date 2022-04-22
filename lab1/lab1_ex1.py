@@ -24,8 +24,7 @@ with open("/home/oormacheah/Desktop/Uni shit/MLPR/lab1/score.txt", "r") as f:
         if elements[2] in country_score:
             country_score[elements[2]] += elements[3]
         else:
-            country_score[elements[2]] = 0
-            country_score[elements[2]] += elements[3]
+            country_score[elements[2]] = elements[3]
         
         comp_list.append(Competitor(*elements))
 
