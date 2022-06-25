@@ -3,8 +3,8 @@ import numpy as np
 import scipy.linalg
 
 import sys
-# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab2.load_plot import load
 from utility.vrow_vcol import vcol, vrow
 
@@ -42,7 +42,7 @@ def plotIRIS2D(DProjected, L, name):
     plt.grid()
     # plt.show()
 
-def SBandSW(dataset, labels, K): # K is the number of classes
+def SW_compute(dataset, labels, K):
     N = dataset.shape[1] # (number of total samples)
     mu = vcol(dataset.mean(axis=1)) # mean of the whole dataset (casted to column vector)
 
@@ -58,6 +58,12 @@ def SBandSW(dataset, labels, K): # K is the number of classes
 
     SW /= N
 
+    return SW
+
+def SB_compute(dataset, labels, K):
+    N = dataset.shape[1]
+    mu = vcol(dataset.mean(axis=1))
+
     SB = 0
     for i in range(K):
         Dc = dataset[:, labels == i]
@@ -68,15 +74,19 @@ def SBandSW(dataset, labels, K): # K is the number of classes
 
     SB /= N
 
-    return SB, SW
+    return SB
+
 
 def LDA_WgivenM(dataset, labels, m, K): # returns projection matrix W -> at most m-1 discriminant directions, receives K number of classes
-    SB, SW = SBandSW(dataset, labels, K)
+    SB = SB_compute(dataset, labels, K)
+    SW = SW_compute(dataset, labels, K)
 
     # Method 1: Generalized eig. problem
 
     # s, U = scipy.linalg.eigh(SB, SW)
-    # W = U[: ,::-1][:, 0:4] # END of solution, but you can get a basis with the following 2 lines
+    # W = U[: ,::-1][:, 0:4] 
+    # 
+    # # END of solution, but you can get a basis with the following 2 lines
 
     # UW, _, _ = np.linalg.svd(W) # Underscore means you don't care about this
     # U = UW[:, 0:m] # U is column of eigenvectors
