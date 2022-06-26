@@ -74,8 +74,6 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
         PredictedL = SPost.argmax(0) # INDEX of max through axis 0
 
         err_count = testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
-
-        return err_count
 # ---------------------------------------
     else:
         # Now, with log densities
@@ -92,8 +90,8 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
         
         CSF_name = CSF_name + ' with log'
         err_count = testLabelPredAccuracy(PredictedL_log, LTE, CSF_name, show)
-
-        return err_count
+    
+    return err_count
 
 def gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest)
