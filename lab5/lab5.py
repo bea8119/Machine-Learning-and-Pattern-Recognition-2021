@@ -86,7 +86,7 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
 
         SPost_afterLog = np.exp(logSPost)
 
-        PredictedL_log = SPost_afterLog.argmax(0) # INDEX of max through axis 0
+        PredictedL_log = SPost_afterLog.argmax(0) # INDEX of max through axis 0 (per sample)
         
         CSF_name = CSF_name + ' with log'
         err_count = testLabelPredAccuracy(PredictedL_log, LTE, CSF_name, show)

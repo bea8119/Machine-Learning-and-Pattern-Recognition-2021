@@ -70,7 +70,8 @@ def S1_estimateModel(hlTercets, eps = 0.1):
     hlTercets: dict whose keys are the classes, and the values are the list of tercets of each class.
     eps: smoothing factor (pseudo-count)
 
-    Return: dictionary h_clsLogProb whose keys are the classes. For each class, h_clsLogProb[cls] is a dictionary whose keys are words and values are the corresponding log-frequencies (model parameters for class cls)
+    Return: dictionary h_clsLogProb whose keys are the classes. For each class, h_clsLogProb[cls] is a dictionary whose 
+    keys are words and values are the corresponding log-frequencies (model parameters for class cls)
     '''
 
     # Build the set of all words appearing at least once in each class
@@ -124,7 +125,8 @@ def S1_compute_logLikelihoodMatrix(h_clsLogProb, lTercets, hCls2Idx = None):
 
     h_clsLogProb is the dictionary of model parameters as returned by S1_estimateModel
     lTercets is a list of tercets (list of strings)
-    hCls2Idx: map between textual labels (keys of h_clsLogProb) and matrix rows. If not provided, automatic mapping based on alphabetical oreder is used
+    hCls2Idx: map between textual labels (keys of h_clsLogProb) and matrix rows. If not provided, automatic 
+    mapping based on alphabetical oreder is used
    
     Returns a #cls x #tercets matrix. Each row corresponds to a class.
     '''
@@ -340,7 +342,8 @@ if __name__ == '__main__':
     SBinary = numpy.vstack([S[0:1, :], S[2:3, :]])
     P = compute_classPosteriors(SBinary)
     labelsEval = numpy.hstack([labelsInf, labelsPar])
-    # Since labelsPar == 2, but the row of Paradiso in SBinary has become row 1 (row 0 is Inferno), we have to modify the labels for paradise, otherwise the function compute_accuracy will not work
+    # Since labelsPar == 2, but the row of Paradiso in SBinary has become row 1 (row 0 is Inferno), we have to modify the 
+    # labels for paradise, otherwise the function compute_accuracy will not work
     labelsEval[labelsEval == 2] = 1
 
     print('Binary (From multiclass) - S1 - Accuracy:', compute_accuracy(P, labelsEval))
