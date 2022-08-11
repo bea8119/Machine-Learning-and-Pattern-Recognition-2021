@@ -90,7 +90,7 @@ def compute_accuracy(Posteriors, TrueL):
     NTotal = TrueL.size
     return float(NCorrect)/float(NTotal)
 
-if __name__ == '__main__':
+def main():
     lInf, lPur, lPar = load_data()
 
     lInf_train, lInf_evaluation = split_data(lInf, 4)
@@ -168,3 +168,5 @@ if __name__ == '__main__':
     labelsEval = np.hstack([labelsInf, labelsPar])
 
     print('Binary [inferno vs paradiso] - Accuracy:', str(round(compute_accuracy(S1_predictions, labelsEval) * 100)), '%')
+if __name__ == '__main__':
+    main()

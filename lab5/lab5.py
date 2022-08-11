@@ -11,7 +11,8 @@ from lab2.load_plot import load
 from lab4.lab4 import logpdf_GAU_ND
 
 def split_db_2to1(D, seed=0):
-    nTrain = int(D.shape[1]*2.0/3.0) # should be 50
+    # Different than the one shown in the Lab, this returns the indexes only, the actual splitting is done in split_dataset
+    nTrain = int(D.shape[1]*2.0/3.0) # should be 50 if we take the whole IRIS dataset
     np.random.seed(seed)
     idx = np.random.permutation(D.shape[1]) # take a random order of indexes from 0 to N
     idxTrain = idx[0:nTrain] 
