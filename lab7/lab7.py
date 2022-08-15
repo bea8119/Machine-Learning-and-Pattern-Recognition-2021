@@ -1,8 +1,6 @@
-from calendar import WEDNESDAY
 import numpy as np
 import sys
 import scipy.optimize, scipy.special
-import sklearn.datasets
 
 # sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
 sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows

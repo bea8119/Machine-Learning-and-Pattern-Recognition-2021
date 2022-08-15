@@ -46,14 +46,14 @@ def testLabelPredAccuracy(PredictedL, LTE, classifierName, show):
     CorrectCount = sum(CorrectPred)
     accuracy = CorrectCount / LTE.shape[0]
     error_rate = 1 - accuracy
-    error_count = LTE.shape[0] - CorrectCount
     if (show):
         # print('Accuracy of' + classifierName + ' Gaussian classifier: ' + str(round(accuracy * 100, 2)) + ' %')
         print('Error rate of' + classifierName + ' Gaussian classifier: ' + str(round(error_rate * 100, 2)) + ' %')
-    return error_count
-
 
 def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
+    '''
+    Returns the Predicted labels in a 1-D ndarray
+    '''
      # now focus on the TEST samples
     N_test = DTE.shape[1]
 
@@ -74,7 +74,7 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
 
         PredictedL = SPost.argmax(0) # INDEX of max through axis 0
 
-        err_count = testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
+        testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
 # ---------------------------------------
     else:
         # Now, with log densities
@@ -87,12 +87,12 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
 
         SPost_afterLog = np.exp(logSPost)
 
-        PredictedL_log = SPost_afterLog.argmax(0) # INDEX of max through axis 0 (per sample)
+        PredictedL = SPost_afterLog.argmax(0) # INDEX of max through axis 0 (per sample)
         
         CSF_name = CSF_name + ' with log'
-        err_count = testLabelPredAccuracy(PredictedL_log, LTE, CSF_name, show)
+        testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
     
-    return err_count
+    return PredictedL
 
 def gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest)
@@ -138,21 +138,21 @@ def K_fold_crossValidation(D, L, k, priorP, K, classifiers, seed=0):
 def main():
     D, L = load('../datasets/iris.csv')
     priorP = vcol(np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0]))
-    k = 3
+    k = len(np.unique(L)) # Number of distinct classes
 
-    # idxTrain, idxTest = split_db_2to1(D)
+    idxTrain, idxTest = split_db_2to1(D)
 
-    # gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    # naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    # tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=False)
+    tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    # tiedNaiveBayesGaussianClassifier(D, L, k, idxTrain, idxTest, priorP, log=False, show=False)
+    tiedNaiveBayesGaussianClassifier(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    CSF_list = [gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier]
+    # CSF_list = [gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier]
 
-    K_fold_crossValidation(D, L, k, priorP, D.shape[1], CSF_list)
+    # K_fold_crossValidation(D, L, k, priorP, D.shape[1], CSF_list)
 
 
 if __name__ == "__main__":

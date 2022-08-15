@@ -5,7 +5,7 @@ import scipy.special
 # sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
 sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from utility.vrow_vcol import vcol, vrow
-from load import load_data, split_data
+from lab6.load import load_data, split_data
 
 def buildWordSet(lTercets):
     # Receives a List of Tercets (remember that each Row of text is a Tercet) and returns a Python SET that contains
@@ -109,11 +109,11 @@ def main():
 
     lTercetsEval = lInf_evaluation + lPur_evaluation + lPar_evaluation
 
-    scoreMatrix = compute_logLikelihoodMatrix(modelDict, lTercetsEval, hCls2Idx)
+    ll_matrix = compute_logLikelihoodMatrix(modelDict, lTercetsEval, hCls2Idx)
 
     priorP_log = vcol(np.log(np.array([1./3., 1./3., 1./3.])))
 
-    posteriorP = compute_classPosteriorP(scoreMatrix, priorP_log)
+    scoreMatrix = compute_classPosteriorP(ll_matrix, priorP_log)
 
     labelsInf = np.zeros(len(lInf_evaluation))
     labelsInf[:] = hCls2Idx['inferno']
@@ -126,13 +126,13 @@ def main():
 
     labelsEval = np.hstack([labelsInf, labelsPur, labelsPar])
 
-    acc_inferno = compute_accuracy(posteriorP[:, labelsEval == hCls2Idx['inferno']], labelsEval[labelsEval == hCls2Idx['inferno']])
+    acc_inferno = compute_accuracy(scoreMatrix[:, labelsEval == hCls2Idx['inferno']], labelsEval[labelsEval == hCls2Idx['inferno']])
     print('Multiclass - Inferno - Accuracy:', str(round(acc_inferno * 100)), '%')
 
-    acc_purgatorio = compute_accuracy(posteriorP[:, labelsEval == hCls2Idx['purgatorio']], labelsEval[labelsEval == hCls2Idx['purgatorio']])
+    acc_purgatorio = compute_accuracy(scoreMatrix[:, labelsEval == hCls2Idx['purgatorio']], labelsEval[labelsEval == hCls2Idx['purgatorio']])
     print('Multiclass - Purgatorio - Accuracy:', str(round(acc_purgatorio * 100)), '%')
 
-    acc_paradiso = compute_accuracy(posteriorP[:, labelsEval == hCls2Idx['paradiso']], labelsEval[labelsEval == hCls2Idx['paradiso']])
+    acc_paradiso = compute_accuracy(scoreMatrix[:, labelsEval == hCls2Idx['paradiso']], labelsEval[labelsEval == hCls2Idx['paradiso']])
     print('Multiclass - Paradiso - Accuracy:', str(round(acc_paradiso * 100)), '%')
 
     # ---------- End of solution --------- #
