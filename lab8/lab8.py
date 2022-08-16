@@ -53,7 +53,7 @@ def ROC_TPR_vs_FPR(llrs, trueL):
 		FPR_arr[idx] = FPR_temp
 	return TPR_arr, FPR_arr
 
-def DCF_unnormalized_normalized_min(llrs, trueL, triplet):
+def DCF_unnormalized_normalized_min_binary(llrs, trueL, triplet):
 	# Un-normalized
 	dcf_u = DCF_binary(compute_confusion_matrix(compute_optBayes_decisions(llrs, *triplet), trueL, 2), *triplet)
 	# Bayesian risk (with dummy system)
@@ -82,34 +82,49 @@ def DCF_vs_priorLogOdds(effPriorLogOdds, llrs, trueL):
 	dcfmin_arr = np.zeros(effPriorLogOdds.shape[0])
 	for idx, p in enumerate(effPriorLogOdds):
 		eff_pi = 1 / (1 + np.exp(-p))
-		dcfs = DCF_unnormalized_normalized_min(llrs, trueL, (eff_pi, 1, 1))
+		dcfs = DCF_unnormalized_normalized_min_binary(llrs, trueL, (eff_pi, 1, 1))
 		dcf_arr[idx] = dcfs[1]
 		dcfmin_arr[idx] = dcfs[2]
 	return dcf_arr, dcfmin_arr
+
+def compute_misclassification_r(confusion_matrix):
+	'''Receives a confusion matrix and computes the mis-classification ratio matrix'''
+	column_sum = np.sum(confusion_matrix, axis=0)
+	return confusion_matrix / column_sum # Exploit broadcasting
+
+def DCF_unnormalized_normalized_multiclass(prior_p, misclsf_ratios, cost_matrix, norm_term):
+	'''Takes formatted inputs, reshapes to 1D when necessary inside the function'''
+	element_wise_mul = np.multiply(misclsf_ratios, cost_matrix) # Multiply everything element-wise
+	inner_sum = np.sum(element_wise_mul, axis=0) # Sum over each row
+	# ravel() to cast into 1D arrays such that np.dot returns a scalar
+	dcf_u = np.dot(prior_p.ravel(), inner_sum.ravel())
+	dcf_norm = dcf_u / norm_term
+
+	return (dcf_u, dcf_norm)
 
 def main():
 	# --------------- MVG clasiffiers ---------------
 
 	# IRIS dataset
 
-	# D, L = load('../datasets/iris.csv')
-	# priorP = vcol(np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0]))
-	# K = len(np.unique(L)) # Number of distinct classes
+	D, L = load('../datasets/iris.csv')
+	priorP = vcol(np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0]))
+	K = len(np.unique(L)) # Number of distinct classes
 
-	# idxTrain, idxTest = split_db_2to1(D)
-	# LTE = L[idxTest]
+	idxTrain, idxTest = split_db_2to1(D)
+	LTE = L[idxTest]
 
-	# gaussianL = gaussianCSF_wrapper(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
-	# # print(compute_confusion_matrix(gaussianL, LTE, K))
+	gaussianL = gaussianCSF_wrapper(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
+	# print(compute_confusion_matrix(gaussianL, LTE, K))
 
-	# naiveBayesGL = naiveBayesGaussianCSF(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
-	# # print(compute_confusion_matrix(naiveBayesGL, LTE, K))
+	naiveBayesGL = naiveBayesGaussianCSF(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
+	# print(compute_confusion_matrix(naiveBayesGL, LTE, K))
 
-	# tiedCovGL = tiedCovarianceGaussianCSF(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
-	# # print(compute_confusion_matrix(tiedCovGL, LTE, K))
+	tiedCovGL = tiedCovarianceGaussianCSF(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
+	# print(compute_confusion_matrix(tiedCovGL, LTE, K))
 
-	# tiedNaiveBayesGL = tiedNaiveBayesGaussianClassifier(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
-	# # print(compute_confusion_matrix(tiedNaiveBayesGL, LTE, K))
+	tiedNaiveBayesGL = tiedNaiveBayesGaussianClassifier(D, L, K, idxTrain, idxTest, priorP, log=False, show=False)
+	# print(compute_confusion_matrix(tiedNaiveBayesGL, LTE, K))
 
 	# ----------------- Divina Commedia -------------
 
@@ -141,7 +156,7 @@ def main():
 	print(f'Optimal Bayes decisions (binary) confusion matrix with\npi_1: {prior_1}, C_fn: {C_fn}, C_fp: {C_fp}:\n', conf_matrix)
 
 	for triplet in triplets:
-		(dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min(llr_infpar, labels_infpar, triplet)
+		(dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llr_infpar, labels_infpar, triplet)
 		print('pi_1: {}, C_fn: {}, C_fp: {}:\tDCF_u:{}\tDCF_norm: {}\tDCF_min: {}'.format(*triplet, dcf_u, dcf_norm, dcf_min))
 
 	# ---------------------- ROC curves ----------------------
@@ -178,6 +193,46 @@ def main():
 	plt.grid()
 	plt.legend()
 	plt.show()
+
+	# -------------------- Multiclass evaluation ----------------------
+
+	divinaCommediaLL = np.load('data/commedia_ll.npy')
+	divinaCommediaLL_eps1 = np.load('data/commedia_ll_eps1.npy')
+	divinaComediaLabels = np.load('data/commedia_labels.npy')
+	divinaComediaLabels_eps1 = np.load('data/commedia_labels_eps1.npy')
+	K = len(np.unique(divinaComediaLabels))
+
+	cost_matrix = np.array([[0, 1, 2], [1, 0, 1], [2, 1, 0]])
+	priorP = vcol(np.array([0.3, 0.4, 0.3]))
+	# priorP = vcol(np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0])) # trying out as last step
+	# cost_matrix = np.array([[0, 1, 1], [1, 0, 1], [1, 1, 0]]) # trying out as last step
+
+	posteriorP = compute_classPosteriorP(divinaCommediaLL, np.log(priorP)) # From lab 6
+	posteriorP_eps1 = compute_classPosteriorP(divinaCommediaLL_eps1, np.log(priorP))
+
+	C_vector = np.dot(cost_matrix, posteriorP)
+	C_vector_eps1 = np.dot(cost_matrix, posteriorP_eps1)
+
+	predL = np.argmin(C_vector, axis=0) # Take the minimum cost class prediction
+	predL_eps1 = np.argmin(C_vector_eps1, axis=0)
+
+	# System that only considers the prior probability and cost matrix (without looking at any sample)
+	C_dummy = np.min(np.dot(cost_matrix, priorP)) # For normalization when computing DCF
+	# The above system just takes cost matrix, prior probs. and computes a column vector with a "overall" cost for the classes,
+	# then it just chooses the one with minimum value
+
+	M_conf = compute_confusion_matrix(predL, divinaComediaLabels, K)
+	M_conf_eps1 = compute_confusion_matrix(predL_eps1, divinaComediaLabels_eps1, K)
+	R_misclsf = compute_misclassification_r(M_conf)
+	R_misclsf_eps1 = compute_misclassification_r(M_conf_eps1)
+
+	(dcf_u, dcf_norm) = DCF_unnormalized_normalized_multiclass(priorP, R_misclsf, cost_matrix, C_dummy)
+	(dcf_u_eps1, dcf_norm_eps1) = DCF_unnormalized_normalized_multiclass(priorP, R_misclsf_eps1, cost_matrix, C_dummy)
+
+	print('eps 0.001:\nM:\n', M_conf, '\nDCF_u:\n', dcf_u, '\nDCF_norm:\n', dcf_norm)
+	print('eps 1:\nM:\n', M_conf_eps1, '\nDCF_u:\n', dcf_u_eps1, '\nDCF_norm:\n', dcf_norm_eps1)
+	
+
 
 if __name__ == '__main__':
 	main()
