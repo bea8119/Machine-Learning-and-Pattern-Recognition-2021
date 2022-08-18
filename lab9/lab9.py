@@ -92,36 +92,37 @@ class SVM_class:
                 )
 
 def main():
-    
-    # ------------- Linear SVM ----------------
 
     D, L = load_iris_binary()
     (DTR, LTR), (DTE, LTE) = split_dataset(D, L, *split_db_2to1(D))
-
-    # K = 1.0
-    # C = 10
     n = DTR.shape[1]
     
-    # linear_SVM_obj = SVM_class(DTR, LTR, K)
-    # alpha_0 = np.zeros(n)
-    # bounds_var = [(0, C) for i in range(n)]
-    # (alpha_opt, L_dual_opt, d) = scipy.optimize.fmin_l_bfgs_b(
-    #     linear_SVM_obj.linear_SVM_obj,
-    #     alpha_0,
-    #     bounds=bounds_var,
-    #     factr=1.0
-    # )
-    # # print(alpha_opt)
-    # w_star = vcol(np.sum(vrow(alpha_opt) * vrow(linear_SVM_obj.z) * linear_SVM_obj.D_ext, axis=1))
+    # ------------- Linear SVM ----------------
 
-    # # Classifying a pattern -> compute extended test dataset
-    # DTE_ext = extended_D(DTE, K)
-    # scores = np.dot(w_star.T, DTE_ext)
+    K = 1.0
+    C = 10
+    
+    
+    linear_SVM_obj = SVM_class(DTR, LTR, K)
+    alpha_0 = np.zeros(n)
+    bounds_var = [(0, C) for i in range(n)]
+    (alpha_opt, L_dual_opt, d) = scipy.optimize.fmin_l_bfgs_b(
+        linear_SVM_obj.linear_SVM_obj,
+        alpha_0,
+        bounds=bounds_var,
+        factr=1.0
+    )
+    # print(alpha_opt)
+    w_star = vcol(np.sum(vrow(alpha_opt) * vrow(linear_SVM_obj.z) * linear_SVM_obj.D_ext, axis=1))
 
-    # print(f'Accuracy with K={K}, C={C}', round((1 - computeAccuracy_logreg_binary(scores, LTE)) * 100, 1), '%')
+    # Classifying a pattern -> compute extended test dataset
+    DTE_ext = extended_D(DTE, K)
+    scores = np.dot(w_star.T, DTE_ext)
 
-    # dual_gap = compute_duality_gap(w_star, C, linear_SVM_obj.D_ext, linear_SVM_obj.z, L_dual_opt)
-    # print('Dual Gap (not exactly the same as prof\'s:', dual_gap)
+    print(f'Accuracy with K={K}, C={C}', round((1 - computeAccuracy_logreg_binary(scores, LTE)) * 100, 1), '%')
+
+    dual_gap = compute_duality_gap(w_star, C, linear_SVM_obj.D_ext, linear_SVM_obj.z, L_dual_opt)
+    print('Dual Gap (not exactly the same as prof\'s:', dual_gap)
 
     # ------------------ Kernel SVM ------------------------
 
