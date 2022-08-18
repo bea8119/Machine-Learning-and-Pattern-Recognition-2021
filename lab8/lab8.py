@@ -1,10 +1,9 @@
 import numpy as np
 import sys
-import scipy.special
 import matplotlib.pyplot as plt
 
-# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab6.lab6 import compute_classPosteriorP
 from lab5.lab5 import gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier
 from lab5.lab5 import split_db_2to1, split_dataset
@@ -196,6 +195,7 @@ def main():
 
 	# -------------------- Multiclass evaluation ----------------------
 
+	print('\nMulticlass evaluation')
 	divinaCommediaLL = np.load('data/commedia_ll.npy')
 	divinaCommediaLL_eps1 = np.load('data/commedia_ll_eps1.npy')
 	divinaComediaLabels = np.load('data/commedia_labels.npy')
