@@ -3,11 +3,9 @@ import sys
 import scipy.special, scipy.optimize
 import matplotlib.pyplot as plt
 
-sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab7.lab7 import load_iris_binary, computeAccuracy_logreg_binary
-from lab6.lab6 import compute_accuracy, compute_classPosteriorP
-from lab5.lab5 import gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier
 from lab5.lab5 import split_db_2to1, split_dataset
 from lab2.load_plot import load
 from utility.vrow_vcol import vcol, vrow

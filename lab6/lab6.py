@@ -74,6 +74,7 @@ def compute_logLikelihoodMatrix(h_clsLogProb, lTercets, hCls2Idx):
     return S
 
 def compute_classPosteriorP(S, logPrior):
+    '''Returns Score matrix (posterior probabilities) for each class (row) and sample (column). Works with logPriors.'''
     logSJoint = S + logPrior
 
     logSMarginal = vrow(scipy.special.logsumexp(logSJoint, axis=0)) # compute for each column

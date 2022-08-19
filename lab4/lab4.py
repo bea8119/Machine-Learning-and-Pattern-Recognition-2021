@@ -31,48 +31,50 @@ def loglikelihood(XND, m_ML, C_ML):
 
 def main():
     # test 1
-    # XPlot = np.linspace(-8, 12, 1000)
-    # m = np.ones((1,1)) * 1.0
-    # C = np.ones((1,1)) * 2.0
-    # plt.figure()
-    # plt.plot(XPlot.ravel(), np.exp(logpdf_GAU_ND(vrow(XPlot), m, C)))
-    # plt.grid()
-    # plt.show()
+    XPlot = np.linspace(-8, 12, 1000)
+    m = np.ones((1,1)) * 1.0
+    C = np.ones((1,1)) * 2.0
+    plt.figure()
+    plt.plot(XPlot.ravel(), np.exp(logpdf_GAU_ND(vrow(XPlot), m, C)))
+    plt.grid()
+    plt.show()
     
     # test 2
-    # XPlot = np.linspace(-8, 12, 1000)
-    # m = np.ones((1,1)) * 1.0
-    # C = np.ones((1,1)) * 2.0
-    # pdfSol = np.load('./llGAU.npy')
-    # pdfGau = logpdf_GAU_ND(vrow(XPlot), m, C)
-    # print(np.abs(pdfSol - pdfGau).max())
+    XPlot = np.linspace(-8, 12, 1000)
+    m = np.ones((1,1)) * 1.0
+    C = np.ones((1,1)) * 2.0
+    pdfSol = np.load('./llGAU.npy')
+    pdfGau = logpdf_GAU_ND(vrow(XPlot), m, C)
+    print(np.abs(pdfSol - pdfGau).max())
 
     # test 3
-    # XND = np.load('./XND.npy')
-    # mu = np.load('./muND.npy')
-    # C = np.load('./CND.npy')
+    XND = np.load('./XND.npy')
+    mu = np.load('./muND.npy')
+    C = np.load('./CND.npy')
 
-    # pdfSol = np.load('./llND.npy')
-    # pdfGau = logpdf_GAU_ND(XND, mu, C)
-    # print(np.abs(pdfSol - pdfGau).max())
+    print(XND)
+    pdfSol = np.load('./llND.npy')
+    pdfGau = logpdf_GAU_ND(XND, mu, C)
+    print(np.abs(pdfSol - pdfGau).max())
 
     # likelihood test 1
-    # XND = np.load('./XND.npy')
-    # m_ML = vcol(XND.mean(axis=1))
-    # C_ML = datasetCovarianceM(XND)
-    # print(m_ML)
-    # print(C_ML)
-    # ll = loglikelihood(XND, m_ML, C_ML)
-    # print(ll)
+    XND = np.load('./XND.npy')
+    m_ML = vcol(XND.mean(axis=1))
+    C_ML = datasetCovarianceM(XND)
+    print(m_ML)
+    print(C_ML)
+    ll = loglikelihood(XND, m_ML, C_ML)
+    print(ll)
 
     # likelihood test 2
-    # X1D = np.load('./X1D.npy')
-    # m_ML = vcol(X1D.mean(axis=1))
-    # C_ML = datasetCovarianceM(X1D)
-    # print(m_ML)
-    # print(C_ML)
-    # ll = loglikelihood(X1D, m_ML, C_ML)
-    # print(ll)
+    X1D = np.load('./X1D.npy')
+    print(X1D)
+    m_ML = vcol(X1D.mean(axis=1))
+    C_ML = datasetCovarianceM(X1D)
+    print(m_ML)
+    print(C_ML)
+    ll = loglikelihood(X1D, m_ML, C_ML)
+    print(ll)
 
     # likelihood test 3
     X1D = np.load('./X1D.npy')
