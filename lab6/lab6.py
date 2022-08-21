@@ -86,10 +86,11 @@ def compute_classPosteriorP(S, logPrior):
     return SPost_afterLog
 
 def compute_accuracy(Posteriors, TrueL):
+    '''Receieves Posterior probabilities for multiclass case and True Labels'''
     PredictedL = np.argmax(Posteriors, axis=0) # INDEX of max through axis 0 (per sample)
     NCorrect = (PredictedL.ravel() == TrueL.ravel()).sum() # Will count as 1 the "True"
     NTotal = TrueL.size
-    return float(NCorrect)/float(NTotal)
+    return float(NCorrect) / float(NTotal)
 
 def main():
     lInf, lPur, lPar = load_data()
