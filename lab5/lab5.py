@@ -3,8 +3,8 @@ import numpy as np
 import sys
 import scipy.special
 
-# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab3.lab3 import SW_compute, datasetCovarianceM, SB_compute
 from utility.vrow_vcol import vcol, vrow
 from lab2.load_plot import load
@@ -49,6 +49,7 @@ def testLabelPredAccuracy(PredictedL, LTE, classifierName, show):
     if (show):
         # print('Accuracy of' + classifierName + ' Gaussian classifier: ' + str(round(accuracy * 100, 2)) + ' %')
         print('Error rate of' + classifierName + ' Gaussian classifier: ' + str(round(error_rate * 100, 2)) + ' %')
+    return LTE.size - CorrectCount # Error count
 
 def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
     '''
@@ -74,7 +75,7 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
 
         PredictedL = SPost.argmax(0) # INDEX of max through axis 0
 
-        testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
+        err_count = testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
 # ---------------------------------------
     else:
         # Now, with log densities
@@ -90,9 +91,9 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
         PredictedL = SPost_afterLog.argmax(0) # INDEX of max through axis 0 (per sample)
         
         CSF_name = CSF_name + ' with log'
-        testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
+        err_count = testLabelPredAccuracy(PredictedL, LTE, CSF_name, show)
     
-    return PredictedL
+    return PredictedL, err_count
 
 def gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest)
@@ -113,6 +114,7 @@ def tiedNaiveBayesGaussianClassifier(D, L, k, idxTrain, idxTest, priorP, log=Fal
     return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, priorP, " Tied Naive Bayes", log, show)
 
 def K_fold_crossValidation(D, L, k, priorP, K, classifiers, seed=0):
+    print(f'{K}-Fold cross-validation error rates')
     nTest = int(D.shape[1] / K)
     np.random.seed(seed)
     idx = np.random.permutation(D.shape[1]) # take a random order of indexes from 0 to N
@@ -127,10 +129,10 @@ def K_fold_crossValidation(D, L, k, priorP, K, classifiers, seed=0):
             # print(idxTest)
             idxTrain = np.setdiff1d(idx, idxTest) # take as training set the remaining folds
             # print(idxTrain)
-            error_acc[i] += classifiers[i](D, L, k, idxTrain, idxTest, priorP, log=False, show=False)
+            error_acc[i] += classifiers[i](D, L, k, idxTrain, idxTest, priorP, log=False, show=False)[1]
             startTest += nTest
     
-    error_rates = error_acc / D.shape[1] * 100
+    error_rates = error_acc / D.shape[1] * 100 # Each data has been used as validation set, so you divide D.shape[1]
     for i in range(len(classifiers)):
         print(f'Classifier {i+1} error rate: {round(error_rates[i], 1)} %')
 
@@ -142,17 +144,18 @@ def main():
 
     idxTrain, idxTest = split_db_2to1(D)
 
-    gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    # gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    # naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    # tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    tiedNaiveBayesGaussianClassifier(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    # tiedNaiveBayesGaussianClassifier(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    # CSF_list = [gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier]
+    CSF_list = [gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier]
 
-    # K_fold_crossValidation(D, L, k, priorP, D.shape[1], CSF_list)
+    K = D.shape[1]
+    K_fold_crossValidation(D, L, k, priorP, K, CSF_list)
 
 
 if __name__ == "__main__":
