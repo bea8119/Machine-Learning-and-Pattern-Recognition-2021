@@ -22,3 +22,19 @@ def load(filename):
     f.close()
     labelVector = np.array(labelVector) # 1D array
     return datasetList, labelVector
+
+def split_db_n_to_1(D, n, seed=0):
+    '''Returns idxTrain and idxTest according to n-to-1 splitting (n is given by the user)'''
+    nTrain = int(D.shape[1] * float(n) / float(n + 1))
+    np.random.seed(seed)
+    idx = np.random.permutation(D.shape[1]) # take a random order of indexes from 0 to N
+    idxTrain = idx[0:nTrain] 
+    idxTest = idx[nTrain:]
+    return idxTrain, idxTest
+
+def split_dataset(D, L, idxTrain, idxTest):
+    DTR = D[:, idxTrain]
+    DTE = D[:, idxTest]
+    LTR = L[idxTrain]
+    LTE = L[idxTest]
+    return (DTR, LTR), (DTE, LTE)

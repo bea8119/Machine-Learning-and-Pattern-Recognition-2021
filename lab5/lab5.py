@@ -3,8 +3,8 @@ import numpy as np
 import sys
 import scipy.special
 
-sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab3.lab3 import SW_compute, datasetCovarianceM, SB_compute
 from utility.vrow_vcol import vcol, vrow
 from lab2.load_plot import load
@@ -154,7 +154,7 @@ def main():
 
     CSF_list = [gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier]
 
-    K = D.shape[1]
+    K = D.shape[1] # Leave-One-Out if equal to D.shape[1] (number of samples)
     K_fold_crossValidation(D, L, k, priorP, K, CSF_list)
 
 

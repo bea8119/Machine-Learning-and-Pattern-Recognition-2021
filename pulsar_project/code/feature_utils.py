@@ -29,3 +29,20 @@ def PCA_givenM(D, M):
     # U, s, Vh = np.linalg.svd(C)
     # P = U[:, :m]
     return P
+
+def SW_compute(D, L, k):
+    N = D.shape[1] # (number of total samples)
+
+    SW = 0
+    for i in range(k):
+        # Use samples of each different (c)lass
+        Dc = D[:, L == i]
+        nc = Dc.shape[1] # n of samples per class
+        # Covariance matrix of each class
+        Sw = covMatrix(Dc)
+
+        SW += (Sw * nc)
+
+    SW /= N
+
+    return SW
