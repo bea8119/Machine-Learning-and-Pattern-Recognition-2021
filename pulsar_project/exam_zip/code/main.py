@@ -15,19 +15,20 @@ ATTRIBUTE_NAMES = ['Mean of the integrated profile',
 
 def main():
 
-    (D, L) = load('../data/Train.txt')
-    Z_D = Z_normalization(D)
+    (DTR, LTR) = load('../data/Train.txt')
+    (DTE, LTE) = load('../data/Test.txt')
+    Z_DTR = Z_normalization(DTR)
 
     # Plot distribution of attribute values (after Z-Normalizing) for each class
-    plotHistogram(Z_D, L, CLASS_NAMES, ATTRIBUTE_NAMES)
+    plotHistogram(Z_DTR, LTR, CLASS_NAMES, ATTRIBUTE_NAMES)
 
     # Plot heatmap of covariance
-    plotHeatmap(D, L)
-    # plt.show()
+    plotHeatmap(DTR, LTR)
+    plt.show()
 
     # Apply PCA
     M = 6
-    PCA_ProjM = PCA_givenM(Z_D, M)
+    PCA_ProjM = PCA_givenM(Z_DTR, M)
     
 
 
