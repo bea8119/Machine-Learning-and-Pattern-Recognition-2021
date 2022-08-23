@@ -1,4 +1,5 @@
-from utils import load, Z_normalization
+from utils import load
+from feature_utils import Z_normalization, PCA_givenM
 from plotting import plotHeatmap, plotHistogram
 import matplotlib.pyplot as plt
 
@@ -14,7 +15,7 @@ ATTRIBUTE_NAMES = ['Mean of the integrated profile',
 
 def main():
 
-    (D, L) = load('../Train.txt')
+    (D, L) = load('Train.txt')
     Z_D = Z_normalization(D)
 
     # Plot distribution of attribute values (after Z-Normalizing) for each class
@@ -22,8 +23,13 @@ def main():
 
     # Plot heatmap of covariance
     plotHeatmap(D, L)
-    plt.show()
+    # plt.show()
+
+    # Apply PCA
+    M = 6
+    PCA_ProjM = PCA_givenM(Z_D, M)
     
+
 
 if __name__  == '__main__':
     main()

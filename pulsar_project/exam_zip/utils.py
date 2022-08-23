@@ -22,12 +22,3 @@ def load(filename):
     f.close()
     labelVector = np.array(labelVector) # 1D array
     return datasetList, labelVector
-
-def Z_normalization(D):
-    '''Returns Z_D (Z-transformed dataset) and the corresponding Mean and Standard Deviation'''
-    mean_vector = vcol(np.mean(D, axis=1))
-    std_vector = vcol(np.std(D, axis=1))
-
-    Z_D = (D - mean_vector) / std_vector
-    
-    return Z_D

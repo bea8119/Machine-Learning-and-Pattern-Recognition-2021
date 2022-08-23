@@ -77,7 +77,7 @@ def SB_compute(dataset, labels, K):
     return SB
 
 
-def LDA_WgivenM(dataset, labels, m, K): # returns projection matrix W -> at most m-1 discriminant directions, receives K number of classes
+def LDA_WgivenM(dataset, labels, m, K): # returns projection matrix W -> at most K-1 discriminant directions, receives K number of classes
     SB = SB_compute(dataset, labels, K)
     SW = SW_compute(dataset, labels, K)
 
@@ -114,8 +114,9 @@ def LDA_WgivenM(dataset, labels, m, K): # returns projection matrix W -> at most
 
 def main():
     D, L = load('../datasets/iris.csv')
+    K = len(np.unique(L)) # Number of classes
     P = PCA_PgivenM(D, 2)
-    W = LDA_WgivenM(D, L, 2, 3)
+    W = LDA_WgivenM(D, L, 2, K)
 
     # Project dataset onto the transformation matrices
     DPCA = np.dot(P.T, D)
