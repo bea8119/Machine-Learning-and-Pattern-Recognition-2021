@@ -143,19 +143,20 @@ def main():
     k = len(np.unique(L)) # Number of distinct classes
 
     idxTrain, idxTest = split_db_2to1(D)
+    # D = np.array([]).reshape((0, D.shape[1])) # For testing
 
-    # gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    # naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    # tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
-    # tiedNaiveBayesGaussianClassifier(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
+    tiedNaiveBayesGaussianClassifier(D, L, k, idxTrain, idxTest, priorP, log=False, show=True)
 
     CSF_list = [gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier]
 
-    K = D.shape[1] # Leave-One-Out if equal to D.shape[1] (number of samples)
-    K_fold_crossValidation(D, L, k, priorP, K, CSF_list)
+    # K = D.shape[1] # Leave-One-Out if equal to D.shape[1] (number of samples)
+    # K_fold_crossValidation(D, L, k, priorP, K, CSF_list)
 
 
 if __name__ == "__main__":

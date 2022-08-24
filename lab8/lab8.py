@@ -2,8 +2,8 @@ import numpy as np
 import sys
 import matplotlib.pyplot as plt
 
-sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab6.lab6 import compute_classPosteriorP
 from lab5.lab5 import gaussianCSF_wrapper, naiveBayesGaussianCSF, tiedCovarianceGaussianCSF, tiedNaiveBayesGaussianClassifier
 from lab5.lab5 import split_db_2to1, split_dataset
@@ -19,7 +19,7 @@ def compute_confusion_matrix(predL, trueL, K):
 	return conf_matrix
 
 
-def compute_optBayes_decisions(llrs=None, pi_1=None, C_fn=None, C_fp=None, given_threshold=None):
+def compute_optBayes_decisions(llrs, pi_1=None, C_fn=None, C_fp=None, given_threshold=None):
 	if (given_threshold is None):
 		threshold = - np.log((pi_1 * C_fn) / ((1 - pi_1) * C_fp))
 	else:
@@ -128,6 +128,7 @@ def main():
 	# ----------------- Divina Commedia -------------
 
 	divinaComediaLabels = np.load('data/commedia_labels.npy')
+	print(divinaComediaLabels)
 	K = len(np.unique(divinaComediaLabels))
 
 	divinaCommediaLL = np.load('data/commedia_ll.npy')

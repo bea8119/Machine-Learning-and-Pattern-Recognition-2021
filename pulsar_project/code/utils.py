@@ -38,3 +38,11 @@ def split_dataset(D, L, idxTrain, idxTest):
     LTR = L[idxTrain]
     LTE = L[idxTest]
     return (DTR, LTR), (DTE, LTE)
+
+def split_db_after_merge(DTR, DTE, LTR, LTE):
+    '''Returns merged dataset (as if Train and Test data were a single dataset) and the corresponding indexes'''
+    D_merged = np.hstack((DTR, DTE))
+    L_merged = np.concatenate((LTR, LTE))
+    idxTrain = np.arange(0, DTR.shape[1])
+    idxTest = np.arange(DTR.shape[1], DTR.shape[1] + DTE.shape[1])
+    return D_merged, L_merged, idxTrain, idxTest 
