@@ -1,6 +1,18 @@
+import utils as u
+import feature_utils as f
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn
+
+CLASS_NAMES = ['RFI / Noise', 'Pulsar']
+ATTRIBUTE_NAMES = ['Mean of the integrated profile',
+                 'Standard deviation of the integrated profile',
+                 'Excess kurtosis of the integrated profile',
+                 'Skewness of the integrated profile',
+                 'Mean of the DM-SNR curve',
+                 'Standard deviation of the DM-SNR curve',
+                 'Excess kurtosis of the DM-SNR curve',
+                 'Skewness of the DM-SNR curve']
 
 def plotHistogram(D, L, class_names, attribute_names):
     # dataset for each class
@@ -32,3 +44,22 @@ def plotHeatmap(D, L):
     plt.figure('True class samples')
     seaborn.heatmap(np.abs(np.corrcoef(D[:, L == 1])), linewidth=0.5, cmap="Blues", square=True, cbar=False)
     # plt.show()
+
+def main():
+
+    DTR, LTR = u.load('../data/Train.txt')
+    DTE, LTE = u.load('../data/Test.txt')
+    
+    # Pre-processing (Z-normalization)
+    DTR = f.Z_normalization(DTR)
+    DTE = f.Z_normalization(DTE)
+
+    # Plot distribution of attribute values (after Z-Normalizing) for each class
+    plotHistogram(DTR, LTR, CLASS_NAMES, ATTRIBUTE_NAMES)
+
+    # Plot heatmap of covariance
+    plotHeatmap(DTR, LTR)
+    plt.show()
+
+if __name__ == '__main__':
+    main()

@@ -43,7 +43,7 @@ def testLabelPredAccuracy(PredictedL, LTE, classifierName, show, lls, triplet):
     if show:
         llrs = lls[1, :] - lls[0, :]
         (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
-        print(f'\t{classifierName}Gaussian classifier min DCF: {round(dcf_min, 4)}')
+        print(f'\t{classifierName}Gaussian classifier min DCF: {round(dcf_min, 3)}')
         # print('Accuracy of' + classifierName + ' Gaussian classifier: ' + str(round(accuracy * 100, 2)) + ' %')
         # print('\t' + classifierName + 'Gaussian classifier error rate: ' + str(round(error_rate * 100, 1)) + ' %')
     return LTE.size - CorrectCount # Error count
@@ -92,7 +92,7 @@ def K_fold_MVG(D, L, k, priorP, K, classifiers, app_triplet, PCA_m=None, seed=0)
     if PCA_m is not None:
         msg = f' with PCA m={PCA_m}'
     else: 
-        msg = ''
+        msg = ' (no PCA)'
     print(f'{K}-Fold cross-validation (MVG Classifiers){msg}')
     nTest = int(D.shape[1] / K)
     np.random.seed(seed)
