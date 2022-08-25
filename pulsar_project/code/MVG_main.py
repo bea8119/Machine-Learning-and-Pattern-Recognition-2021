@@ -27,12 +27,14 @@ def main():
     
     for triplet in application_points:
         # ----------------- Using validation set (single fold or K-fold) ----------------------
+
         # Single Fold
         print('\nApplication point (pi_eff: {}, C_fn: {}, C_fp: {})'.format(*triplet))
         print('****************************************************')
 
         idxTrain, idxTest = u.split_db_n_to_1(DTR, n)
         print(f'Single fold ({n}-to-1) (MVG Classifiers) (No PCA)')
+        
         for classifier in CSF_list:
             classifier[0](DTR, LTR, k, idxTrain, idxTest, triplet, show=True)
         print('-----------------------------------------------------')

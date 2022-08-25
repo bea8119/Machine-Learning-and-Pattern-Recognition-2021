@@ -47,7 +47,6 @@ def DCF_unnormalized_normalized_min_binary(llrs, trueL, triplet):
 	B_dummy = min(triplet[0] * triplet[1], (1 - triplet[0]) * triplet[2])
 	# Normalized Detection Cost Function (wrt. to dummy system)
 	dcf_norm = dcf_u / B_dummy
-
 	# Minimum DCF (with score calibration)
 	# Create a new object (ndarray), otherwise in-place sorting will mess up the following computations of the confusion matrix
 	thresholds = np.array(llrs)
