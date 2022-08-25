@@ -6,8 +6,8 @@ import numpy as np
 
 # for K-fold
 CSF_list = [
-            (MVG.gaussianCSF_wrapper, 'Gaussian'), 
-            (MVG.naiveBayesGaussianCSF, 'Naive Bayes Gaussian'), 
+            (MVG.gaussianCSF_wrapper, 'Full Covariance Gaussian'), 
+            (MVG.naiveBayesGaussianCSF, 'Diag Covariance Gaussian'), 
             (MVG.tiedCovarianceGaussianCSF, 'Tied Covariance Gaussian'),
             ]
 
@@ -33,7 +33,7 @@ def main():
     for triplet in application_points:
         # ----------------- Using validation set (single fold or K-fold) ----------------------
         # Single Fold
-        print('Application point (pi_eff: {}, C_fn: {}, C_fp: {})'.format(*triplet))
+        print('\nApplication point (pi_eff: {}, C_fn: {}, C_fp: {})'.format(*triplet))
         print('****************************************************')
         idxTrain, idxTest = u.split_db_n_to_1(DTR, n)
         print(f'Single fold ({n}-to-1) (MVG Classifiers) (No PCA)')

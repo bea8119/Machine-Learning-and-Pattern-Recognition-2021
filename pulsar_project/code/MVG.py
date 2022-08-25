@@ -43,7 +43,7 @@ def testLabelPredAccuracy(PredictedL, LTE, classifierName, show, lls, triplet):
     if show:
         llrs = lls[1, :] - lls[0, :]
         (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
-        print(f'\t{classifierName}Gaussian classifier min DCF: {round(dcf_min, 3)}')
+        print(f'\t{classifierName}Gaussian classifier -> min DCF: {round(dcf_min, 3)}')
         # print('Accuracy of' + classifierName + ' Gaussian classifier: ' + str(round(accuracy * 100, 2)) + ' %')
         # print('\t' + classifierName + 'Gaussian classifier error rate: ' + str(round(error_rate * 100, 1)) + ' %')
     return LTE.size - CorrectCount # Error count
@@ -72,12 +72,12 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, triplet, show):
 
 def gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, priorP, triplet=None, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest)
-    return gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, "", triplet, show)
+    return gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, "Full Covariance ", triplet, show)
 
 def naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, priorP, triplet=None, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest)
     C_naive_arr = [C_arr[i] * np.identity(C_arr[i].shape[0]) for i in range(k)] # element by element mult.
-    return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, priorP, "Naive Bayes ", triplet, show)
+    return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, priorP, "Diag Covariance ", triplet, show)
 
 def tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, priorP, triplet=None, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest, tied=True)
@@ -104,10 +104,8 @@ def K_fold_MVG(D, L, k, priorP, K, classifiers, app_triplet, PCA_m=None, seed=0)
         # For DCF computation
         llrs = np.array([])
         for j in range(K):
-            idxTest = idx[startTest: (startTest + nTest)] # take a different fold for test
-            # print(idxTest)
-            idxTrain = np.setdiff1d(idx, idxTest) # take as training set the remaining folds
-            # print(idxTrain)
+            idxTest = idx[startTest: (startTest + nTest)]
+            idxTrain = np.setdiff1d(idx, idxTest)
             if PCA_m is not None:
                 DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
                 PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
@@ -128,4 +126,5 @@ def K_fold_MVG(D, L, k, priorP, K, classifiers, app_triplet, PCA_m=None, seed=0)
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
         (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, trueL_ordered, app_triplet)
-        print(f'\t{classifiers[i][1]} min DCF: {round(dcf_min, 3)}')
+        print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}')
+
