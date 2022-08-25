@@ -48,11 +48,11 @@ def plotHeatmap(D, L):
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')
-    DTE, LTE = u.load('../data/Test.txt')
+    # DTE, LTE = u.load('../data/Test.txt')
     
     # Pre-processing (Z-normalization)
-    DTR = f.Z_normalization(DTR)
-    DTE = f.Z_normalization(DTE)
+    DTR, mean, std = f.Z_normalization(DTR)
+    DTE = f.Z_normalization(DTE, mean, std)
 
     # Plot distribution of attribute values (after Z-Normalizing) for each class
     plotHistogram(DTR, LTR, CLASS_NAMES, ATTRIBUTE_NAMES)

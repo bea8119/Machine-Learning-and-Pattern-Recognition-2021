@@ -1,6 +1,5 @@
 import utils as u
 import feature_utils as f
-import plotting as p
 import MVG
 import numpy as np
 
@@ -15,16 +14,12 @@ def main():
 
     DTR, LTR = u.load('../data/Train.txt')
     DTE, LTE = u.load('../data/Test.txt')
-    
-    # Pre-processing (Z-normalization)
-    DTR = f.Z_normalization(DTR)
-    DTE = f.Z_normalization(DTE)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
     # ------- MVG classifiers ------
 
-    priorP = u.vcol(np.array([0.5, 0.5]))
+    # priorP = u.vcol(np.array([0.5, 0.5]))
     k = 2 # Number of classes
 
     n = 4 # Single-Fold value
@@ -35,14 +30,15 @@ def main():
         # Single Fold
         print('\nApplication point (pi_eff: {}, C_fn: {}, C_fp: {})'.format(*triplet))
         print('****************************************************')
+
         idxTrain, idxTest = u.split_db_n_to_1(DTR, n)
         print(f'Single fold ({n}-to-1) (MVG Classifiers) (No PCA)')
         for classifier in CSF_list:
-            classifier[0](DTR, LTR, k, idxTrain, idxTest, priorP, triplet, show=True)
+            classifier[0](DTR, LTR, k, idxTrain, idxTest, triplet, show=True)
         print('-----------------------------------------------------')
 
         # K-fold
-        MVG.K_fold_MVG(DTR, LTR, k, priorP, K, CSF_list, triplet)
+        MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet)
 
         # ------------------ Applying PCA ------------------
 
@@ -54,14 +50,13 @@ def main():
             PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
             DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            print(f'Single Fold (n={n}) (MVG Classifiers) with PCA m={m}')
+            print(f'Single Fold ({n}-to-1) (MVG Classifiers) with PCA m={m}')
             for classifier in CSF_list:
-                classifier[0](DTR_PCA, LTR, k, idxTrain, idxTest, priorP, triplet, show=True)
+                classifier[0](DTR_PCA, LTR, k, idxTrain, idxTest, triplet, show=True)
             print('-----------------------------------------------------')
 
             # K-fold
-            MVG.K_fold_MVG(DTR, LTR, k, priorP, K, CSF_list, triplet, m)
-        
+            MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet, m)
 
         # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) --------------
         # print('-----------------------------------------------------')

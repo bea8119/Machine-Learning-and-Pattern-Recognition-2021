@@ -1,14 +1,17 @@
 import numpy as np
 from utils import vcol
 
-def Z_normalization(D):
-    '''Returns Z_D (Z-transformed dataset) and the corresponding Mean and Standard Deviation'''
-    mean_vector = vcol(np.mean(D, axis=1))
-    std_vector = vcol(np.std(D, axis=1))
-
-    Z_D = (D - mean_vector) / std_vector
+def Z_normalization(D, means=None, std_v=None):
+    '''Returns Z_D (Z-transformed dataset) and the corresponding Mean and Standard Deviation vectors. 
+    If applying to a evaluation/validation set, pass the vectors of the corresponding training set obtained before'''
+    if means is None and std_v is None:
+        mean_vector = vcol(np.mean(D, axis=1))
+        std_vector = vcol(np.std(D, axis=1))
+        Z_D = (D - mean_vector) / std_vector
+        return Z_D, mean_vector, std_vector
+    else:
+        return (D - means) / std_v
     
-    return Z_D
 
 def centerDataset(D):
     mu_v = vcol(D.mean(axis=1))
