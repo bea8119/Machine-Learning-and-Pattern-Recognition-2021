@@ -1,0 +1,153 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+Single fold (4-to-1) (MVG Classifiers) (No PCA)
+        Gaussian classifier min DCF: 0.11
+        Naive Bayes Gaussian classifier min DCF: 0.183
+        Tied Covariance Gaussian classifier min DCF: 0.108
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) (no PCA)
+        Gaussian min DCF: 0.141
+        Naive Bayes Gaussian min DCF: 0.193
+        Tied Covariance Gaussian min DCF: 0.112
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=7
+        Gaussian classifier min DCF: 0.113
+        Naive Bayes Gaussian classifier min DCF: 0.194
+        Tied Covariance Gaussian classifier min DCF: 0.108
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=7
+        Gaussian min DCF: 0.139
+        Naive Bayes Gaussian min DCF: 0.215
+        Tied Covariance Gaussian min DCF: 0.112
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=6
+        Gaussian classifier min DCF: 0.112
+        Naive Bayes Gaussian classifier min DCF: 0.204
+        Tied Covariance Gaussian classifier min DCF: 0.109
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=6
+        Gaussian min DCF: 0.152
+        Naive Bayes Gaussian min DCF: 0.224
+        Tied Covariance Gaussian min DCF: 0.14
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=5
+        Gaussian classifier min DCF: 0.136
+        Naive Bayes Gaussian classifier min DCF: 0.192
+        Tied Covariance Gaussian classifier min DCF: 0.125
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=5
+        Gaussian min DCF: 0.151
+        Naive Bayes Gaussian min DCF: 0.221
+        Tied Covariance Gaussian min DCF: 0.15
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=4
+        Gaussian classifier min DCF: 0.168
+        Naive Bayes Gaussian classifier min DCF: 0.188
+        Tied Covariance Gaussian classifier min DCF: 0.126
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=4
+        Gaussian min DCF: 0.179
+        Naive Bayes Gaussian min DCF: 0.209
+        Tied Covariance Gaussian min DCF: 0.15
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+Single fold (4-to-1) (MVG Classifiers) (No PCA)
+        Gaussian classifier min DCF: 0.281
+        Naive Bayes Gaussian classifier min DCF: 0.28
+        Tied Covariance Gaussian classifier min DCF: 0.216
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) (no PCA)
+        Gaussian min DCF: 0.284
+        Naive Bayes Gaussian min DCF: 0.314
+        Tied Covariance Gaussian min DCF: 0.223
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=7
+        Gaussian classifier min DCF: 0.28
+        Naive Bayes Gaussian classifier min DCF: 0.499
+        Tied Covariance Gaussian classifier min DCF: 0.21
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=7
+        Gaussian min DCF: 0.302
+        Naive Bayes Gaussian min DCF: 0.506
+        Tied Covariance Gaussian min DCF: 0.222
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=6
+        Gaussian classifier min DCF: 0.286
+        Naive Bayes Gaussian classifier min DCF: 0.522
+        Tied Covariance Gaussian classifier min DCF: 0.255
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=6
+        Gaussian min DCF: 0.287
+        Naive Bayes Gaussian min DCF: 0.53
+        Tied Covariance Gaussian min DCF: 0.258
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=5
+        Gaussian classifier min DCF: 0.262
+        Naive Bayes Gaussian classifier min DCF: 0.454
+        Tied Covariance Gaussian classifier min DCF: 0.262
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=5
+        Gaussian min DCF: 0.25
+        Naive Bayes Gaussian min DCF: 0.457
+        Tied Covariance Gaussian min DCF: 0.262
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=4
+        Gaussian classifier min DCF: 0.308
+        Naive Bayes Gaussian classifier min DCF: 0.461
+        Tied Covariance Gaussian classifier min DCF: 0.262
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=4
+        Gaussian min DCF: 0.325
+        Naive Bayes Gaussian min DCF: 0.445
+        Tied Covariance Gaussian min DCF: 0.26
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+Single fold (4-to-1) (MVG Classifiers) (No PCA)
+        Gaussian classifier min DCF: 0.63
+        Naive Bayes Gaussian classifier min DCF: 0.619
+        Tied Covariance Gaussian classifier min DCF: 0.522
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) (no PCA)
+        Gaussian min DCF: 0.669
+        Naive Bayes Gaussian min DCF: 0.746
+        Tied Covariance Gaussian min DCF: 0.574
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=7
+        Gaussian classifier min DCF: 0.598
+        Naive Bayes Gaussian classifier min DCF: 0.642
+        Tied Covariance Gaussian classifier min DCF: 0.524
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=7
+        Gaussian min DCF: 0.642
+        Naive Bayes Gaussian min DCF: 0.721
+        Tied Covariance Gaussian min DCF: 0.577
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=6
+        Gaussian classifier min DCF: 0.594
+        Naive Bayes Gaussian classifier min DCF: 0.691
+        Tied Covariance Gaussian classifier min DCF: 0.584
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=6
+        Gaussian min DCF: 0.648
+        Naive Bayes Gaussian min DCF: 0.727
+        Tied Covariance Gaussian min DCF: 0.582
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=5
+        Gaussian classifier min DCF: 0.579
+        Naive Bayes Gaussian classifier min DCF: 0.662
+        Tied Covariance Gaussian classifier min DCF: 0.56
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=5
+        Gaussian min DCF: 0.641
+        Naive Bayes Gaussian min DCF: 0.729
+        Tied Covariance Gaussian min DCF: 0.573
+-----------------------------------------------------
+Single Fold (n=4) (MVG Classifiers) with PCA m=4
+        Gaussian classifier min DCF: 0.765
+        Naive Bayes Gaussian classifier min DCF: 0.568
+        Tied Covariance Gaussian classifier min DCF: 0.566
+-----------------------------------------------------
+5-Fold cross-validation (MVG Classifiers) with PCA m=4
+        Gaussian min DCF: 0.826
+        Naive Bayes Gaussian min DCF: 0.693
+        Tied Covariance Gaussian min DCF: 0.574

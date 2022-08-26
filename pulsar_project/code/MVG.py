@@ -77,10 +77,11 @@ def tiedNaiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=Tru
 
 def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
     if PCA_m is not None:
-        msg = f' with PCA m={PCA_m}'
+        msg = f' with PCA m = {PCA_m}'
     else: 
         msg = ' (no PCA)'
-    print(f'{K}-Fold cross-validation (MVG Classifiers){msg}')
+    print(f'{K}-Fold cross-validation MVG Classifiers{msg}')
+
     nTest = int(D.shape[1] / K)
     np.random.seed(seed)
     idx = np.random.permutation(D.shape[1]) 
@@ -88,7 +89,7 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
     for i in range(len(classifiers)):
         startTest = 0
         # For DCF computation
-        llrs = np.array([])
+        llrs_all = np.array([])
         for j in range(K):
             idxTest = idx[startTest: (startTest + nTest)]
             idxTrain = np.setdiff1d(idx, idxTest)
@@ -100,12 +101,12 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
             else:
                 log_likelihoods = classifiers[i][0](D, L, k, idxTrain, idxTest, app_triplet, show=False)
 
-            llr = log_likelihoods[1, :] - log_likelihoods[0, :] # log-likelihood ratio
-            llrs = np.concatenate((llrs, llr))
+            llrs = log_likelihoods[1, :] - log_likelihoods[0, :] # log-likelihood ratio
+            llrs_all = np.concatenate((llrs_all, llrs))
             startTest += nTest
         
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
-        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, trueL_ordered, app_triplet)
+        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs_all, trueL_ordered, app_triplet)
         print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}')
 

@@ -5,10 +5,10 @@ import numpy as np
 
 # for K-fold
 CSF_list = [
-            (MVG.gaussianCSF_wrapper, 'Full Covariance Gaussian'), 
-            (MVG.naiveBayesGaussianCSF, 'Diag Covariance Gaussian'), 
-            (MVG.tiedCovarianceGaussianCSF, 'Tied Covariance Gaussian'),
-            ]
+    (MVG.gaussianCSF_wrapper, 'Full Covariance Gaussian'), 
+    (MVG.naiveBayesGaussianCSF, 'Diag Covariance Gaussian'), 
+    (MVG.tiedCovarianceGaussianCSF, 'Tied Covariance Gaussian'),
+]
 
 def main():
 
@@ -27,14 +27,13 @@ def main():
     
     for triplet in application_points:
         # ----------------- Using validation set (single fold or K-fold) ----------------------
-
-        # Single Fold
         print('\nApplication point (pi_eff: {}, C_fn: {}, C_fp: {})'.format(*triplet))
         print('****************************************************')
 
+        # Single Fold
         idxTrain, idxTest = u.split_db_n_to_1(DTR, n)
-        print(f'Single fold ({n}-to-1) (MVG Classifiers) (No PCA)')
-        
+        print(f'Single fold ({n}-to-1) MVG Classifiers (no PCA)')
+
         for classifier in CSF_list:
             classifier[0](DTR, LTR, k, idxTrain, idxTest, triplet, show=True)
         print('-----------------------------------------------------')
@@ -52,7 +51,7 @@ def main():
             PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
             DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            print(f'Single Fold ({n}-to-1) (MVG Classifiers) with PCA m={m}')
+            print(f'Single Fold ({n}-to-1) MVG Classifiers with PCA m = {m}')
             for classifier in CSF_list:
                 classifier[0](DTR_PCA, LTR, k, idxTrain, idxTest, triplet, show=True)
             print('-----------------------------------------------------')
@@ -61,12 +60,12 @@ def main():
             MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet, m)
 
         # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) --------------
-        # print('-----------------------------------------------------')
-        # D_merged, L_merged, idxTrain, idxTest = u.split_db_after_merge(DTR, DTE, LTR, LTE)
-        # print(f'MVG Classifiers on whole dataset)')
-        # MVG.gaussianCSF_wrapper(D_merged, L_merged, k, idxTrain, idxTest, priorP, triplet, show=True)
-        # MVG.naiveBayesGaussianCSF(D_merged, L_merged, k, idxTrain, idxTest, priorP, triplet, show=True)
-        # MVG.tiedCovarianceGaussianCSF(D_merged, L_merged, k, idxTrain, idxTest, priorP, triplet, show=True)
+        print('-----------------------------------------------------')
+        D_merged, L_merged, idxTrain, idxTest = u.split_db_after_merge(DTR, DTE, LTR, LTE)
+        print(f'MVG Classifiers on whole dataset')
+        MVG.gaussianCSF_wrapper(D_merged, L_merged, k, idxTrain, idxTest, triplet, show=True)
+        MVG.naiveBayesGaussianCSF(D_merged, L_merged, k, idxTrain, idxTest, triplet, show=True)
+        MVG.tiedCovarianceGaussianCSF(D_merged, L_merged, k, idxTrain, idxTest, triplet, show=True)
     
 
 if __name__  == '__main__':

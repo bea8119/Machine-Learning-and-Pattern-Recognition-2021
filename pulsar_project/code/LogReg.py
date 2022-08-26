@@ -6,11 +6,11 @@ import scipy.optimize
 
 # def lambdaTuning()
 
-def computeAccuracy_logreg_binary(scoreArray, TrueL):
-    PredictedL = np.array([(1 if score > 0 else 0) for score in scoreArray.ravel()])
-    NCorrect = (PredictedL.ravel() == TrueL.ravel()).sum() # Will count as 1 the "True"
-    NTotal = TrueL.size
-    return float(NCorrect) / float(NTotal)
+# def computeAccuracy_logreg_binary(scoreArray, TrueL):
+#     PredictedL = np.array([(1 if score > 0 else 0) for score in scoreArray.ravel()])
+#     NCorrect = (PredictedL.ravel() == TrueL.ravel()).sum() # Will count as 1 the "True"
+#     NTotal = TrueL.size
+#     return float(NCorrect) / float(NTotal)
 
 def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True):
 
@@ -61,21 +61,21 @@ class logRegClass:
         return llrs.ravel()
 
 
-def K_fold_LogReg(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
+def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0):
     if PCA_m is not None:
-        msg = f' with PCA m={PCA_m}'
+        msg = f' with PCA m = {PCA_m}'
     else: 
         msg = ' (no PCA)'
-    print(f'{K}-Fold cross-validation (MVG Classifiers){msg}')
+    print(f'{K}-Fold cross-validation Linear Log Reg{msg}')
 
     nTest = int(D.shape[1] / K)
     np.random.seed(seed)
     idx = np.random.permutation(D.shape[1]) 
 
-    for i in range(len(classifiers)):
+    for params in LR_param_list:
         startTest = 0
         # For DCF computation
-        llrs = np.array([])
+        llrs_all = np.array([])
         for j in range(K):
             idxTest = idx[startTest: (startTest + nTest)]
             idxTrain = np.setdiff1d(idx, idxTest)
@@ -83,15 +83,13 @@ def K_fold_LogReg(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
                 DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
                 PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
                 D_PCA = np.dot(PCA_P.T, D)
-                log_likelihoods = classifiers[i][0](D_PCA, L, k, idxTrain, idxTest, app_triplet, show=False)
+                llrs = logReg_wrapper(D_PCA, L, *params, idxTrain, idxTest, app_triplet, single_fold=False)
             else:
-                log_likelihoods = classifiers[i][0](D, L, k, idxTrain, idxTest, app_triplet, show=False)
-
-            llr = log_likelihoods[1, :] - log_likelihoods[0, :] # log-likelihood ratio
-            llrs = np.concatenate((llrs, llr))
+                llrs = logReg_wrapper(D, L, *params, idxTrain, idxTest, app_triplet, single_fold=False)
+            llrs_all = np.concatenate((llrs_all, llrs))
             startTest += nTest
         
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
-        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, trueL_ordered, app_triplet)
-        print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}')
+        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs_all, trueL_ordered, app_triplet)
+        print(f'\tLinear Log Reg (lambda = {params[0]}, priorT = {params[1]}) -> min DCF: {round(dcf_min, 3)}')
