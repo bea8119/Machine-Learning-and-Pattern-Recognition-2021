@@ -77,7 +77,7 @@ def tiedNaiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=Tru
 
 def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
     if PCA_m is not None:
-        msg = f' with PCA m = {PCA_m}'
+        msg = f' (PCA m = {PCA_m})'
     else: 
         msg = ' (no PCA)'
     print(f'{K}-Fold cross-validation MVG Classifiers{msg}')

@@ -4,32 +4,32 @@ from DCF import DCF_unnormalized_normalized_min_binary
 import numpy as np
 import scipy.optimize
 
-# def lambdaTuning()
-
 # def computeAccuracy_logreg_binary(scoreArray, TrueL):
 #     PredictedL = np.array([(1 if score > 0 else 0) for score in scoreArray.ravel()])
 #     NCorrect = (PredictedL.ravel() == TrueL.ravel()).sum() # Will count as 1 the "True"
 #     NTotal = TrueL.size
 #     return float(NCorrect) / float(NTotal)
 
-def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True):
+def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True, show=True):
 
     (DTR, LTR), (DTE, LTE) = split_dataset(D, L, idxTrain, idxTest)
 
-    # Apply Z-normalization from training, apply the same transformation on the test set
+    # Apply Z-normalization on the training set (of the current fold), apply the same transformation on the test set
     DTR, mean, std = Z_normalization(DTR)
     DTE = Z_normalization(DTE, mean, std)
 
     logRegObj = logRegClass(DTR, LTR, l, priorT)
     llrs = logRegObj.logreg_llrs(DTE)
     if single_fold:
-        testDCF_LogReg(LTE, l, priorT, llrs, triplet)
-        return
+        return minDCF_LogReg(LTE, l, priorT, llrs, triplet, show)
     return llrs
 
-def testDCF_LogReg(LTE, l, priorT, llrs, triplet):
+def minDCF_LogReg(LTE, l, priorT, llrs, triplet, show=True):
+    '''Returns DCF min for lambda tuning'''
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
-    print(f'\tLinear LogReg (lambda = {l}, priorT = {priorT}) -> min DCF: {round(dcf_min, 3)}')
+    if show:
+        print(f'\tLinear LogReg (lambda = {l}, priorT = {priorT}) -> min DCF: {round(dcf_min, 3)}')
+    return dcf_min
 
 class logRegClass:
     def __init__(self, DTR, LTR, l, priorT):
@@ -60,8 +60,7 @@ class logRegClass:
         llrs = np.dot(w.T, DTE) + b # Posterior log-likelihood ratio
         return llrs.ravel()
 
-
-def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0):
+def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0, show=True):
     if PCA_m is not None:
         msg = f' with PCA m = {PCA_m}'
     else: 
@@ -86,10 +85,13 @@ def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0):
                 llrs = logReg_wrapper(D_PCA, L, *params, idxTrain, idxTest, app_triplet, single_fold=False)
             else:
                 llrs = logReg_wrapper(D, L, *params, idxTrain, idxTest, app_triplet, single_fold=False)
+
             llrs_all = np.concatenate((llrs_all, llrs))
             startTest += nTest
         
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
         (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs_all, trueL_ordered, app_triplet)
-        print(f'\tLinear Log Reg (lambda = {params[0]}, priorT = {params[1]}) -> min DCF: {round(dcf_min, 3)}')
+        if show:
+            print(f'\tLinear Log Reg (lambda = {params[0]}, priorT = {params[1]}) -> min DCF: {round(dcf_min, 3)}')
+    return dcf_min
