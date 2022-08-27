@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 PCA_list = [None, 7, 6]
 colors = ['red', 'green', 'blue']
+quadratic = True # False for Linear Logistic Regression
 
 def main():
 
@@ -17,7 +18,7 @@ def main():
     priorT = 0.5
     n = 4 # Single fold value
     K = 5 # K-fold value
-    l_arr = np.logspace(-5, 5)
+    l_arr = np.logspace(-5, 5, 5)
 
     idxTrain, idxTest = u.split_db_n_to_1(DTR, n) # Single-fold split
 
@@ -38,15 +39,15 @@ def main():
 
                 # Single Fold
                 min_DCF_single[i] = np.append(min_DCF_single[i], 
-                    LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, l, priorT, idxTrain, idxTest, triplet, show=False)
+                    LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, l, priorT, idxTrain, idxTest, triplet, show=False, quad=quadratic)
                 )
 
                 # K-fold (Takes very long)
                 min_DCF_kfold[i] = np.append(min_DCF_kfold, 
-                    LR.K_fold_LogReg(DTR, LTR, K, [(l, priorT)], triplet, m, show=False)
+                    LR.K_fold_LogReg(DTR, LTR, K, [(l, priorT)], triplet, m, show=False, quad=quadratic)
                 )
 
-        p.plotDCFmin_vs_lambda(l_arr, min_DCF_single, min_DCF_kfold, m, n, K, colors, application_points)
+        p.plotDCFmin_vs_lambda(l_arr, min_DCF_single, None, m, n, K, colors, application_points, quad=quadratic)
     plt.show()
 
 if __name__ == '__main__':

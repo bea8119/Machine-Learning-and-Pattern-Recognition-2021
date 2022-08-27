@@ -11,10 +11,12 @@ LR_param_list = [
 
 PCA_list = [None, 7, 6, 5]
 
+quadratic = True # False for Linear Logistic Regression
+
 def main():
     DTR, LTR = u.load('../data/Train.txt')
     DTE, LTE = u.load('../data/Test.txt')
-    
+
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
     # ----------------- Logistic Regression -------------------
@@ -37,13 +39,15 @@ def main():
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
                 DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            print('Single Fold ({}-to-1) Linear Log Reg {}'.format(n, '(no PCA)' if m is None else f'(PCA m = {m})'))
+            print('Single Fold ({}-to-1) {} Log Reg {}'.format(
+                n, 'Quadratic' if quadratic else 'Linear', '(no PCA)' if m is None else f'(PCA m = {m})'
+                ))
             for params in LR_param_list:
-                LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, *params, idxTrain_s, idxTest_s, triplet)
+                LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, *params, idxTrain_s, idxTest_s, triplet, quad=quadratic)
             print('-----------------------------------------------------')
 
             # K-fold
-            LR.K_fold_LogReg(DTR, LTR, K, LR_param_list, triplet, m)
+            LR.K_fold_LogReg(DTR, LTR, K, LR_param_list, triplet, m, quad=quadratic)
             print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
@@ -51,9 +55,12 @@ def main():
                 DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
                 D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            print('Log Reg on whole dataset {}'.format('(no PCA)' if m is None else f'(PCA m = {m})'))
+            print('{} Log Reg on whole dataset {}'.format(
+                'Quadratic' if quadratic else 'Linear', '(no PCA)' if m is None else f'(PCA m = {m})'
+                ))
             for params in LR_param_list:
-                LR.logReg_wrapper(D_merged if m is None else D_merged_PCA, L_merged, *params, idxTR_merged, idxTE_merged, triplet)
+                LR.logReg_wrapper(
+                    D_merged if m is None else D_merged_PCA, L_merged, *params, idxTR_merged, idxTE_merged, triplet, quad=quadratic)
             print('-----------------------------------------------------')
 
 if __name__ == '__main__':

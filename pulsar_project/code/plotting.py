@@ -45,9 +45,9 @@ def plotHeatmap(D, L):
     seaborn.heatmap(np.abs(np.corrcoef(D[:, L == 1])), linewidth=0.5, cmap="Blues", square=True, cbar=False)
     # plt.show()
 
-def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, eff_priors):
+def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, eff_priors, quad=False):
     '''Receives 3 arrays to plot (curves) for each eff_prior'''
-
+    print('Lambda tuning for {} Log Reg'.format('Quadratic' if quad else 'Linear'))
     fig_single = plt.figure('Single-fold ({}-to-1) lambda tuning {}'.format(n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
     fig_kfold = plt.figure('{}-fold lambda tuning {}'.format(K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
 
