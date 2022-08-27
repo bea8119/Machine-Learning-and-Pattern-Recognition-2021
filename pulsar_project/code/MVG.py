@@ -46,7 +46,7 @@ def testDCF_MVG(LTE, classifierName, lls, triplet):
 
 def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     '''
-    Returns the Predicted labels in a 1-D ndarray, the error count and the class-posterior log-likelihood matrix (S)
+    Returns the class-posterior log-likelihood (not probability) matrix (S) or just prints the min DCF 
     '''
     N_test = DTE.shape[1]
     S = np.zeros((k, N_test))

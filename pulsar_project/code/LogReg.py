@@ -57,7 +57,8 @@ class logRegClass:
         w = vcol(v[0:-1])
         b = v[-1]
         DTE = Z_normalization(DTE, means, std) # Same transformation on Test set
-        llrs = np.dot(w.T, DTE) + b # Posterior log-likelihood ratio
+        p_lprs = np.dot(w.T, DTE) + b # Posterior log-probability ratio
+        llrs = p_lprs - np.log(self.priorT / (1 - self.priorT)) # Unplug the prior probabilities to have only the log-likelihood ratios
         return llrs.ravel()
 
 def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0, show=True):
