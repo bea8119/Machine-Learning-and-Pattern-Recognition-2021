@@ -45,6 +45,34 @@ def plotHeatmap(D, L):
     seaborn.heatmap(np.abs(np.corrcoef(D[:, L == 1])), linewidth=0.5, cmap="Blues", square=True, cbar=False)
     # plt.show()
 
+def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, eff_priors):
+    '''Receives 3 arrays to plot (curves) for each eff_prior'''
+
+    fig_single = plt.figure('Single-fold ({}-to-1) lambda tuning {}'.format(n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+    fig_kfold = plt.figure('{}-fold lambda tuning {}'.format(K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+
+    for i in range(len(eff_priors)):
+        plt.figure(fig_single)
+        plt.plot(l_arr, min_DCF_single_arr[i], color=colors[i], label=f'eff_prior = {eff_priors[i][0]}')
+        plt.xlim([min(l_arr), max(l_arr)])
+        plt.xscale('log')
+        plt.xlabel(r'$\lambda$')
+        plt.ylabel('min DCF')
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.grid()
+
+        if min_DCF_kfold_arr is not None:
+            plt.figure(fig_kfold)
+            plt.plot(l_arr, min_DCF_kfold_arr[i], color=colors[i], label=f'eff_prior = {eff_priors[i][0]}')
+            plt.xlim([min(l_arr), max(l_arr)])
+            plt.xscale('log')
+            plt.xlabel(r'$\lambda$')
+            plt.ylabel('min DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid()
+
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')

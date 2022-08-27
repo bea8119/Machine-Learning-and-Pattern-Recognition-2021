@@ -42,9 +42,9 @@ def main():
                 LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, *params, idxTrain_s, idxTest_s, triplet)
             print('-----------------------------------------------------')
 
-            # # K-fold
-            # LR.K_fold_LogReg(DTR, LTR, K, LR_param_list, triplet, m)
-            # print('-----------------------------------------------------')
+            # K-fold
+            LR.K_fold_LogReg(DTR, LTR, K, LR_param_list, triplet, m)
+            print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
             if m is not None:
