@@ -52,11 +52,10 @@ class logRegClass:
 
     def logreg_llrs(self, DTE):
         x0 = np.zeros(self.DTR.shape[0] + 1)
-        self.DTR, means, std = Z_normalization(self.DTR) # Z-normalization
         (v, J, d) = scipy.optimize.fmin_l_bfgs_b(self.logreg_obj_binary, x0, approx_grad=True)
         w = vcol(v[0:-1])
         b = v[-1]
-        DTE = Z_normalization(DTE, means, std) # Same transformation on Test set
+        
         p_lprs = np.dot(w.T, DTE) + b # Posterior log-probability ratio
         llrs = p_lprs - np.log(self.priorT / (1 - self.priorT)) # Unplug the prior probabilities to have only the log-likelihood ratios
         return llrs.ravel()
@@ -66,7 +65,8 @@ def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0, show=
         msg = f' with PCA m = {PCA_m}'
     else: 
         msg = ' (no PCA)'
-    print(f'{K}-Fold cross-validation Linear Log Reg{msg}')
+    if show:
+        print(f'{K}-Fold cross-validation Linear Log Reg{msg}')
 
     nTest = int(D.shape[1] / K)
     np.random.seed(seed)
@@ -83,9 +83,9 @@ def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0, show=
                 DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
                 PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
                 D_PCA = np.dot(PCA_P.T, D)
-                llrs = logReg_wrapper(D_PCA, L, *params, idxTrain, idxTest, app_triplet, single_fold=False)
+                llrs = logReg_wrapper(D_PCA, L, *params, idxTrain, idxTest, app_triplet, single_fold=False, show=show)
             else:
-                llrs = logReg_wrapper(D, L, *params, idxTrain, idxTest, app_triplet, single_fold=False)
+                llrs = logReg_wrapper(D, L, *params, idxTrain, idxTest, app_triplet, single_fold=False, show=show)
 
             llrs_all = np.concatenate((llrs_all, llrs))
             startTest += nTest
