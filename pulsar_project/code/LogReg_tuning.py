@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 PCA_list = [None, 7, 6]
 colors = ['red', 'green', 'blue']
+
 quadratic = True # False for Linear Logistic Regression
 
 def main():
@@ -47,7 +48,7 @@ def main():
                     LR.K_fold_LogReg(DTR, LTR, K, [(l, priorT)], triplet, m, show=False, quad=quadratic)
                 )
 
-        p.plotDCFmin_vs_lambda(l_arr, min_DCF_single, None, m, n, K, colors, application_points, quad=quadratic)
+        p.plotDCFmin_vs_lambda(l_arr, min_DCF_single, min_DCF_kfold, m, n, K, colors, application_points, quad=quadratic)
     plt.show()
 
 if __name__ == '__main__':
