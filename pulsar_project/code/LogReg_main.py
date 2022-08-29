@@ -11,7 +11,7 @@ LR_param_list = [
 
 PCA_list = [None, 7, 6, 5]
 
-quadratic = True # False for Linear Logistic Regression
+quadratic = False # False for Linear Logistic Regression
 
 def main():
     DTR, LTR = u.load('../data/Train.txt')
@@ -47,7 +47,8 @@ def main():
             print('-----------------------------------------------------')
 
             # K-fold
-            LR.K_fold_LogReg(DTR, LTR, K, LR_param_list, triplet, m, quad=quadratic)
+            for params in LR_param_list:
+                LR.K_fold_LogReg(DTR, LTR, K, *params, triplet, m, quad=quadratic)
             print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------

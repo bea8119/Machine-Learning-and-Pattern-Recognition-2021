@@ -75,7 +75,7 @@ class logRegClass:
         llrs = p_lprs - np.log(self.priorT / (1 - self.priorT)) # Unplug the prior probabilities to have only the log-likelihood ratios
         return llrs.ravel()
 
-def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0, show=True, quad=False):
+def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True, quad=False):
     if PCA_m is not None:
         msg = f'with PCA m = {PCA_m}'
     else: 
@@ -87,28 +87,27 @@ def K_fold_LogReg(D, L, K, LR_param_list, app_triplet, PCA_m=None, seed=0, show=
     np.random.seed(seed)
     idx = np.random.permutation(D.shape[1]) 
 
-    for params in LR_param_list:
-        startTest = 0
-        # For DCF computation
-        llrs_all = np.array([])
-        for j in range(K):
-            idxTest = idx[startTest: (startTest + nTest)]
-            idxTrain = np.setdiff1d(idx, idxTest)
-            if PCA_m is not None:
-                DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
-                PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
-                D_PCA = np.dot(PCA_P.T, D)
-                llrs = logReg_wrapper(D_PCA, L, *params, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
-            else:
-                llrs = logReg_wrapper(D, L, *params, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
+    startTest = 0
+    # For DCF computation
+    llrs_all = np.array([])
+    for j in range(K):
+        idxTest = idx[startTest: (startTest + nTest)]
+        idxTrain = np.setdiff1d(idx, idxTest)
+        if PCA_m is not None:
+            DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
+            PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
+            D_PCA = np.dot(PCA_P.T, D)
+            llrs = logReg_wrapper(D_PCA, L, l, priorT, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
+        else:
+            llrs = logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
 
-            llrs_all = np.concatenate((llrs_all, llrs))
-            startTest += nTest
+        llrs_all = np.concatenate((llrs_all, llrs))
+        startTest += nTest
         
-        # DCF computation (compute)
-        trueL_ordered = L[idx] # idx was computed randomly before
-        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs_all, trueL_ordered, app_triplet)
-        if show:
-            print('\t{} LogReg (lambda = {}, priorT = {}) -> min DCF: {}'.format(
-                'Quadratic' if quad else 'Linear', *params, round(dcf_min, 3)))
+    # DCF computation (compute)
+    trueL_ordered = L[idx] # idx was computed randomly before
+    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs_all, trueL_ordered, app_triplet)
+    if show:
+        print('\t{} LogReg (lambda = {}, priorT = {}) -> min DCF: {}'.format(
+            'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3)))
     return dcf_min

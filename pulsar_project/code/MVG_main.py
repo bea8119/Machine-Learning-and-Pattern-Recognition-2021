@@ -46,9 +46,9 @@ def main():
                 classifier[0](DTR if m is None else DTR_PCA, LTR, k, idxTrain_s, idxTest_s, triplet, show=True)
             print('-----------------------------------------------------')
 
-            # # K-fold
-            # MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet, m)
-            # print('-----------------------------------------------------')
+            # K-fold
+            MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet, m)
+            print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
             if m is not None:

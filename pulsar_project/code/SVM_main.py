@@ -1,10 +1,15 @@
 import utils as u
 import numpy as np
 import feature_utils as f
+import SVM
 
-PCA_list = [None, 7, 6, 5]
+PCA_list = [None, 7, 6]
 
-SVM_type = 'Linear'
+kernel_SVM = True # True for Linear SVM, regardless of the next flag
+Poly_RBF = True # True for polynomial, False for RBF kernel SVM (assuming kernel flag == True)
+K_svm = 1 # Value of sqrt(psi)
+
+SVM_param_list = [(0.1, None), (0.1, 0.5)]
 
 def main():
 
@@ -18,8 +23,20 @@ def main():
     n = 4 # Single-Fold value
     K = 5 # K-Fold cross-validation K -> Leave-One-Out if equal to D.shape[1] (number of samples)
 
+    # (x1T_x2 + c)^2 Polynomial kernel params
+    c = 1
+    d = 2
+
+    # RBF parameter
+    gamma = 1e-1
+
     idxTrain_s, idxTest_s = u.split_db_n_to_1(DTR, n) # Single-fold split
     D_merged, L_merged, idxTR_merged, idxTE_merged = u.split_db_after_merge(DTR, DTE, LTR, LTE) # Merged split
+
+    if kernel_SVM:
+        type_SVM = '{} Kernel'.format('Quadratic' if Poly_RBF else 'RBF')
+    else:
+        type_SVM = 'Linear'
 
     for triplet in application_points:
         print('\nApplication point (pi_eff: {}, C_fn: {}, C_fp: {})'.format(*triplet))
@@ -34,28 +51,32 @@ def main():
                 DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
             print('Single Fold ({}-to-1) {} SVM {}'.format(
-                n, 'Quadratic' if quadratic else 'Linear', '(no PCA)' if m is None else f'(PCA m = {m})'
+                n, type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'
                 ))
-            for params in LR_param_list:
-                LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, *params, idxTrain_s, idxTest_s, triplet, quad=quadratic)
+            for params in SVM_param_list:
+                SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, *params, idxTrain_s, idxTest_s, triplet, c, d, gamma,
+                    kern=kernel_SVM, Poly_RBF=Poly_RBF)
             print('-----------------------------------------------------')
 
             # K-fold
-            LR.K_fold_LogReg(DTR, LTR, K, LR_param_list, triplet, m, quad=quadratic)
+            print('{}-Fold cross-validation {} SVM {}'.format(K, type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'))
+            for params in SVM_param_list:
+                SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma)
             print('-----------------------------------------------------')
 
-            # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
-            if m is not None:
-                DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
-                PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
-                D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            print('{} Log Reg on whole dataset {}'.format(
-                'Quadratic' if quadratic else 'Linear', '(no PCA)' if m is None else f'(PCA m = {m})'
-                ))
-            for params in LR_param_list:
-                LR.logReg_wrapper(
-                    D_merged if m is None else D_merged_PCA, L_merged, *params, idxTR_merged, idxTE_merged, triplet, quad=quadratic)
-            print('-----------------------------------------------------')
+            # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
+            # if m is not None:
+            #     DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
+            #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
+            #     D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
+            # print('{} SVM on whole dataset {}'.format(
+            #     type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'
+            #     ))
+            # for params in SVM_param_list:
+            #     SVM.SVM_wrapper(
+            #         D_merged if m is None else D_merged_PCA, L_merged, K_svm, *params, idxTR_merged, 
+            #         idxTE_merged, triplet, c, d, gamma, single_fold=True, show=True, kern=kernel_SVM, Poly_RBF=Poly_RBF)
+            # print('-----------------------------------------------------')
 
 if __name__ == '__main__':
     main()
