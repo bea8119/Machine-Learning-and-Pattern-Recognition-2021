@@ -128,8 +128,8 @@ class SVM_class:
             self.kernel_SVM_obj if kern else self.linear_SVM_obj,
             alpha_0,
             bounds=bounds_list,
-            # factr=1.0,
-            maxiter=100,
+            factr=1.0,
+            # maxiter=100,
         )
         if kern:
             # Kernel SVM
