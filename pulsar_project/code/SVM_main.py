@@ -5,7 +5,7 @@ import SVM
 
 PCA_list = [None, 7, 6]
 
-kernel_SVM = True # True for Linear SVM, regardless of the next flag
+kernel_SVM = True # False for Linear SVM, regardless of the next flag
 Poly_RBF = True # True for polynomial, False for RBF kernel SVM (assuming kernel flag == True)
 K_svm = 1 # Value of sqrt(psi)
 
@@ -15,6 +15,9 @@ def main():
 
     DTR, LTR = u.load('../data/Train.txt')
     DTE, LTE = u.load('../data/Test.txt')
+
+    # Reduced dataset (less samples) for testing only
+    # DTR, LTR = u.reduced_dataset(DTR, LTR, 2000, seed=0)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 

@@ -44,7 +44,7 @@ def main():
                 )
 
                 # K-fold (Takes very long)
-                min_DCF_kfold[i] = np.append(min_DCF_kfold, 
+                min_DCF_kfold[i] = np.append(min_DCF_kfold[i], 
                     LR.K_fold_LogReg(DTR, LTR, K, [(l, priorT)], triplet, m, show=False, quad=quadratic)
                 )
 

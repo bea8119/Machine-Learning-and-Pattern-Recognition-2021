@@ -33,7 +33,7 @@ def plotHistogram(D, L, class_names, attribute_names):
         plt.xlabel(attribute_names[i])
         plt.legend()
         plt.tight_layout()
-        plt.grid()
+        plt.grid(b=True)
     # plt.show()
 
 def plotHeatmap(D, L):
@@ -53,27 +53,117 @@ def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n,
         K, 'Quadratic' if quad else 'Linear', '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
 
     for i in range(len(eff_priors)):
-        plt.figure(fig_single)
-        plt.plot(l_arr, min_DCF_single_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
-        plt.xlim([min(l_arr), max(l_arr)])
-        plt.xscale('log')
-        plt.xlabel(r'$\lambda$')
-        plt.ylabel('DCF')
-        plt.legend(loc='best')
-        plt.tight_layout()
-        plt.grid()
-
-        if min_DCF_kfold_arr is not None:
-            plt.figure(fig_kfold)
-            plt.plot(l_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'\$pi$', eff_priors[i][0]))
+        if min_DCF_single_arr is not None:
+            plt.figure(fig_single)
+            plt.plot(l_arr, min_DCF_single_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
             plt.xlim([min(l_arr), max(l_arr)])
             plt.xscale('log')
             plt.xlabel(r'$\lambda$')
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid()
+            plt.grid(b=True)
+        if min_DCF_kfold_arr is not None:
+            plt.figure(fig_kfold)
+            plt.plot(l_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
+            plt.xlim([min(l_arr), max(l_arr)])
+            plt.xscale('log')
+            plt.xlabel(r'$\lambda$')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(b=True)
 
+def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, eff_priors):
+    '''Tuning of C parameter alone, on every application point'''
+    fig_single = plt.figure('Single-fold ({}-to-1) Linear SVM -> C tuning {}'.format(
+        n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+    fig_kfold = plt.figure('{}-fold Linear SVM -> C tuning {}'.format(
+        K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+
+    for i in range(len(eff_priors)):
+        if min_DCF_single_arr is not None:
+            plt.figure(fig_single)
+            plt.plot(C_arr, min_DCF_single_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
+            plt.xlim([min(C_arr), max(C_arr)])
+            plt.xscale('log')
+            plt.xlabel('C')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(b=True)
+        if min_DCF_kfold_arr is not None:
+            plt.figure(fig_kfold)
+            plt.plot(C_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
+            plt.xlim([min(C_arr), max(C_arr)])
+            plt.xscale('log')
+            plt.xlabel('C')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(b=True)
+
+def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, c_list):
+    '''Tuning of C jointly with c (in linear scale), take three different values of c on the same application point'''
+    fig_single = plt.figure('Single-fold ({}-to-1) Quadratic Kernel SVM -> C - c tuning {}'.format(
+        n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+    fig_kfold = plt.figure('{}-fold Quadratic Kernel SVM -> C - c tuning {}'.format(
+        K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+    
+    for i in range(len(c_list)):
+        if min_DCF_single_arr is not None:
+            plt.figure(fig_single)
+            plt.plot(C_arr, min_DCF_single_arr[i], color=colors[i], label='min DCF {} = {}, c = {}'.format(
+                r'$\tilde{\pi}$', app_point[0], c_list[i]))
+            plt.xlim([min(C_arr), max(C_arr)])
+            plt.xscale('log')
+            plt.xlabel('C')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(b=True)
+        if min_DCF_kfold_arr is not None:
+            plt.figure(fig_kfold)
+            plt.plot(C_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}, c = {}'.format(
+                r'$\tilde{\pi}$', app_point[0], c_list[i]))
+            plt.xlim([min(C_arr), max(C_arr)])
+            plt.xscale('log')
+            plt.xlabel('C')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(b=True)
+
+def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, gamma_list):
+    '''Tuning of C jointly with gamma (in log scale), take different values of gamma on the same application point'''
+    fig_single = plt.figure('Single-fold ({}-to-1) RBF Kernel SVM -> C - gamma tuning {}'.format(
+        n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+    fig_kfold = plt.figure('{}-fold RBF Kernel SVM -> C - gamma tuning {}'.format(
+        K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+    
+    for i in range(len(gamma_list)):
+        if min_DCF_single_arr is not None:
+            plt.figure(fig_single)
+            plt.plot(C_arr, min_DCF_single_arr[i], color=colors[i], label='min DCF {} = {}, log {} = {}'.format(
+                r'$\tilde{\pi}$', app_point[0], r'$\gamma$', int(np.log10(gamma_list[i]))))
+            plt.xlim([min(C_arr), max(C_arr)])
+            plt.xscale('log')
+            plt.xlabel('C')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(b=True)
+        if min_DCF_kfold_arr is not None:
+            plt.figure(fig_kfold)
+            plt.plot(C_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}, log {} = {}'.format(
+                r'$\tilde{\pi}$', app_point[0], r'$\gamma$', int(np.log10(gamma_list[i]))))
+            plt.xlim([min(C_arr), max(C_arr)])
+            plt.xscale('log')
+            plt.xlabel('C')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(b=True)
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')

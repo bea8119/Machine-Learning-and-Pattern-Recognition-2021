@@ -46,3 +46,11 @@ def split_db_after_merge(DTR, DTE, LTR, LTE):
     idxTrain = np.arange(0, DTR.shape[1])
     idxTest = np.arange(DTR.shape[1], DTR.shape[1] + DTE.shape[1])
     return D_merged, L_merged, idxTrain, idxTest 
+
+def reduced_dataset(D, L, N, seed=0):
+    '''For test purposes. Receives a dataset, its labels and an integer number N. 
+    Returns a reduced dataset and labels (of N samples) randomly sampled from the given one'''
+    np.random.seed(seed)
+    idx = np.random.permutation(D.shape[1]) # take a random order of indexes from 0 to N
+    idx_trunc = idx[:N]
+    return D[:, idx_trunc], L[idx_trunc]
