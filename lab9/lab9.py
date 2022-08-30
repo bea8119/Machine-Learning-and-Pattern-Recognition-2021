@@ -134,6 +134,8 @@ def main():
     alpha_0 = np.zeros(n)
     bounds_var = [(0, C) for i in range(n)]
 
+    # Polynomial kernel SVM
+
     kern_SVM_obj_Poly = SVM_class(DTR, LTR, K, kern=True, Poly_RBF=True, c=c, d=d, gamma=gamma)
 
     (alpha_opt_Poly, L_dual_opt, data) = scipy.optimize.fmin_l_bfgs_b(
@@ -147,6 +149,8 @@ def main():
     print(f'Accuracy (kernel SVM) (Poly) with K={K}, C={C}, d={d}, c={c}', 
         round((1 - computeAccuracy_logreg_binary(scores_Poly, LTE)) * 100, 1), '%')
     
+    # RBF kernel SVM
+
     kern_SVM_obj_RBF = SVM_class(DTR, LTR, K, kern=True, Poly_RBF=False, c=c, d=d, gamma=gamma)
     (alpha_opt_RBF, L_dual_opt, data) = scipy.optimize.fmin_l_bfgs_b(
         kern_SVM_obj_RBF.kernel_SVM_obj,
