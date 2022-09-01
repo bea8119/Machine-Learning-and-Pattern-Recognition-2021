@@ -35,14 +35,14 @@ def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True
         DTE = expand_f_space(DTE)
 
     logRegObj = logRegClass(DTR, LTR, l, priorT)
-    llrs = logRegObj.logreg_llrs(DTE)
+    scores = logRegObj.logreg_scores(DTE)
     if single_fold:
-        return testDCF_LogReg(LTE, l, priorT, llrs, triplet, show=show, quad=quad)
-    return llrs
+        return testDCF_LogReg(LTE, l, priorT, scores, triplet, show=show, quad=quad)
+    return scores
 
-def testDCF_LogReg(LTE, l, priorT, llrs, triplet, show=True, quad=False):
+def testDCF_LogReg(LTE, l, priorT, scores, triplet, show=True, quad=False):
     '''Returns DCF min for lambda tuning'''
-    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
+    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)
     if show:
         print('\t{} Log Reg (lambda = {}, priorT = {}) -> min DCF: {}'.format(
             'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3)))
@@ -66,14 +66,13 @@ class logRegClass:
         crossEntropy = self.priorT * mean_term1 + (1 - self.priorT) * mean_term0
         return 0.5 * self.l * np.linalg.norm(w)**2 + crossEntropy
 
-    def logreg_llrs(self, DTE):
+    def logreg_scores(self, DTE):
         x0 = np.zeros(self.DTR.shape[0] + 1)
         (v, J, d) = scipy.optimize.fmin_l_bfgs_b(self.logreg_obj_binary, x0, approx_grad=True)
         w = vcol(v[0:-1])
         b = v[-1]
         p_lprs = np.dot(w.T, DTE) + b # Posterior log-probability ratio
-        llrs = p_lprs - np.log(self.priorT / (1 - self.priorT)) # Unplug the prior probabilities to have only the log-likelihood ratios
-        return llrs.ravel()
+        return p_lprs.ravel()
 
 def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True, quad=False):
     if PCA_m is not None:
@@ -89,7 +88,7 @@ def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True
 
     startTest = 0
     # For DCF computation
-    llrs_all = np.array([])
+    scores_all = np.array([])
     for j in range(K):
         idxTest = idx[startTest: (startTest + nTest)]
         idxTrain = np.setdiff1d(idx, idxTest)
@@ -97,16 +96,16 @@ def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True
             DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
             PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
             D_PCA = np.dot(PCA_P.T, D)
-            llrs = logReg_wrapper(D_PCA, L, l, priorT, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
+            scores = logReg_wrapper(D_PCA, L, l, priorT, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
         else:
-            llrs = logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
+            scores = logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, app_triplet, single_fold=False, show=show, quad=quad)
 
-        llrs_all = np.concatenate((llrs_all, llrs))
+        scores_all = np.concatenate((scores_all, scores))
         startTest += nTest
         
     # DCF computation (compute)
     trueL_ordered = L[idx] # idx was computed randomly before
-    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs_all, trueL_ordered, app_triplet)
+    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
         print('\t{} LogReg (lambda = {}, priorT = {}) -> min DCF: {}'.format(
             'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3)))

@@ -170,10 +170,10 @@ def GMM_wrapper(D, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied=Fa
     DTR, mean, std = Z_normalization(DTR)
     DTE = Z_normalization(DTE, mean, std)
 
-    llrs = GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tied, diag, iprint)
+    scores = GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tied, diag, iprint)
     if single_fold:
-        return testDCF_GMM(LTE, GMM_type, n_splits, llrs, triplet)
-    return llrs
+        return testDCF_GMM(LTE, GMM_type, n_splits, scores, triplet)
+    return scores
 
 def GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tiedCov=False, diagCov=False, iprint=False):
     # Train the model for each class
@@ -194,8 +194,8 @@ def GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tiedCov=False,
         # We have optimal GMM for this class
         PP_cluster[i, :], _ = logpdf_GMM(DTE, gmm_LBG) # AKA the class-conditional log density of a "MVG" (S matrix)
 
-    llrs = PP_cluster[1, :] - PP_cluster[0, :]
-    return llrs
+    scores = PP_cluster[1, :] - PP_cluster[0, :]
+    return scores
 
 def testDCF_GMM(LTE, classifierName, n_splits, llrs, triplet, show=True):
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)

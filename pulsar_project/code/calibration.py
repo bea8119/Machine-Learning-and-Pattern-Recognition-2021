@@ -1,2 +1,4 @@
-def calibrateScores(scores):
+import LogReg as LR
+
+def calibrate_scores(scores):
     

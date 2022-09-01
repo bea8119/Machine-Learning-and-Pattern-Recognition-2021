@@ -11,6 +11,8 @@ K_svm = 1 # Value of sqrt(psi)
 
 SVM_param_list = [(0.1, None), (0.1, 0.5)]
 
+calibrate = True
+
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')

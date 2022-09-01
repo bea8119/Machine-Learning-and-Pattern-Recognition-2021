@@ -41,8 +41,8 @@ def classifierSetup(D, L, k, idxTrain, idxTest, tied=False):
         C_arr = [C_tied for i in range(k)]
     return (DTE, LTE), mu_arr, C_arr 
 
-def testDCF_MVG(LTE, classifierName, llrs, triplet):
-    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
+def testDCF_MVG(LTE, classifierName, scores, triplet):
+    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)
     print(f'\t{classifierName}Gaussian classifier -> min DCF: {round(dcf_min, 3)}')
 
 def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
@@ -53,11 +53,11 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     S = np.zeros((k, N_test))
     for i in range(k):
         S[i, :] = vrow(np.array(logpdf_GAU_ND(DTE, mu_arr[i], C_arr[i])))
-    llrs = S[1, :] - S[0, :]
+    scores = S[1, :] - S[0, :] # Log-likelihood ratios
     if show:
-        testDCF_MVG(LTE, CSF_name, llrs, triplet)
+        testDCF_MVG(LTE, CSF_name, scores, triplet)
         return
-    return S
+    return scores
 
 def gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, triplet=None, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest)
@@ -91,7 +91,7 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
     for i in range(len(classifiers)):
         startTest = 0
         # For DCF computation
-        llrs_all = np.array([])
+        scores_all = np.array([])
         for j in range(K):
             idxTest = idx[startTest: (startTest + nTest)]
             idxTrain = np.setdiff1d(idx, idxTest)
@@ -99,16 +99,15 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
                 DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
                 PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
                 D_PCA = np.dot(PCA_P.T, D)
-                log_likelihoods = classifiers[i][0](D_PCA, L, k, idxTrain, idxTest, app_triplet, show=False)
+                scores = classifiers[i][0](D_PCA, L, k, idxTrain, idxTest, app_triplet, show=False)
             else:
-                log_likelihoods = classifiers[i][0](D, L, k, idxTrain, idxTest, app_triplet, show=False)
+                scores = classifiers[i][0](D, L, k, idxTrain, idxTest, app_triplet, show=False)
 
-            llrs = log_likelihoods[1, :] - log_likelihoods[0, :] # log-likelihood ratio
-            llrs_all = np.concatenate((llrs_all, llrs))
+            scores_all = np.concatenate((scores_all, scores))
             startTest += nTest
         
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
-        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs_all, trueL_ordered, app_triplet)
+        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
         print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}')
 

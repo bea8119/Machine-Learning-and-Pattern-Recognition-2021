@@ -1,6 +1,6 @@
-from ast import arg
 from utils import vrow, vcol, split_dataset
 from feature_utils import Z_normalization, PCA_givenM
+from calibration import calibrate_scores
 from DCF import DCF_unnormalized_normalized_min_binary
 import numpy as np
 import scipy.optimize
@@ -61,7 +61,7 @@ def kernel_SVM_scores(DTR, DTE, alpha_star, encodedLTR, kern_f, K, c, d, gamma):
             scores[i] += alpha_star[j] * encodedLTR[j] * kern_f(DTR[:, j], DTE[:, i], K, c, d, gamma)
     return scores
 
-def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=None, gamma=None, single_fold=True, show=True, kern=False, Poly_RBF=True):
+def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=None, gamma=None, single_fold=True, show=True, kern=False, Poly_RBF=True, calibrate=False):
     
     (DTR, LTR), (DTE, LTE) = split_dataset(D, L, idxTrain, idxTest)
 
@@ -84,6 +84,9 @@ def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=
 
     scores = SVM_obj.SVM_scores(DTE, kern, Poly_RBF, bounds_list, c, d, gamma)
     
+    if calibrate:
+        scores = calibrate_scores(scores, LTE)
+
     if single_fold:
         return minDCF_SVM(LTE, K_svm, C, scores, triplet, show, kern, Poly_RBF, priorT_b)
     return scores
