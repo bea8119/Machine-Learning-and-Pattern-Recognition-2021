@@ -62,13 +62,13 @@ def DCF_unnormalized_normalized_min_binary(scores, trueL, triplet):
 			dcf_min = dcf_temp_norm 
 	return (dcf_u, dcf_norm, dcf_min)
 
-def DCF_vs_priorLogOdds(effPriorLogOdds, llrs, trueL):
+def DCF_vs_priorLogOdds(effPriorLogOdds, scores, trueL):
 	'''Returns normalized and min DCF for a given set of effective prior log-odds'''
 	dcf_arr = np.zeros(effPriorLogOdds.shape[0])
 	dcfmin_arr = np.zeros(effPriorLogOdds.shape[0])
 	for idx, p in enumerate(effPriorLogOdds):
 		eff_pi = 1 / (1 + np.exp(-p))
-		dcfs = DCF_unnormalized_normalized_min_binary(llrs, trueL, (eff_pi, 1, 1))
+		dcfs = DCF_unnormalized_normalized_min_binary(scores, trueL, (eff_pi, 1, 1))
 		dcf_arr[idx] = dcfs[1]
 		dcfmin_arr[idx] = dcfs[2]
 	return dcf_arr, dcfmin_arr
