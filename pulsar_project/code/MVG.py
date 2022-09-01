@@ -41,8 +41,7 @@ def classifierSetup(D, L, k, idxTrain, idxTest, tied=False):
         C_arr = [C_tied for i in range(k)]
     return (DTE, LTE), mu_arr, C_arr 
 
-def testDCF_MVG(LTE, classifierName, lls, triplet):
-    llrs = lls[1, :] - lls[0, :]
+def testDCF_MVG(LTE, classifierName, llrs, triplet):
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
     print(f'\t{classifierName}Gaussian classifier -> min DCF: {round(dcf_min, 3)}')
 
@@ -54,8 +53,9 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     S = np.zeros((k, N_test))
     for i in range(k):
         S[i, :] = vrow(np.array(logpdf_GAU_ND(DTE, mu_arr[i], C_arr[i])))
+    llrs = S[1, :] - S[0, :]
     if show:
-        testDCF_MVG(LTE, CSF_name, S, triplet)
+        testDCF_MVG(LTE, CSF_name, llrs, triplet)
         return
     return S
 
