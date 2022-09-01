@@ -177,5 +177,5 @@ def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, sho
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
         print('\t{} SVM (K = {}, C = {}, priorT = {}) -> min DCF: {}'.format(
-            type_SVM, K_svm, C, priorT_b, round(dcf_min, 3)))
+            type_SVM, K_svm, C, priorT_b if priorT_b else 'unbalanced', round(dcf_min, 3)))
     return dcf_min

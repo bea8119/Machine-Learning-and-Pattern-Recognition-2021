@@ -94,10 +94,10 @@ def M_step(gamma, X, psi, diagCov=False, tiedCov=False):
 
         cov_m_next = (S / Z) - np.dot(mu_next, mu_next.T)
 
-        # Diagonal or Tied Covariance update
+        # Diagonal and/or Tied Covariance update (added while doing the project)
         if diagCov == True:
             cov_m_next = cov_m_next * np.eye(cov_m_next.shape[0])
-        elif tiedCov == True:
+        if tiedCov == True:
             tied_cov_matrix +=  Z * cov_m_next
         
         c_matrix_list.append(cov_m_next)
@@ -197,7 +197,7 @@ def GMM_classifier(DTR, LTR, DTE, LTE, K, delta, alpha, psi, n_splits, priorP, d
 
         gmm_LBG = LBG_GMM(cls_data, GMM_1_ML, delta, alpha, psi, n_splits, iprint=iprint, diagCov=diagCov, tiedCov=tiedCov)
         # We have optimal GMM for this class
-        SM_cluster[i, :], _ = logpdf_GMM(DTE, gmm_LBG) # AKA the class joint density of a "MVG"
+        SM_cluster[i, :], _ = logpdf_GMM(DTE, gmm_LBG) # AKA the class log density of a "MVG"
     
     posteriorP_TE = compute_classPosteriorP(SM_cluster, np.log(priorP))
     err_rate = 1 - compute_accuracy(posteriorP_TE, LTE)

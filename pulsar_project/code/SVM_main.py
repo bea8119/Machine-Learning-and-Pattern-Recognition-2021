@@ -17,7 +17,7 @@ def main():
     DTE, LTE = u.load('../data/Test.txt')
 
     # Reduced dataset (less samples) for testing only
-    # DTR, LTR = u.reduced_dataset(DTR, LTR, 2000, seed=0)
+    # DTR, LTR = u.reduced_dataset(DTR, LTR, 150, seed=0)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
@@ -67,19 +67,17 @@ def main():
                 SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma)
             print('-----------------------------------------------------')
 
-            # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
-            # if m is not None:
-            #     DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
-            #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
-            #     D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            # print('{} SVM on whole dataset {}'.format(
-            #     type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'
-            #     ))
-            # for params in SVM_param_list:
-            #     SVM.SVM_wrapper(
-            #         D_merged if m is None else D_merged_PCA, L_merged, K_svm, *params, idxTR_merged, 
-            #         idxTE_merged, triplet, c, d, gamma, single_fold=True, show=True, kern=kernel_SVM, Poly_RBF=Poly_RBF)
-            # print('-----------------------------------------------------')
+            # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
+            if m is not None:
+                DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
+                PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
+                D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
+            print('{} SVM on whole dataset {}'.format(type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'))
+            for params in SVM_param_list:
+                SVM.SVM_wrapper(
+                    D_merged if m is None else D_merged_PCA, L_merged, K_svm, *params, idxTR_merged, 
+                    idxTE_merged, triplet, c, d, gamma, single_fold=True, show=True, kern=kernel_SVM, Poly_RBF=Poly_RBF)
+            print('-----------------------------------------------------')
 
 if __name__ == '__main__':
     main()

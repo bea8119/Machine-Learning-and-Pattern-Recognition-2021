@@ -37,10 +37,10 @@ def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True
     logRegObj = logRegClass(DTR, LTR, l, priorT)
     llrs = logRegObj.logreg_llrs(DTE)
     if single_fold:
-        return minDCF_LogReg(LTE, l, priorT, llrs, triplet, show=show, quad=quad)
+        return testDCF_LogReg(LTE, l, priorT, llrs, triplet, show=show, quad=quad)
     return llrs
 
-def minDCF_LogReg(LTE, l, priorT, llrs, triplet, show=True, quad=False):
+def testDCF_LogReg(LTE, l, priorT, llrs, triplet, show=True, quad=False):
     '''Returns DCF min for lambda tuning'''
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
     if show:

@@ -3,8 +3,8 @@ import numpy as np
 import sys
 import scipy.special
 
-# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab3.lab3 import SW_compute, datasetCovarianceM, SB_compute
 from utility.vrow_vcol import vcol, vrow
 from lab2.load_plot import load
@@ -62,7 +62,7 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, priorP, CSF_name, log, show):
 
     for i in range(k):
         # S will store the LOG densities
-        S[i, :] = vrow(np.array([logpdf_GAU_ND(vcol(DTE[:, j]), mu_arr[i], C_arr[i]) for j in range(N_test)]))
+        S[i, :] = vrow(np.array(logpdf_GAU_ND(DTE, mu_arr[i], C_arr[i])))
 
     if log == False:
         # Work WITHOUT LOG densities

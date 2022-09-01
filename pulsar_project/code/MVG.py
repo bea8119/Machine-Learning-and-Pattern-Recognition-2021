@@ -2,9 +2,9 @@ from utils import vcol, vrow, split_dataset
 from feature_utils import covMatrix, SW_compute, PCA_givenM, Z_normalization
 from DCF import DCF_unnormalized_normalized_min_binary
 import numpy as np
-import scipy.special
 
 def logpdf_GAU_ND(x, mu, C):
+
     mu = vcol(mu)
     M = x.shape[0]
     N = x.shape[1]
@@ -13,8 +13,10 @@ def logpdf_GAU_ND(x, mu, C):
 
     Y = np.zeros(N)
     x_mu = x - mu
+    
     for i in range(N):
-        mat_product = (0.5 * (np.dot(np.dot(x_mu.T, C_inv), x_mu)))
+        x_curr = vcol(x_mu[:, i])
+        mat_product = (0.5 * (np.dot(np.dot(x_curr.T, C_inv), x_curr)))
         Y[i] = - (M * 0.5) * np.log(2 * np.pi) - (0.5 * det_logC) - mat_product
     return Y
 
@@ -51,7 +53,7 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     N_test = DTE.shape[1]
     S = np.zeros((k, N_test))
     for i in range(k):
-        S[i, :] = vrow(np.array([logpdf_GAU_ND(vcol(DTE[:, j]), mu_arr[i], C_arr[i]) for j in range(N_test)]))
+        S[i, :] = vrow(np.array(logpdf_GAU_ND(DTE, mu_arr[i], C_arr[i])))
     if show:
         testDCF_MVG(LTE, CSF_name, S, triplet)
         return
