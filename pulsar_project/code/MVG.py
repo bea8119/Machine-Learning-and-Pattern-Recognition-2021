@@ -43,7 +43,7 @@ def classifierSetup(D, L, k, idxTrain, idxTest, tied=False):
 
 def testDCF_MVG(LTE, classifierName, scores, triplet):
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)
-    print(f'\t{classifierName}Gaussian classifier -> min DCF: {round(dcf_min, 3)}')
+    print(f'\t{classifierName}Gaussian classifier -> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
 
 def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     '''
@@ -56,7 +56,6 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     scores = S[1, :] - S[0, :] # Log-likelihood ratios
     if show:
         testDCF_MVG(LTE, CSF_name, scores, triplet)
-        return
     return scores
 
 def gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, triplet=None, show=True):
@@ -77,7 +76,7 @@ def tiedNaiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=Tru
     C_naive_arr = [C_arr[i] * np.identity(C_arr[i].shape[0]) for i in range(k)] # element by element mult.
     return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, "Tied Naive Bayes ", triplet, show)
 
-def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
+def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, printStatus=False):
     if PCA_m is not None:
         msg = f' (PCA m = {PCA_m})'
     else: 
@@ -93,6 +92,8 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
         # For DCF computation
         scores_all = np.array([])
         for j in range(K):
+            if printStatus:
+                print('fold {} start...'.format(j + 1))
             idxTest = idx[startTest: (startTest + nTest)]
             idxTrain = np.setdiff1d(idx, idxTest)
             if PCA_m is not None:
@@ -109,5 +110,5 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0):
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
         (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
-        print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}')
+        print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
 

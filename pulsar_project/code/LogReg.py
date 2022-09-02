@@ -44,8 +44,8 @@ def testDCF_LogReg(LTE, l, priorT, scores, triplet, show=True, quad=False):
     '''Returns DCF min for lambda tuning'''
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)
     if show:
-        print('\t{} Log Reg (lambda = {}, priorT = {}) -> min DCF: {}'.format(
-            'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3)))
+        print('\t{} Log Reg (lambda = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(
+            'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min
 
 class logRegClass:
@@ -74,13 +74,7 @@ class logRegClass:
         p_lprs = np.dot(w.T, DTE) + b # Posterior log-probability ratio
         return p_lprs.ravel()
 
-def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True, quad=False):
-    if PCA_m is not None:
-        msg = f'with PCA m = {PCA_m}'
-    else: 
-        msg = '(no PCA)'
-    if show:
-        print('{}-Fold cross-validation {} Log Reg {}'.format(K, 'Quadratic' if quad else 'Linear', msg))
+def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True, quad=False, printStatus=False):
 
     nTest = int(D.shape[1] / K)
     np.random.seed(seed)
@@ -90,6 +84,8 @@ def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True
     # For DCF computation
     scores_all = np.array([])
     for j in range(K):
+        if printStatus:
+            print('fold {} start...'.format(j + 1))
         idxTest = idx[startTest: (startTest + nTest)]
         idxTrain = np.setdiff1d(idx, idxTest)
         if PCA_m is not None:
@@ -107,6 +103,6 @@ def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True
     trueL_ordered = L[idx] # idx was computed randomly before
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
-        print('\t{} LogReg (lambda = {}, priorT = {}) -> min DCF: {}'.format(
-            'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3)))
+        print('\t{} LogReg (lambda = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(
+            'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min

@@ -200,10 +200,10 @@ def GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tiedCov=False,
 def testDCF_GMM(LTE, classifierName, n_splits, llrs, triplet, show=True):
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
     if show:
-        print(f'\t{classifierName}GMM classifier ({2**n_splits} components)-> min DCF: {round(dcf_min, 3)}')
+        print(f'\t{classifierName}GMM classifier ({2**n_splits} components)-> min DCF: {round(dcf_min, 3)}    act DCF {round(dcf_norm, 3)}')
     return dcf_min
 
-def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet, PCA_m=None, show=True, seed=0):
+def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet, PCA_m=None, show=True, seed=0, printStatus=False):
     if show:
         GMM_type = ''
         if tied:
@@ -222,6 +222,8 @@ def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet,
     # For DCF computation
     scores_all = np.array([])
     for j in range(K):
+        if printStatus:
+            print('fold {} start...'.format(j + 1))
         idxTest = idx[startTest: (startTest + nTest)]
         idxTrain = np.setdiff1d(idx, idxTest)
         if PCA_m is not None:
@@ -239,5 +241,5 @@ def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet,
     trueL_ordered = L[idx] # idx was computed randomly before
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
-        print('\t{}GMM (n_components = {}) -> min DCF: {}'.format(GMM_type, 2**n_splits, round(dcf_min, 3)))
+        print('\t{}GMM (n_components = {}) -> min DCF: {}    act DCF: {}'.format(GMM_type, 2**n_splits, round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min

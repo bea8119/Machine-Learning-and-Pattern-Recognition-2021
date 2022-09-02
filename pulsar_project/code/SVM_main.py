@@ -6,10 +6,10 @@ import SVM
 PCA_list = [None, 7, 6]
 
 kernel_SVM = True # False for Linear SVM, regardless of the next flag
-Poly_RBF = True # True for polynomial, False for RBF kernel SVM (assuming kernel flag == True)
+Poly_RBF = False # True for polynomial, False for RBF kernel SVM (assuming kernel flag == True)
 K_svm = 1 # Value of sqrt(psi)
 
-SVM_param_list = [(0.1, None), (0.1, 0.5)]
+SVM_param_list = [(0.1, None), (0.1, 0.5)] # Pair of (C, priorT_balance)
 
 calibrate = True
 
@@ -48,6 +48,7 @@ def main():
         print('****************************************************')
 
         for m in PCA_list:
+            pca_msg = '(no PCA)' if m is None else f'(PCA m = {m})'
             # ----------------- Using validation set (single fold or K-fold) ----------------------
             # Single Fold
             if m is not None:
@@ -55,18 +56,18 @@ def main():
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
                 DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            print('Single Fold ({}-to-1) {} SVM {}'.format(
-                n, type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'
-                ))
-            for params in SVM_param_list:
-                SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, *params, idxTrain_s, idxTest_s, triplet, c, d, gamma,
-                    kern=kernel_SVM, Poly_RBF=Poly_RBF)
-            print('-----------------------------------------------------')
+            # print('Single Fold ({}-to-1) {} SVM {}'.format(
+            #     n, type_SVM, pca_msg
+            #     ))
+            # for params in SVM_param_list:
+            #     SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, *params, idxTrain_s, idxTest_s, triplet, c, d, gamma,
+            #         kern=kernel_SVM, Poly_RBF=Poly_RBF)
+            # print('-----------------------------------------------------')
 
             # K-fold
-            print('{}-Fold cross-validation {} SVM {}'.format(K, type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'))
+            print('{}-Fold cross-validation {} SVM {}'.format(K, type_SVM, pca_msg))
             for params in SVM_param_list:
-                SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma)
+                SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma, printStatus=True)
             print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
@@ -74,7 +75,7 @@ def main():
                 DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
                 D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            print('{} SVM on whole dataset {}'.format(type_SVM, '(no PCA)' if m is None else f'(PCA m = {m})'))
+            print('{} SVM on whole dataset {}'.format(type_SVM, pca_msg))
             for params in SVM_param_list:
                 SVM.SVM_wrapper(
                     D_merged if m is None else D_merged_PCA, L_merged, K_svm, *params, idxTR_merged, 

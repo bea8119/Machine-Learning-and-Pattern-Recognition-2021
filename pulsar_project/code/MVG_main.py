@@ -36,12 +36,13 @@ def main():
         print('****************************************************')
 
         for m in PCA_list:
+            pca_msg = '(no PCA)' if m is None else f'(PCA m = {m})'
             if m is not None:
                 DTR_PCA_fold = u.split_dataset(DTR, LTR, idxTrain_s, idxTest_s)[0][0] # Retrieve single fold train subset
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
                 DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            print('Single Fold ({}-to-1) MVG classifiers {}'.format(n, '(no PCA)' if m is None else f'(PCA m = {m})'))
+            print('Single Fold ({}-to-1) MVG classifiers {}'.format(n, pca_msg))
             for classifier in CSF_list:
                 classifier[0](DTR if m is None else DTR_PCA, LTR, k, idxTrain_s, idxTest_s, triplet, show=True)
             print('-----------------------------------------------------')
@@ -55,7 +56,7 @@ def main():
                 DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
                 D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            print('MVG classifiers on whole dataset {}'.format('(no PCA)' if m is None else f'(PCA m = {m})'))
+            print('MVG classifiers on whole dataset {}'.format(pca_msg))
             for classifier in CSF_list:
                 classifier[0](D_merged if m is None else D_merged_PCA, L_merged, k, idxTR_merged, idxTE_merged, triplet, show=True)
             print('-----------------------------------------------------')

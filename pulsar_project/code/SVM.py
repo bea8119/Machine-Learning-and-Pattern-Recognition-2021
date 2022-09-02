@@ -84,14 +84,14 @@ def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=
 
     scores = SVM_obj.SVM_scores(DTE, kern, Poly_RBF, bounds_list, c, d, gamma)
     
-    if calibrate:
-        scores = calibrate_scores(scores, LTE)
+    # if calibrate:
+    #     scores = calibrate_scores(scores, LTE, triplet[0])
 
     if single_fold:
-        return minDCF_SVM(LTE, K_svm, C, scores, triplet, show, kern, Poly_RBF, priorT_b)
+        return DCF_SVM(LTE, K_svm, C, scores, triplet, show, kern, Poly_RBF, priorT_b)
     return scores
 
-def minDCF_SVM(LTE, K_svm, C, scores, triplet, show=True, kern=False, Poly_RBF=True, priorT_b=None):
+def DCF_SVM(LTE, K_svm, C, scores, triplet, show=True, kern=False, Poly_RBF=True, priorT_b=None):
     '''Returns DCF min for C tuning'''
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)
     if show:
@@ -99,9 +99,9 @@ def minDCF_SVM(LTE, K_svm, C, scores, triplet, show=True, kern=False, Poly_RBF=T
             type_SVM = '{} Kernel'.format('Quadratic' if Poly_RBF else 'RBF')
         else:
             type_SVM = 'Linear'
-        print('\t{} SVM (K = {}, C = {}, priorT = {}) -> min DCF: {}'.format(
+        print('\t{} SVM (K = {}, C = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(
             type_SVM,
-            K_svm, C, priorT_b if priorT_b is not None else 'unbalanced', round(dcf_min, 3)))
+            K_svm, C, priorT_b if priorT_b is not None else 'unbalanced', round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min
 
 class SVM_class:
@@ -145,7 +145,7 @@ class SVM_class:
             scores = np.dot(w_star.T, DTE) # Acts as llrs for min DCF but actually not probabilistic so need to calibrate 
             return scores.ravel() # Return as 1D array
 
-def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, show=True, kern=False, Poly_RBF=True, c=None, d=None, gamma=None):
+def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, show=True, kern=False, Poly_RBF=True, c=None, d=None, gamma=None, calibrate=False, printStatus=False):
     if show:
         if kern:
             type_SVM = '{} Kernel'.format('Quadratic' if Poly_RBF else 'RBF')
@@ -160,6 +160,8 @@ def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, sho
     # For DCF computation
     scores_all = np.array([])
     for j in range(K):
+        if printStatus:
+            print('fold {} start...'.format(j + 1))
         idxTest = idx[startTest: (startTest + nTest)]
         idxTrain = np.setdiff1d(idx, idxTest)
         if PCA_m is not None:
@@ -179,6 +181,6 @@ def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, sho
     trueL_ordered = L[idx] # idx was computed randomly before
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
-        print('\t{} SVM (K = {}, C = {}, priorT = {}) -> min DCF: {}'.format(
-            type_SVM, K_svm, C, priorT_b if priorT_b else 'unbalanced', round(dcf_min, 3)))
+        print('\t{} SVM (K = {}, C = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(
+            type_SVM, K_svm, C, priorT_b if priorT_b else 'unbalanced', round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min
