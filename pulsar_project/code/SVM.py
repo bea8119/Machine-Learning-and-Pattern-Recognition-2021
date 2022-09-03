@@ -84,8 +84,8 @@ def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=
 
     scores = SVM_obj.SVM_scores(DTE, kern, Poly_RBF, bounds_list, c, d, gamma)
     
-    # if calibrate:
-    #     scores = calibrate_scores(scores, LTE, triplet[0])
+    if calibrate:
+        scores = calibrate_scores(scores, LTE, 0.5) 
 
     if single_fold:
         return DCF_SVM(LTE, K_svm, C, scores, triplet, show, kern, Poly_RBF, priorT_b)
@@ -101,7 +101,7 @@ def DCF_SVM(LTE, K_svm, C, scores, triplet, show=True, kern=False, Poly_RBF=True
             type_SVM = 'Linear'
         print('\t{} SVM (K = {}, C = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(
             type_SVM,
-            K_svm, C, priorT_b if priorT_b is not None else 'unbalanced', round(dcf_min, 3), round(dcf_norm, 3)))
+            K_svm, C, priorT_b if priorT_b is not None else 'unb', round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min
 
 class SVM_class:
@@ -169,18 +169,22 @@ def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, sho
             PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
             D_PCA = np.dot(PCA_P.T, D)
             scores = SVM_wrapper(D_PCA, L, K_svm, C, priorT_b, idxTrain, idxTest, app_triplet,
-                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF)
+                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF, calibrate=calibrate)
         else:
             scores = SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, app_triplet,
-                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF)
+                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF, calibrate=calibrate)
 
         scores_all = np.concatenate((scores_all, scores))
         startTest += nTest
-        
+
     # DCF computation (compute)
     trueL_ordered = L[idx] # idx was computed randomly before
+
+    if calibrate:
+        scores_all = calibrate_scores(scores_all, trueL_ordered, 0.5)
+
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
         print('\t{} SVM (K = {}, C = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(
-            type_SVM, K_svm, C, priorT_b if priorT_b else 'unbalanced', round(dcf_min, 3), round(dcf_norm, 3)))
+            type_SVM, K_svm, C, priorT_b if priorT_b else 'unb', round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min

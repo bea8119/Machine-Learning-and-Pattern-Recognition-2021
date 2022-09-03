@@ -54,6 +54,7 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     for i in range(k):
         S[i, :] = vrow(np.array(logpdf_GAU_ND(DTE, mu_arr[i], C_arr[i])))
     scores = S[1, :] - S[0, :] # Log-likelihood ratios
+
     if show:
         testDCF_MVG(LTE, CSF_name, scores, triplet)
     return scores
@@ -76,7 +77,7 @@ def tiedNaiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=Tru
     C_naive_arr = [C_arr[i] * np.identity(C_arr[i].shape[0]) for i in range(k)] # element by element mult.
     return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, "Tied Naive Bayes ", triplet, show)
 
-def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, printStatus=False):
+def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibrate=False, printStatus=False):
     if PCA_m is not None:
         msg = f' (PCA m = {PCA_m})'
     else: 
@@ -109,6 +110,10 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, printSt
         
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
+
+        if calibrate:
+            scores_all = calibrate_scores(scores_all, trueL_ordered, 0.5)
+
         (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
         print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
 

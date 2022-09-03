@@ -66,12 +66,14 @@ class logRegClass:
         crossEntropy = self.priorT * mean_term1 + (1 - self.priorT) * mean_term0
         return 0.5 * self.l * np.linalg.norm(w)**2 + crossEntropy
 
-    def logreg_scores(self, DTE):
+    def logreg_scores(self, DTE, calibrate=False):
         x0 = np.zeros(self.DTR.shape[0] + 1)
         (v, J, d) = scipy.optimize.fmin_l_bfgs_b(self.logreg_obj_binary, x0, approx_grad=True)
         w = vcol(v[0:-1])
         b = v[-1]
         p_lprs = np.dot(w.T, DTE) + b # Posterior log-probability ratio
+        if calibrate:
+            return p_lprs.ravel(), w, b
         return p_lprs.ravel()
 
 def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True, quad=False, printStatus=False):
