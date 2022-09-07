@@ -1,6 +1,6 @@
 from utils import vrow, vcol, split_dataset
 from feature_utils import Z_normalization, PCA_givenM
-from calibration import calibrate_scores
+from LogReg import calibrate_scores
 from DCF import DCF_unnormalized_normalized_min_binary
 import numpy as np
 import scipy.optimize
@@ -83,9 +83,9 @@ def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=
         bounds_list = [(0, C_T if LTR[i] == 1 else C_F) for i in range(DTR.shape[1])]
 
     scores = SVM_obj.SVM_scores(DTE, kern, Poly_RBF, bounds_list, c, d, gamma)
-    
+
     if calibrate:
-        scores = calibrate_scores(scores, LTE, 0.5) 
+        scores, w, b = calibrate_scores(scores, LTE, 0.5)
 
     if single_fold:
         return DCF_SVM(LTE, K_svm, C, scores, triplet, show, kern, Poly_RBF, priorT_b)
@@ -181,7 +181,7 @@ def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, sho
     trueL_ordered = L[idx] # idx was computed randomly before
 
     if calibrate:
-        scores_all = calibrate_scores(scores_all, trueL_ordered, 0.5)
+        scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
 
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:

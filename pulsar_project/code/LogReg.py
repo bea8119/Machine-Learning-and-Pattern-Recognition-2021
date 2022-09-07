@@ -1,4 +1,4 @@
-from utils import vcol, split_dataset
+from utils import vcol, vrow, split_dataset
 from feature_utils import PCA_givenM, Z_normalization
 from DCF import DCF_unnormalized_normalized_min_binary
 import numpy as np
@@ -22,7 +22,7 @@ def expand_f_space(D):
     exp_D = np.vstack([exp_D, D]) # Stack original D at the bottom
     return exp_D
 
-def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True, show=True, quad=False):
+def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True, show=True, quad=False, calibrate=False):
 
     (DTR, LTR), (DTE, LTE) = split_dataset(D, L, idxTrain, idxTest)
 
@@ -36,6 +36,10 @@ def logReg_wrapper(D, L, l, priorT, idxTrain, idxTest, triplet, single_fold=True
 
     logRegObj = logRegClass(DTR, LTR, l, priorT)
     scores = logRegObj.logreg_scores(DTE)
+
+    if calibrate:
+        scores, w, b = calibrate_scores(scores, LTE, 0.5)
+
     if single_fold:
         return testDCF_LogReg(LTE, l, priorT, scores, triplet, show=show, quad=quad)
     return scores
@@ -76,7 +80,7 @@ class logRegClass:
             return p_lprs.ravel(), w, b
         return p_lprs.ravel()
 
-def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True, quad=False, printStatus=False):
+def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True, quad=False, printStatus=False, calibrate=False):
 
     nTest = int(D.shape[1] / K)
     np.random.seed(seed)
@@ -100,11 +104,32 @@ def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True
 
         scores_all = np.concatenate((scores_all, scores))
         startTest += nTest
-        
+
     # DCF computation (compute)
     trueL_ordered = L[idx] # idx was computed randomly before
+
+    if calibrate:
+        scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
+
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
         print('\t{} LogReg (lambda = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(
             'Quadratic' if quad else 'Linear', l, priorT, round(dcf_min, 3), round(dcf_norm, 3)))
     return dcf_min
+
+def calibrate_scores(scores_D, L, eff_prior, w=None, b=None):
+    '''This function takes the scores (1D) of the classifiers (whatever the model yields as scores) and returns
+    the calibrated scores after applying a LogReg with lambda = 0 (no regularization) and a given effective
+    prior to use as the "prior" of the LogReg model. This LogReg will return a new set of scores (applying the 
+    optimal w and b to the same scores used for training the data) that are the transformed (hopefully optimal)
+    scores and also returns the corresponding w, b pair. If you pass w and b, instead, the calibration will 
+    happen by applying the transformation given (skipping the training)'''
+    scores_D = vrow(scores_D)
+    if w is None and b is None:
+        logRegObj = logRegClass(scores_D, L, 0, eff_prior)
+        logreg_scores, w, b = logRegObj.logreg_scores(scores_D, calibrate=True)
+        calibrated_scores = logreg_scores - np.log(eff_prior / (1 - eff_prior))
+        return calibrated_scores, w, b
+    else:
+        calibrated_scores = np.dot(w.T, scores_D) + b
+        return calibrated_scores

@@ -7,7 +7,8 @@ import numpy as np
 CSF_list = [
     (MVG.gaussianCSF_wrapper, 'Full Covariance Gaussian'), 
     (MVG.naiveBayesGaussianCSF, 'Diag Covariance Gaussian'), 
-    (MVG.tiedCovarianceGaussianCSF, 'Tied Covariance Gaussian'),
+    (MVG.tiedCovarianceGaussianCSF, 'Tied Full-Cov Gaussian'),
+    (MVG.tiedNaiveBayesGaussianCSF, 'Tied Diag-Cov Gaussian')
 ]
 
 PCA_list = [None, 7, 6, 5]

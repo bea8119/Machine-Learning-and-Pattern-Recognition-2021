@@ -5,13 +5,13 @@ import SVM
 
 PCA_list = [None, 7, 6]
 
-kernel_SVM = True # False for Linear SVM, regardless of the next flag
+kernel_SVM = False # False for Linear SVM, regardless of the next flag
 Poly_RBF = False # True for polynomial, False for RBF kernel SVM (assuming kernel flag == True)
 K_svm = 1 # Value of sqrt(psi)
 
 SVM_param_list = [(0.1, None), (0.1, 0.5)] # Pair of (C, priorT_balance)
 
-calibrate = True
+calibrate = False
 
 def main():
 

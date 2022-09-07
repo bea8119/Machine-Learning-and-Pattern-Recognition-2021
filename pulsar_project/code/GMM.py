@@ -2,6 +2,7 @@ from MVG import logpdf_GAU_ND
 from utils import vrow, vcol, split_dataset
 from feature_utils import covMatrix, Z_normalization, PCA_givenM
 from DCF import DCF_unnormalized_normalized_min_binary
+from LogReg import calibrate_scores
 import numpy as np
 import scipy.special
 
@@ -154,7 +155,7 @@ def LBG_GMM(X, init_GMM, delta, alpha, psi, n_splits, iprint=False, diagCov=Fals
         curr_GMM = new_GMM
     return curr_GMM
 
-def GMM_wrapper(D, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied=False, diag=False, triplet=None, single_fold=True, show=True, iprint=False):
+def GMM_wrapper(D, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied=False, diag=False, triplet=None, single_fold=True, show=True, iprint=False, calibrate=False):
     GMM_type = ''
     if tied:
         GMM_type += 'Tied '
@@ -171,6 +172,10 @@ def GMM_wrapper(D, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied=Fa
     DTE = Z_normalization(DTE, mean, std)
 
     scores = GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tied, diag, iprint)
+
+    if calibrate:
+        scores, w, b = calibrate_scores(scores, LTE, 0.5)
+
     if single_fold:
         return testDCF_GMM(LTE, GMM_type, n_splits, scores, triplet)
     return scores
@@ -203,7 +208,7 @@ def testDCF_GMM(LTE, classifierName, n_splits, llrs, triplet, show=True):
         print(f'\t{classifierName}GMM classifier ({2**n_splits} components)-> min DCF: {round(dcf_min, 3)}    act DCF {round(dcf_norm, 3)}')
     return dcf_min
 
-def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet, PCA_m=None, show=True, seed=0, printStatus=False):
+def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet, PCA_m=None, show=True, seed=0, printStatus=False, calibrate=False):
     if show:
         GMM_type = ''
         if tied:
@@ -239,6 +244,10 @@ def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet,
         
     # DCF computation (compute)
     trueL_ordered = L[idx] # idx was computed randomly before
+
+    if calibrate:
+        scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
+
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
         print('\t{}GMM (n_components = {}) -> min DCF: {}    act DCF: {}'.format(GMM_type, 2**n_splits, round(dcf_min, 3), round(dcf_norm, 3)))
