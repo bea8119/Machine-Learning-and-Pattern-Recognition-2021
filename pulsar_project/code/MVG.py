@@ -1,6 +1,7 @@
 from utils import vcol, vrow, split_dataset
 from feature_utils import covMatrix, SW_compute, PCA_givenM, Z_normalization
 from DCF import DCF_unnormalized_normalized_min_binary
+from LogReg import calibrate_scores
 import numpy as np
 
 def logpdf_GAU_ND(x, mu, C):
@@ -70,12 +71,12 @@ def naiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=True):
 
 def tiedCovarianceGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest, tied=True)
-    return gaussianCSF(DTE, LTE, k, mu_arr, C_arr, "Tied Covariance ", triplet, show)
+    return gaussianCSF(DTE, LTE, k, mu_arr, C_arr, "Tied Full-Cov ", triplet, show)
 
 def tiedNaiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=True):
     (DTE, LTE), mu_arr, C_arr = classifierSetup(D, L, k, idxTrain, idxTest, tied=True)
     C_naive_arr = [C_arr[i] * np.identity(C_arr[i].shape[0]) for i in range(k)] # element by element mult.
-    return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, "Tied Naive Bayes ", triplet, show)
+    return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, "Tied Diag-Cov ", triplet, show)
 
 def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibrate=False, printStatus=False):
     if PCA_m is not None:

@@ -133,3 +133,21 @@ def calibrate_scores(scores_D, L, eff_prior, w=None, b=None):
     else:
         calibrated_scores = np.dot(w.T, scores_D) + b
         return calibrated_scores
+
+def fusionModel(csf_1_scores, csf_2_scores, L, eff_prior, w=None, b=None):
+    '''Receives two 1D arrays containing the scores of the output of 2 classifiers. Trains a logistic regression 
+    model for performing the fusion of the scores, by stacking the samples vertically in order for a "dataset" 
+    of size (2, N). Works similarly as the calibrate_scores() function.'''
+
+    csf_1_s = vrow(csf_1_scores)
+    csf_2_s = vrow(csf_2_scores)
+
+    scores_D = np.vstack([csf_1_s, csf_2_s])
+    if w is None and b is None:
+        logRegObj = logRegClass(scores_D, L, 0, eff_prior)
+        logreg_scores, w, b = logRegObj.logreg_scores(scores_D, calibrate=True)
+        fused_scores = logreg_scores - np.log(eff_prior / (1 - eff_prior))
+        return fused_scores, w, b
+    else:
+        fused_scores = np.dot(w.T, scores_D) + b
+        return fused_scores
