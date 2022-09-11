@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 def compute_confusion_matrix(predL, trueL, K):
 	conf_matrix = np.zeros((K, K))
@@ -59,7 +60,8 @@ def DCF_unnormalized_normalized_min_binary(scores, trueL, triplet):
 		dcf_temp = DCF_binary(compute_confusion_matrix(compute_optBayes_decisions(scores, *triplet, threshold), trueL, 2), *triplet)
 		dcf_temp_norm = dcf_temp / B_dummy
 		if dcf_temp_norm < dcf_min:
-			dcf_min = dcf_temp_norm 
+			dcf_min = dcf_temp_norm
+
 	return (dcf_u, dcf_norm, dcf_min)
 
 def DCF_vs_priorLogOdds(effPriorLogOdds, scores, trueL):
