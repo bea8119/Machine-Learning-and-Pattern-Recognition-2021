@@ -52,15 +52,15 @@ def main():
             MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet, m)
             print('-----------------------------------------------------')
 
-            # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
-            if m is not None:
-                DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
-                PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
-                D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            print('MVG classifiers on whole dataset {}'.format(pca_msg))
-            for classifier in CSF_list:
-                classifier[0](D_merged if m is None else D_merged_PCA, L_merged, k, idxTR_merged, idxTE_merged, triplet, show=True)
-            print('-----------------------------------------------------')
+            # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
+            # if m is not None:
+            #     DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
+            #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
+            #     D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
+            # print('MVG classifiers on whole dataset {}'.format(pca_msg))
+            # for classifier in CSF_list:
+            #     classifier[0](D_merged if m is None else D_merged_PCA, L_merged, k, idxTR_merged, idxTE_merged, triplet, show=True)
+            # print('-----------------------------------------------------')
             
 if __name__  == '__main__':
     main()
