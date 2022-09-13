@@ -64,7 +64,7 @@ def main():
 
     # plt.show()
     
-    # ------------ Quadratic kernel SVM, tune C and c jointly, same appplication point (0.5, 1, 1) (unbalanced) ---------------
+    # ------------ Quadratic kernel SVM, tune C and c jointly, same appplication point (0.5, 1, 1) (unbalanced) ----
     for m in PCA_list:
         min_DCF_single = []
         min_DCF_kfold = []
@@ -95,7 +95,7 @@ def main():
         p.plotDCFmin_vs_C_quadSVM(C_arr, None, min_DCF_kfold, m, n, K, colors, application_points[0], c_list)
     # plt.show()
 
-    # ------------ RBF kernel SVM, tune C and gamma jointly, same appplication point (0.5, 1, 1) (unbalanced) ---------------
+    # ------------ RBF kernel SVM, tune C and gamma jointly, same appplication point (0.5, 1, 1) (unbalanced) ------
     for m in PCA_list:
         min_DCF_single = []
         min_DCF_kfold = []

@@ -9,6 +9,7 @@ PCA_list = [None, 7, 6]
 colors = ['red', 'green', 'blue']
 
 quadratic = False # False for Linear Logistic Regression
+printStatus = True
 
 def main():
 
@@ -26,6 +27,10 @@ def main():
 
     idxTrain, idxTest = u.split_db_n_to_1(DTR, n) # Single-fold split
 
+    if printStatus:
+        total_steps = 2 * len(application_points) * len(PCA_list) * len(l_arr)
+        step = 1
+
     for m in PCA_list:
         if m is not None:
             DTR_PCA_fold = u.split_dataset(DTR, LTR, idxTrain, idxTest)[0][0] # Retrieve single fold train subset
@@ -42,14 +47,25 @@ def main():
                 # ----------------- Using validation set (single fold or K-fold) ----------------------
 
                 # Single Fold
+
+                if printStatus:
+                    print(f'Step {step} (single-fold) of {total_steps}')
+
                 min_DCF_single[i] = np.append(min_DCF_single[i], 
                     LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, l, priorT, idxTrain, idxTest, triplet, show=False, quad=quadratic)
                 )
 
+                if printStatus:
+                    step += 1
+                    print(f'Step {step} (K-fold) of {total_steps}')
+
                 # K-fold (Takes very long)
                 min_DCF_kfold[i] = np.append(min_DCF_kfold[i], 
-                    LR.K_fold_LogReg(DTR, LTR, K, l, priorT, triplet, m, show=False, quad=quadratic, printStatus=True)
+                    LR.K_fold_LogReg(DTR, LTR, K, l, priorT, triplet, m, show=False, quad=quadratic, printStatus=printStatus)
                 )
+
+                if printStatus:
+                    step += 1
 
         p.plotDCFmin_vs_lambda(l_arr, min_DCF_single, min_DCF_kfold, m, n, K, colors, application_points, quad=quadratic)
     plt.show()
