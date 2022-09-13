@@ -115,6 +115,9 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibra
         if calibrate:
             scores_all = calibrate_scores(scores_all, trueL_ordered, 0.5)
 
+        if printStatus:
+            print('calculating minDCF...')
+            
         (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
         print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
 

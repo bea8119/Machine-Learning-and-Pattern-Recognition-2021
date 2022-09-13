@@ -33,7 +33,7 @@ def plotHistogram(D, L, class_names, attribute_names):
         plt.xlabel(attribute_names[i])
         plt.legend()
         plt.tight_layout()
-        plt.grid(b=True)
+        plt.grid(visible=True)
     # plt.show()
 
 def plotHeatmap(D, L):
@@ -64,7 +64,7 @@ def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n,
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
         if min_DCF_kfold_arr:
             plt.figure(fig_kfold)
             plt.plot(l_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
@@ -74,7 +74,7 @@ def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n,
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
 
 def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b, m_PCA, n, K, colors, eff_priors):
     '''Tuning of C parameter alone, on every application point'''
@@ -95,7 +95,7 @@ def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
         if min_DCF_kfold_arr:
             plt.figure(fig_kfold)
             plt.plot(C_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
@@ -105,7 +105,7 @@ def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
 
 def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, c_list):
     '''Tuning of C jointly with c (in linear scale), take three different values of c on the same application point'''
@@ -127,7 +127,7 @@ def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA,
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
         if min_DCF_kfold_arr:
             plt.figure(fig_kfold)
             plt.plot(C_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}, c = {}'.format(
@@ -138,7 +138,7 @@ def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA,
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
 
 def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, gamma_list):
     '''Tuning of C jointly with gamma (in log scale), take different values of gamma on the same application point'''
@@ -160,7 +160,7 @@ def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, 
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
         if min_DCF_kfold_arr:
             plt.figure(fig_kfold)
             plt.plot(C_arr, min_DCF_kfold_arr[i], color=colors[i], label='min DCF {} = {}, log {} = {}'.format(
@@ -171,7 +171,7 @@ def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, 
             plt.ylabel('DCF')
             plt.legend(loc='best')
             plt.tight_layout()
-            plt.grid(b=True)
+            plt.grid(visible=True)
 
 def create_GMM_figure(tied, diag):
     '''Receives tied and diag flags and n=4, returns a list of figure objects with the appropriate names'''
@@ -211,7 +211,7 @@ def plotGMM(n_splits, dcf_min_list, eff_prior, tied_diag_pairs, colors, PCA_list
         plt.ylabel('DCF')
         plt.legend(loc='best')
         plt.tight_layout()
-        plt.grid(b=True)
+        plt.grid(visible=True)
     
 
 def main():
@@ -221,7 +221,7 @@ def main():
     
     # Pre-processing (Z-normalization)
     DTR, mean, std = f.Z_normalization(DTR)
-    DTE = f.Z_normalization(DTE, mean, std)
+    # DTE = f.Z_normalization(DTE, mean, std)
 
     # Plot distribution of attribute values (after Z-Normalizing) for each class
     plotHistogram(DTR, LTR, CLASS_NAMES, ATTRIBUTE_NAMES)

@@ -72,7 +72,13 @@ class logRegClass:
 
     def logreg_scores(self, DTE, calibrate=False):
         x0 = np.zeros(self.DTR.shape[0] + 1)
-        (v, J, d) = scipy.optimize.fmin_l_bfgs_b(self.logreg_obj_binary, x0, approx_grad=True)
+        (v, J, d) = scipy.optimize.fmin_l_bfgs_b(
+            self.logreg_obj_binary, 
+            x0, 
+            approx_grad=True,
+            factr=1.0,
+            # maxiter=100,
+        )
         w = vcol(v[0:-1])
         b = v[-1]
         p_lprs = np.dot(w.T, DTE) + b # Posterior log-probability ratio
@@ -111,6 +117,9 @@ def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True
     if calibrate:
         scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
 
+    if printStatus:
+        print('calculating minDCF...')
+        
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
         print('\t{} LogReg (lambda = {}, priorT = {}) -> min DCF: {}    act DCF: {}'.format(

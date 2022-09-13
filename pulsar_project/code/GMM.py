@@ -248,6 +248,9 @@ def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet,
     if calibrate:
         scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
 
+    if printStatus:
+        print('calculating minDCF...')
+
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
     if show:
         print('\t{}GMM (n_components = {}) -> min DCF: {}    act DCF: {}'.format(GMM_type, 2**n_splits, round(dcf_min, 3), round(dcf_norm, 3)))
