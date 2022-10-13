@@ -14,6 +14,8 @@ K_svm = 1 # Value of sqrt(psi)
 c_list = [1, 5, 10, 20, 30]
 gamma_list = [1e-2, 1e-1, 1e-0, 1e1, 1e2]
 
+printStatus = True
+
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')
@@ -57,14 +59,14 @@ def main():
                     print('\tKfold')
                     # K-fold
                     min_DCF_kfold[i] = np.append(min_DCF_kfold[i], 
-                        SVM.K_fold_SVM(DTR, LTR, K, K_svm, C, pi_b, triplet, m, show=True, kern=False)
+                        SVM.K_fold_SVM(DTR, LTR, K, K_svm, C, pi_b, triplet, m, show=False, kern=False, printStatus=True)
                     )
 
             p.plotDCFmin_vs_C_linearSVM(C_arr, None, min_DCF_kfold, pi_b, m, n, K, colors, application_points)
 
     # plt.show()
     
-    # ------------ Quadratic kernel SVM, tune C and c jointly, same appplication point (0.5, 1, 1) (unbalanced) ----
+    # ------------ Quadratic kernel SVM, tune C and c jointly, same application point (0.5, 1, 1) (unbalanced) ----
     for m in PCA_list:
         min_DCF_single = []
         min_DCF_kfold = []
@@ -90,7 +92,7 @@ def main():
                 # K-fold
                 print('\tKfold')
                 min_DCF_kfold[i] = np.append(min_DCF_kfold[i], 
-                    SVM.K_fold_SVM(DTR, LTR, K, K_svm, C, priorT_b[0], application_points[0], m, show=True, kern=True, c=c, d=d)
+                    SVM.K_fold_SVM(DTR, LTR, K, K_svm, C, priorT_b[0], application_points[0], m, show=True, kern=True, c=c, d=d, printStatus=True)
                 )
         p.plotDCFmin_vs_C_quadSVM(C_arr, None, min_DCF_kfold, m, n, K, colors, application_points[0], c_list)
     # plt.show()
@@ -120,7 +122,7 @@ def main():
                 # K-fold
                 print('\tKfold')
                 min_DCF_kfold[i] = np.append(min_DCF_kfold[i], 
-                    SVM.K_fold_SVM(DTR, LTR, K, K_svm, C, priorT_b[0], application_points[0], m, show=True, kern=True, gamma=gamma, Poly_RBF=False)
+                    SVM.K_fold_SVM(DTR, LTR, K, K_svm, C, priorT_b[0], application_points[0], m, show=True, kern=True, gamma=gamma, Poly_RBF=False, printStatus=True)
                 )
         p.plotDCFmin_vs_C_RBFSVM(C_arr, None, min_DCF_kfold, m, n, K, colors, application_points[0], gamma_list)
 
