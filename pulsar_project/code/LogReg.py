@@ -4,12 +4,6 @@ from DCF import DCF_unnormalized_normalized_min_binary
 import numpy as np
 import scipy.optimize
 
-# def computeAccuracy_logreg_binary(scoreArray, TrueL):
-#     PredictedL = np.array([(1 if score > 0 else 0) for score in scoreArray.ravel()])
-#     NCorrect = (PredictedL.ravel() == TrueL.ravel()).sum() # Will count as 1 the "True"
-#     NTotal = TrueL.size
-#     return float(NCorrect) / float(NTotal)
-
 def vec_xxT(x):
     '''Receives a 1D array, returns 1D array after computing product and reordering column-wise'''
     x = vcol(x)

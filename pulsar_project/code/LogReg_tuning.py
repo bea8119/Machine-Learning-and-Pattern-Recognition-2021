@@ -5,30 +5,31 @@ import plotting as p
 import numpy as np
 import matplotlib.pyplot as plt
 
-PCA_list = [None, 7, 6]
+PCA_list = [None, 7]
 colors = ['red', 'green', 'blue']
 
-quadratic = False # False for Linear Logistic Regression
+quadratic = True # False for Linear Logistic Regression
 printStatus = True
+save_fig = True
 
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')
 
     # Reduced dataset (less samples) for testing only
-    # DTR, LTR = u.reduced_dataset(DTR, LTR, 1000, seed=0)
+    # DTR, LTR = u.reduced_dataset(DTR, LTR, 500, seed=0)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
     priorT = 0.5
     n = 4 # Single fold value
     K = 5 # K-fold value
-    l_arr = np.logspace(-5, 5)
+    l_arr = np.logspace(-5, 5, 40)
 
     idxTrain, idxTest = u.split_db_n_to_1(DTR, n) # Single-fold split
 
     if printStatus:
-        total_steps = 2 * len(application_points) * len(PCA_list) * len(l_arr)
+        total_steps = 1 * len(application_points) * len(PCA_list) * len(l_arr)
         step = 1
 
     for m in PCA_list:
@@ -48,15 +49,15 @@ def main():
 
                 # Single Fold
 
-                if printStatus:
-                    print(f'Step {step} (single-fold) of {total_steps}')
+                # if printStatus:
+                #     print(f'Step {step} (single-fold) of {total_steps}')
 
-                min_DCF_single[i] = np.append(min_DCF_single[i], 
-                    LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, l, priorT, idxTrain, idxTest, triplet, show=False, quad=quadratic)
-                )
+                # min_DCF_single[i] = np.append(min_DCF_single[i], 
+                #     LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, l, priorT, idxTrain, idxTest, triplet, show=False, quad=quadratic)
+                # )
 
                 if printStatus:
-                    step += 1
+                    # step += 1
                     print(f'Step {step} (K-fold) of {total_steps}')
 
                 # K-fold (Takes very long)
@@ -67,7 +68,8 @@ def main():
                 if printStatus:
                     step += 1
 
-        p.plotDCFmin_vs_lambda(l_arr, min_DCF_single, min_DCF_kfold, m, n, K, colors, application_points, quad=quadratic)
+        p.plotDCFmin_vs_lambda(l_arr, None, min_DCF_kfold, m, n, K, colors, application_points, quad=quadratic, save_fig=save_fig)
+
     plt.show()
 
 if __name__ == '__main__':

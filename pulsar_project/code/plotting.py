@@ -45,14 +45,16 @@ def plotHeatmap(D, L):
     seaborn.heatmap(np.abs(np.corrcoef(D[:, L == 1])), linewidth=0.5, cmap="Blues", square=True, cbar=False)
     # plt.show()
 
-def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, eff_priors, quad=False):
+def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, eff_priors, quad=False, save_fig=False):
     '''Receives 3 arrays to plot (curves) for each eff_prior'''
     if min_DCF_single_arr:
-        fig_single = plt.figure('Single-fold ({}-to-1) {} Log Reg -> lambda tuning {}'.format(
-            n, 'Quadratic' if quad else 'Linear', '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_single = 'Single-fold ({}-to-1) {} Log Reg -> lambda tuning {}'.format(
+            n, 'Quadratic' if quad else 'Linear', '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_single = plt.figure(fig_name_single)
     if min_DCF_kfold_arr:
-        fig_kfold = plt.figure('{}-fold {} Log Reg -> lambda tuning {}'.format(
-            K, 'Quadratic' if quad else 'Linear', '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_kfold = '{}-fold {} Log Reg -> lambda tuning {}'.format(
+            K, 'Quadratic' if quad else 'Linear', '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_kfold = plt.figure(fig_name_kfold)
 
     for i in range(len(eff_priors)):
         if min_DCF_single_arr:
@@ -75,15 +77,25 @@ def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n,
             plt.legend(loc='best')
             plt.tight_layout()
             plt.grid(visible=True)
+    
+    if save_fig:
+        if min_DCF_single_arr:
+            plt.figure(fig_single)
+            plt.savefig('../plots/' + fig_name_single.replace('>', '-') + '.png')
+        if min_DCF_kfold_arr:
+            plt.figure(fig_kfold)
+            plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
 
-def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b, m_PCA, n, K, colors, eff_priors):
+def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b, m_PCA, n, K, colors, eff_priors, save_fig=False):
     '''Tuning of C parameter alone, on every application point'''
     if min_DCF_single_arr:
-        fig_single = plt.figure('Single-fold ({}-to-1) Linear SVM -> C tuning (pi_T = {}) {}'.format(
-            n, 'unbalanced' if pi_b is None else pi_b, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_single = 'Single-fold ({}-to-1) Linear SVM -> C tuning (pi_T = {}) {}'.format(
+            n, 'unbalanced' if pi_b is None else pi_b, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_single = plt.figure(fig_name_single)
     if min_DCF_kfold_arr:
-        fig_kfold = plt.figure('{}-fold Linear SVM -> C tuning (pi_T = {}) {}'.format(
-            K, 'unbalanced' if pi_b is None else pi_b, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_kfold = '{}-fold Linear SVM -> C tuning (pi_T = {}) {}'.format(
+            K, 'unbalanced' if pi_b is None else pi_b, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_kfold = plt.figure(fig_name_kfold)
 
     for i in range(len(eff_priors)):
         if min_DCF_single_arr:
@@ -107,14 +119,24 @@ def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b
             plt.tight_layout()
             plt.grid(visible=True)
 
-def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, c_list):
+    if save_fig:
+        if min_DCF_single_arr:
+            plt.figure(fig_single)
+            plt.savefig('../plots/' + fig_name_single.replace('>', '-') + '.png')
+        if min_DCF_kfold_arr:
+            plt.figure(fig_kfold)
+            plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
+
+def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, c_list, save_fig=False):
     '''Tuning of C jointly with c (in linear scale), take three different values of c on the same application point'''
     if min_DCF_single_arr:
-        fig_single = plt.figure('Single-fold ({}-to-1) Quadratic Kernel SVM -> C - c tuning {}'.format(
-            n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_single = 'Single-fold ({}-to-1) Quadratic Kernel SVM -> C - c tuning {}'.format(
+            n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_single = plt.figure(fig_name_single)
     if min_DCF_kfold_arr:
-        fig_kfold = plt.figure('{}-fold Quadratic Kernel SVM -> C - c tuning {}'.format(
-            K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_kfold = '{}-fold Quadratic Kernel SVM -> C - c tuning {}'.format(
+            K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_kfold = plt.figure(fig_name_kfold)
     
     for i in range(len(c_list)):
         if min_DCF_single_arr:
@@ -140,14 +162,24 @@ def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA,
             plt.tight_layout()
             plt.grid(visible=True)
 
-def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, gamma_list):
+    if save_fig:
+        if min_DCF_single_arr:
+            plt.figure(fig_single)
+            plt.savefig('../plots/' + fig_name_single.replace('>', '-') + '.png')
+        if min_DCF_kfold_arr:
+            plt.figure(fig_kfold)
+            plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
+
+def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, gamma_list, save_fig=False):
     '''Tuning of C jointly with gamma (in log scale), take different values of gamma on the same application point'''
     if min_DCF_single_arr:
-        fig_single = plt.figure('Single-fold ({}-to-1) RBF Kernel SVM -> C - gamma tuning {}'.format(
-            n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_single = 'Single-fold ({}-to-1) RBF Kernel SVM -> C - gamma tuning {}'.format(
+            n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_single = plt.figure(fig_name_single)
     if min_DCF_kfold_arr:
-        fig_kfold = plt.figure('{}-fold RBF Kernel SVM -> C - gamma tuning {}'.format(
-            K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})'))
+        fig_name_kfold = '{}-fold RBF Kernel SVM -> C - gamma tuning {}'.format(
+            K, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
+        fig_kfold = plt.figure(fig_name_kfold)
     
     for i in range(len(gamma_list)):
         if min_DCF_single_arr:
@@ -172,6 +204,14 @@ def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, 
             plt.legend(loc='best')
             plt.tight_layout()
             plt.grid(visible=True)
+
+    if save_fig:
+        if min_DCF_single_arr:
+            plt.figure(fig_single)
+            plt.savefig('../plots/' + fig_name_single.replace('>', '-') + '.png')
+        if min_DCF_kfold_arr:
+            plt.figure(fig_kfold)
+            plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
 
 def create_GMM_figure(tied, diag):
     '''Receives tied and diag flags and n=4, returns a list of figure objects with the appropriate names'''
