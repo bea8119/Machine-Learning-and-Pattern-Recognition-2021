@@ -205,7 +205,7 @@ def GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tiedCov=False,
 def testDCF_GMM(LTE, classifierName, n_splits, llrs, triplet, show=True):
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
     if show:
-        print(f'\t{classifierName}GMM classifier ({2**n_splits} components)-> min DCF: {round(dcf_min, 3)}    act DCF {round(dcf_norm, 3)}')
+        print(f'\t{classifierName}GMM classifier ({2**n_splits} components)-> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
     return dcf_min
 
 def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet, PCA_m=None, show=True, seed=0, printStatus=False, calibrate=False):
