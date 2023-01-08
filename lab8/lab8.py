@@ -66,6 +66,14 @@ def DCF_unnormalized_normalized_min_binary(llrs, trueL, triplet):
 	thresholds.sort()
 	thresholds = np.concatenate([np.array([-np.inf]), thresholds, np.array([np.inf])])
 
+	# Vectorize the functions
+	# compute_opt_v = np.vectorize(compute_optBayes_decisions, otypes=[np.ndarray], excluded=[0, 1, 2, 3])
+	# compute_conf_v = np.vectorize(compute_confusion_matrix, otypes=[np.ndarray], excluded=[1, 2])
+	# dcf_norm_v = np.vectorize(DCF_binary, excluded=[1, 2, 3])
+
+	# dcf_arr = (dcf_norm_v(compute_conf_v(compute_opt_v(scores, *triplet, thresholds), trueL, 2), *triplet)) / B_dummy
+	# dcf_min = dcf_arr.min()
+
 	dcf_min = np.inf
 
 	for threshold in thresholds:

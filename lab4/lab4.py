@@ -18,7 +18,7 @@ def logpdf_GAU_ND(x, mu, C):
     Y = np.zeros(N)
 
     # IMPORTANTISIMO (Look below)
-
+    
     for i in range(N):
         x_mu = vcol(x[:, i]) - mu # grab one sample only, MAKE IT A COLUMN VECTOR, NOT 1D
         mat_product = (0.5 * (np.dot(np.dot(x_mu.T, C_inv), x_mu)))

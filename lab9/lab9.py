@@ -3,8 +3,8 @@ import sys
 import scipy.special, scipy.optimize
 import matplotlib.pyplot as plt
 
-# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from lab7.lab7 import load_iris_binary, computeAccuracy_logreg_binary
 from lab5.lab5 import split_db_2to1, split_dataset
 from lab2.load_plot import load
@@ -24,7 +24,7 @@ def compute_duality_gap(w_star, C, D_ext, encodedL, L_Dual_opt):
     loss_term = np.sum(np.maximum(np.zeros(D_ext.shape[1]), 1 - encodedL * scores))
     return (0.5 * np.linalg.norm(w_star)**2 + C * loss_term) + L_Dual_opt
 
-def compute_H_kern(D, encodedL, Poly_RBF, K, c, d, gamma):
+def H_kern_matrix(D, encodedL, Poly_RBF, K, c, d, gamma):
     if Poly_RBF:     
         k_f_matrix = kernel_func_Poly(D, K, c, d)
     else:
@@ -71,9 +71,8 @@ class SVM_class:
         self.DTR = DTR
         self.z = 2 * LTR - 1
         self.K = K
-        self.D_ext = extended_D(self.DTR, self.K)
-        self.H = H_matrix(self.D_ext, self.z)
-        self.H_kern = None if kern == False else compute_H_kern(DTR, self.z, Poly_RBF, K, c, d, gamma)
+        self.D_ext = None if kern else extended_D(self.DTR, self.K)
+        self.H = H_kern_matrix(DTR, self.z, Poly_RBF, K, c, d, gamma) if kern else H_matrix(self.D_ext, self.z)
 
     def linear_SVM_obj(self, alpha):
         # alpha instead of v (different than lab 7), which is received as a 1-D array, returns the gradient too
@@ -85,8 +84,8 @@ class SVM_class:
         # np.dot(alpha_v.T, np.ones((alpha_v.shape[0], 1)) is the more inefficient way of doing it
     def kernel_SVM_obj(self, alpha):
         alpha_v = vcol(alpha)
-        return ((0.5 * np.dot(np.dot(alpha_v.T, self.H_kern), alpha_v)) - np.sum(alpha_v),
-                np.dot(self.H_kern, alpha_v) - np.ones((alpha_v.shape[0], 1))
+        return ((0.5 * np.dot(np.dot(alpha_v.T, self.H), alpha_v)) - np.sum(alpha_v),
+                np.dot(self.H, alpha_v) - np.ones((alpha_v.shape[0], 1))
                 )
 
 def main():
@@ -117,7 +116,7 @@ def main():
     DTE_ext = extended_D(DTE, K)
     scores = np.dot(w_star.T, DTE_ext)
 
-    print(f'Accuracy with K={K}, C={C}', round((1 - computeAccuracy_logreg_binary(scores, LTE)) * 100, 1), '%')
+    print(f'Accuracy (linear SVM) with K={K}, C={C}', round((1 - computeAccuracy_logreg_binary(scores, LTE)) * 100, 1), '%')
 
     dual_gap = compute_duality_gap(w_star, C, linear_SVM_obj.D_ext, linear_SVM_obj.z, L_dual_opt)
     print('Dual Gap (not exactly the same as prof\'s:', dual_gap)
@@ -135,6 +134,8 @@ def main():
     alpha_0 = np.zeros(n)
     bounds_var = [(0, C) for i in range(n)]
 
+    # Polynomial kernel SVM
+
     kern_SVM_obj_Poly = SVM_class(DTR, LTR, K, kern=True, Poly_RBF=True, c=c, d=d, gamma=gamma)
 
     (alpha_opt_Poly, L_dual_opt, data) = scipy.optimize.fmin_l_bfgs_b(
@@ -148,6 +149,8 @@ def main():
     print(f'Accuracy (kernel SVM) (Poly) with K={K}, C={C}, d={d}, c={c}', 
         round((1 - computeAccuracy_logreg_binary(scores_Poly, LTE)) * 100, 1), '%')
     
+    # RBF kernel SVM
+
     kern_SVM_obj_RBF = SVM_class(DTR, LTR, K, kern=True, Poly_RBF=False, c=c, d=d, gamma=gamma)
     (alpha_opt_RBF, L_dual_opt, data) = scipy.optimize.fmin_l_bfgs_b(
         kern_SVM_obj_RBF.kernel_SVM_obj,

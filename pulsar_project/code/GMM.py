@@ -1,18 +1,10 @@
+from MVG import logpdf_GAU_ND
+from utils import vrow, vcol, split_dataset
+from feature_utils import covMatrix, Z_normalization, PCA_givenM
+from DCF import DCF_unnormalized_normalized_min_binary
+from LogReg import calibrate_scores
 import numpy as np
-import sys
-import json
-import scipy.special, scipy.optimize
-import matplotlib.pyplot as plt
-
-sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
-from lab7.lab7 import load_iris_binary, computeAccuracy_logreg_binary
-from lab6.lab6 import compute_accuracy, compute_classPosteriorP, compute_logLikelihoods
-from lab5.lab5 import split_db_2to1, split_dataset
-from lab4.lab4 import logpdf_GAU_ND
-from lab3.lab3 import datasetCovarianceM
-from lab2.load_plot import load
-from utility.vrow_vcol import vcol, vrow
+import scipy.special
 
 def logpdf_GMM(X, gmm):
     '''
@@ -26,19 +18,9 @@ def logpdf_GMM(X, gmm):
 
     for (g, (weight, mean, C_matrix)) in enumerate(gmm):
         S[g, :] = logpdf_GAU_ND(X, mean, C_matrix)
-        S[g, :] += np.log(weight) # Adding the log prior
+        S[g, :] += np.log(weight) # Adding the log prior weight
 
     return scipy.special.logsumexp(S, axis=0), S
-
-def save_gmm(gmm, filename):
-    gmmJson = [(i, j.tolist(), k.tolist()) for i, j, k in gmm]
-    with open(filename, 'w') as f:
-        json.dump(gmmJson, f)
-    
-def load_gmm(filename):
-    with open(filename, 'r') as f:
-        gmm = json.load(f)
-    return [(i, np.asarray(j), np.asarray(k)) for i, j, k in gmm]
 
 def compute_clusterPosteriorP(SJoint):
     '''
@@ -94,7 +76,7 @@ def M_step(gamma, X, psi, diagCov=False, tiedCov=False):
 
         cov_m_next = (S / Z) - np.dot(mu_next, mu_next.T)
 
-        # Diagonal and/or Tied Covariance update (added while doing the project)
+        # Diagonal and/or Tied Covariance update
         if diagCov == True:
             cov_m_next = cov_m_next * np.eye(cov_m_next.shape[0])
         if tiedCov == True:
@@ -173,22 +155,40 @@ def LBG_GMM(X, init_GMM, delta, alpha, psi, n_splits, iprint=False, diagCov=Fals
         curr_GMM = new_GMM
     return curr_GMM
 
-def GMM_classifier(DTR, LTR, DTE, LTE, K, delta, alpha, psi, n_splits, priorP, diagCov=False, tiedCov=False, iprint=False):
+def GMM_wrapper(D, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied=False, diag=False, triplet=None, single_fold=True, show=True, iprint=False, calibrate=False):
+    GMM_type = ''
+    if tied:
+        GMM_type += 'Tied '
+    if diag:
+        GMM_type += 'Diag '
+    if not diag and not tied:
+        GMM_type += 'Full '
+    GMM_type += 'Covariance '
+
+    (DTR, LTR), (DTE, LTE) = split_dataset(D, L, idxTrain, idxTest)
+
+    # Apply Z-normalization on the training set (of the current fold), apply the same transformation on the test set
+    DTR, mean, std = Z_normalization(DTR)
+    DTE = Z_normalization(DTE, mean, std)
+
+    scores = GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tied, diag, iprint)
+
+    if calibrate:
+        scores, w, b = calibrate_scores(scores, LTE, 0.5)
+
+    if single_fold:
+        return testDCF_GMM(LTE, GMM_type, n_splits, scores, triplet)
+    return scores
+
+def GMM_classifier(DTR, LTR, DTE, k, delta, alpha, psi, n_splits, tiedCov=False, diagCov=False, iprint=False):
     # Train the model for each class
-    if diagCov:
-        tag = ' (Diagonal Cov)'
-    elif tiedCov:
-        tag = ' (Tied Cov)'
-    else: 
-        tag = ''
-    SM_cluster = np.zeros((K, DTE.shape[1]))
+    PP_cluster = np.zeros((k, DTE.shape[1]))
 
-    for i in range(K):
+    for i in range(k):
         cls_data = DTR[:, LTR == i] # Subset of samples of DTR that belong to the same class
-
         # Compute ML parameters as starting point for LBG
         mu_ML = vcol(cls_data.mean(axis=1))
-        C_ML = datasetCovarianceM(cls_data)
+        C_ML = covMatrix(cls_data)
         U, s, _ = np.linalg.svd(C_ML)
         s[s < psi] = psi
         C_ML_adjusted = np.dot(U, vcol(s) * U.T)
@@ -197,70 +197,61 @@ def GMM_classifier(DTR, LTR, DTE, LTE, K, delta, alpha, psi, n_splits, priorP, d
 
         gmm_LBG = LBG_GMM(cls_data, GMM_1_ML, delta, alpha, psi, n_splits, iprint=iprint, diagCov=diagCov, tiedCov=tiedCov)
         # We have optimal GMM for this class
-        SM_cluster[i, :], _ = logpdf_GMM(DTE, gmm_LBG) # AKA the class log density of a "MVG"
-    
-    posteriorP_TE = compute_classPosteriorP(SM_cluster, np.log(priorP))
-    err_rate = 1 - compute_accuracy(posteriorP_TE, LTE)
+        PP_cluster[i, :], _ = logpdf_GMM(DTE, gmm_LBG) # AKA the class-conditional log density of a "MVG" (S matrix)
 
-    print(f'Error rate GMM classifier{tag} with {2**n_splits} components:', str(round(err_rate * 100, 1)), '%')
+    scores = PP_cluster[1, :] - PP_cluster[0, :]
+    return scores
 
-def main():
+def testDCF_GMM(LTE, classifierName, n_splits, llrs, triplet, show=True):
+    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(llrs, LTE, triplet)
+    if show:
+        print(f'\t{classifierName}GMM classifier ({2**n_splits} components)-> min DCF: {round(dcf_min, 3)}    act DCF {round(dcf_norm, 3)}')
+    return dcf_min
 
-    # ------------------ Gaussian Mixture models ----------------
+def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet, PCA_m=None, show=True, seed=0, printStatus=False, calibrate=False):
+    if show:
+        GMM_type = ''
+        if tied:
+            GMM_type += 'Tied '
+        if diag:
+            GMM_type += 'Diag '
+        if not diag and not tied:
+            GMM_type += 'Full '
+        GMM_type += 'Covariance '
 
-    GMM_data = np.load('data/GMM_data_4D.npy')
-    ref_GMM = load_gmm('data/GMM_4D_3G_init.json')
+    nTest = int(D.shape[1] / K)
+    np.random.seed(seed)
+    idx = np.random.permutation(D.shape[1])
 
-    lls = logpdf_GMM(GMM_data, ref_GMM)[0]
-    sol_GMM_ll = np.load('data/GMM_4D_3G_init_ll.npy')
-    # print(np.abs(sol_GMM_ll - lls).max()) # Test passed
+    startTest = 0
+    # For DCF computation
+    scores_all = np.array([])
+    for j in range(K):
+        if printStatus:
+            print('fold {} start...'.format(j + 1))
+        idxTest = idx[startTest: (startTest + nTest)]
+        idxTrain = np.setdiff1d(idx, idxTest)
+        if PCA_m is not None:
+            DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
+            PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
+            D_PCA = np.dot(PCA_P.T, D)
+            scores = GMM_wrapper(D_PCA, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied, diag, app_triplet, False, show)
+        else:
+            scores = GMM_wrapper(D, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied, diag, app_triplet, False, show)
 
-    # ------------------- EM-algorithm ----------------------
+        scores_all = np.concatenate((scores_all, scores))
+        startTest += nTest
+        
+    # DCF computation (compute)
+    trueL_ordered = L[idx] # idx was computed randomly before
 
-    delta = 1e-6
-    psi = 0 # For constraining eigenvalues of cov matrix
-    # opt_EM_gmm = EM_GMM(GMM_data, ref_GMM, delta, psi)
+    if calibrate:
+        scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
 
-    # ------------------- LBG algorithm ---------------------
+    if printStatus:
+        print('calculating minDCF...')
 
-    # Maximum likelihood parameters
-    mu_ML = vcol(GMM_data.mean(axis=1))
-    C_ML = datasetCovarianceM(GMM_data)
-
-    
-    U, s, _ = np.linalg.svd(C_ML)
-    s[s < psi] = psi
-    C_ML_adjusted = np.dot(U, vcol(s) * U.T)
-    # IMPORTANT: CHECK that this transformation is important in the ML solution with other dataset, because in this ML solution,
-    # the singular value vector doesn't contain any eigenvalue lower than 0 so the initial transformation seems to do nothing
-
-    # print(np.abs(C_ML_adjusted - C_ML).max())
-
-    GMM_1 = [(1.0, mu_ML, C_ML_adjusted)]
-    alpha = 0.1
-    
-    opt_EM_GMM = EM_GMM(GMM_data, GMM_1, delta, psi, iprint=True)
-    print('end of step 0 EM')
-    opt_LBG_GMM = LBG_GMM(GMM_data, GMM_1, delta, alpha, psi, 2, iprint=True)
-
-    # ----------------- GMM for classification ---------------------
-
-    D, L = load('../datasets/iris.csv')
-    K = len(np.unique(L))
-    (DTR, LTR), (DTE, LTE) = split_dataset(D, L, *split_db_2to1(D))
-    delta = 1e-6
-    alpha = 0.1
-    psi = 0.01
-    priorP = vcol(np.array([1.0 / 3.0, 1.0 / 3.0, 1.0 / 3.0]))
-    n_splits = 4 # Number of components will be equal to 2^n_splits
-
-    for i in range(n_splits + 1):
-        GMM_classifier(DTR, LTR, DTE, LTE, K, delta, alpha, psi, i, priorP)
-        GMM_classifier(DTR, LTR, DTE, LTE, K, delta, alpha, psi, i, priorP, diagCov=True)
-        GMM_classifier(DTR, LTR, DTE, LTE, K, delta, alpha, psi, i, priorP, tiedCov=True)
-        print('-----------------------------------')
-    
-
-
-if __name__ == '__main__':
-    main()
+    (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
+    if show:
+        print('\t{}GMM (n_components = {}) -> min DCF: {}    act DCF: {}'.format(GMM_type, 2**n_splits, round(dcf_min, 3), round(dcf_norm, 3)))
+    return dcf_min

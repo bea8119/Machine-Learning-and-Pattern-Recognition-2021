@@ -2,8 +2,8 @@ import numpy as np
 import sys
 import scipy.special
 
-# sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
-sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
+sys.path.append('/home/oormacheah/Desktop/Uni shit/MLPR') # for linux
+# sys.path.append('C:/Users/andre/Desktop/Cositas/poli_repo/MLPR_21-22') # for windows
 from utility.vrow_vcol import vcol, vrow
 from lab6.load import load_data, split_data
 
