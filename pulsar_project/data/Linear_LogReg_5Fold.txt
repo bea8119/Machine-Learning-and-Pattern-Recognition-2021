@@ -1,0 +1,38 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Linear Log Reg (no PCA)
+        Linear LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.116    act DCF: 0.119
+        Linear LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.113    act DCF: 0.18
+        Linear LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.119    act DCF: 0.31
+-----------------------------------------------------
+5-Fold cross-validation Linear Log Reg (PCA m = 7)
+        Linear LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.148    act DCF: 0.153
+        Linear LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.144    act DCF: 0.234
+        Linear LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.156    act DCF: 0.354
+-----------------------------------------------------
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)    
+**************************************************** 
+5-Fold cross-validation Linear Log Reg (no PCA)      
+        Linear LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.218    act DCF: 0.224
+        Linear LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.21    act DCF: 0.311
+        Linear LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.219    act DCF: 0.339
+-----------------------------------------------------
+5-Fold cross-validation Linear Log Reg (PCA m = 7)
+        Linear LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.263    act DCF: 0.274
+        Linear LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.259    act DCF: 0.342
+        Linear LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.267    act DCF: 0.536
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Linear Log Reg (no PCA)
+        Linear LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.526    act DCF: 0.548
+        Linear LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.559    act DCF: 0.826
+        Linear LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.515    act DCF: 0.821
+-----------------------------------------------------
+5-Fold cross-validation Linear Log Reg (PCA m = 7)
+        Linear LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.587    act DCF: 0.639
+        Linear LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.62    act DCF: 0.995
+        Linear LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.575    act DCF: 0.909
+-----------------------------------------------------
