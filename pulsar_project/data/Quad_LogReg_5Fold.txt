@@ -1,0 +1,38 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Quadratic Log Reg (no PCA)
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.114    act DCF: 0.116
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.11    act DCF: 0.164
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.123    act DCF: 0.28
+-----------------------------------------------------
+5-Fold cross-validation Quadratic Log Reg (PCA m = 7)
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.126    act DCF: 0.129
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.122    act DCF: 0.183
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.13    act DCF: 0.319
+-----------------------------------------------------
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Quadratic Log Reg (no PCA)
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.218    act DCF: 0.225
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.206    act DCF: 0.293
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.235    act DCF: 0.364
+-----------------------------------------------------
+5-Fold cross-validation Quadratic Log Reg (PCA m = 7)
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.215    act DCF: 0.226
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.219    act DCF: 0.316
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.235    act DCF: 0.369
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Quadratic Log Reg (no PCA)
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.47    act DCF: 0.505
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.503    act DCF: 0.764
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.514    act DCF: 0.723
+-----------------------------------------------------
+5-Fold cross-validation Quadratic Log Reg (PCA m = 7)
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.562    act DCF: 0.573
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.55    act DCF: 0.877
+        Quadratic LogReg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.582    act DCF: 0.766
+-----------------------------------------------------
