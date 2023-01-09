@@ -3,7 +3,7 @@ import numpy as np
 import feature_utils as f
 import SVM
 
-PCA_list = [None, 7, 6]
+PCA_list = [None]
 
 kernel_SVM = False # False for Linear SVM, regardless of the next flag
 Poly_RBF = False # True for polynomial, False for RBF kernel SVM (assuming kernel flag == True)
@@ -13,13 +13,22 @@ SVM_param_list = [(0.1, None), (0.1, 0.5)] # Pair of (C, priorT_balance)
 
 calibrate = False
 
+# (x1T_x2 + c)^2 Polynomial kernel params
+c = 1
+d = 2
+
+# RBF parameter
+gamma = 1e-1
+
+printStatus = False
+
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')
     DTE, LTE = u.load('../data/Test.txt')
 
     # Reduced dataset (less samples) for testing only
-    # DTR, LTR = u.reduced_dataset(DTR, LTR, 4000, seed=0)
+    # DTR, LTR = u.reduced_dataset(DTR, LTR, 400, seed=0)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
@@ -27,13 +36,6 @@ def main():
 
     n = 4 # Single-Fold value
     K = 5 # K-Fold cross-validation K -> Leave-One-Out if equal to D.shape[1] (number of samples)
-
-    # (x1T_x2 + c)^2 Polynomial kernel params
-    c = 1
-    d = 2
-
-    # RBF parameter
-    gamma = 1e-1
 
     cal_msg = '(calibrated)' if calibrate else '(uncalibrated)'
     idxTrain_s, idxTest_s = u.split_db_n_to_1(DTR, n) # Single-fold split
@@ -68,7 +70,7 @@ def main():
             # K-fold
             print('{}-Fold cross-validation {} SVM {} {}'.format(K, type_SVM, pca_msg, cal_msg))
             for params in SVM_param_list:
-                SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma, printStatus=True)
+                SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma, printStatus=printStatus)
             print('-----------------------------------------------------')
 
             # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------

@@ -1,0 +1,20 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Linear SVM (no PCA) (uncalibrated)
+        Linear SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.111    act DCF: 0.213
+        Linear SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.115    act DCF: 0.119
+-----------------------------------------------------
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Linear SVM (no PCA) (uncalibrated)
+        Linear SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.211    act DCF: 0.478
+        Linear SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.221    act DCF: 0.296
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation Linear SVM (no PCA) (uncalibrated)
+        Linear SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.569    act DCF: 0.964
+        Linear SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.563    act DCF: 0.841
+-----------------------------------------------------

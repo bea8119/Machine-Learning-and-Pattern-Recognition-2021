@@ -5,20 +5,20 @@ import numpy as np
 
 LR_param_list = [
     (1e-5, 0.5),
-    # (1e-5, 0.1),
-    # (1e-5, 0.9),
+    (1e-5, 0.1),
+    (1e-5, 0.9),
 ] # Pairs of parameters to apply LogReg
 
-PCA_list = [None, 7, 6, 5]
+PCA_list = [None, 7]
 
-quadratic = False # False for Linear Logistic Regression
+quadratic = True # False for Linear Logistic Regression
 
 def main():
     DTR, LTR = u.load('../data/Train.txt')
     DTE, LTE = u.load('../data/Test.txt')
 
     # Reduced dataset (less samples) for testing only
-    # DTR, LTR = u.reduced_dataset(DTR, LTR, 4000, seed=0)
+    # DTR, LTR = u.reduced_dataset(DTR, LTR, 2000, seed=0)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
