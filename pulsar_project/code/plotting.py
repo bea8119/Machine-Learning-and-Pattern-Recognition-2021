@@ -39,10 +39,13 @@ def plotHistogram(D, L, class_names, attribute_names):
 def plotHeatmap(D, L):
     plt.figure('Whole Dataset')
     seaborn.heatmap(np.abs(np.corrcoef(D)), linewidth=0.5, cmap="Greys", square=True, cbar=False)
+    plt.xlabel('Whole Dataset')
     plt.figure('False class samples')
     seaborn.heatmap(np.abs(np.corrcoef(D[:, L == 0])), linewidth=0.5, cmap="Reds", square=True, cbar=False)
+    plt.xlabel('False Class Samples')
     plt.figure('True class samples')
     seaborn.heatmap(np.abs(np.corrcoef(D[:, L == 1])), linewidth=0.5, cmap="Blues", square=True, cbar=False)
+    plt.xlabel('True Class Samples')
     # plt.show()
 
 def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, eff_priors, quad=False, save_fig=False):
@@ -257,7 +260,7 @@ def plotGMM(n_splits, dcf_min_list, eff_prior, tied_diag_pairs, colors, PCA_list
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')
-    # DTE, LTE = u.load('../data/Test.txt')
+    DTE, LTE = u.load('../data/Test.txt')
     
     # Pre-processing (Z-normalization)
     DTR, mean, std = f.Z_normalization(DTR)
@@ -269,6 +272,7 @@ def main():
     # Plot heatmap of covariance
     plotHeatmap(DTR, LTR)
     plt.show()
+    plt.savefig()
 
 if __name__ == '__main__':
     main()
