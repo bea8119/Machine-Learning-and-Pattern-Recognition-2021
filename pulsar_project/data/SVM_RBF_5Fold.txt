@@ -1,0 +1,20 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation RBF Kernel SVM (no PCA) (uncalibrated)
+        RBF Kernel SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.125    act DCF: 0.232
+        RBF Kernel SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.123    act DCF: 0.13
+-----------------------------------------------------
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation RBF Kernel SVM (no PCA) (uncalibrated)
+        RBF Kernel SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.232    act DCF: 1.0
+        RBF Kernel SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.229    act DCF: 0.968
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation RBF Kernel SVM (no PCA) (uncalibrated)
+        RBF Kernel SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.727    act DCF: 1.0
+        RBF Kernel SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.561    act DCF: 1.0
+-----------------------------------------------------
