@@ -31,3 +31,28 @@ Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
         Tied Diag Covariance GMM (n_components = 8) -> min DCF: 0.191    act DCF: 0.193
         Tied Diag Covariance GMM (n_components = 16) -> min DCF: 0.167    act DCF: 0.17
 -----------------------------------------------------
+
+
+
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+5-Fold cross-validation GMM classifiers (no PCA)
+        Full Covariance GMM (n_components = 2) -> min DCF: 0.151    act DCF: 0.159
+        Full Covariance GMM (n_components = 4) -> min DCF: 0.134    act DCF: 0.139
+        Full Covariance GMM (n_components = 8) -> min DCF: 0.124    act DCF: 0.128
+        Full Covariance GMM (n_components = 16) -> min DCF: 0.119    act DCF: 0.12
+        Diag Covariance GMM (n_components = 2) -> min DCF: 0.191    act DCF: 0.195
+        Diag Covariance GMM (n_components = 4) -> min DCF: 0.171    act DCF: 0.178
+        Diag Covariance GMM (n_components = 8) -> min DCF: 0.151    act DCF: 0.153
+        Diag Covariance GMM (n_components = 16) -> min DCF: 0.143    act DCF: 0.15
+        Tied Covariance GMM (n_components = 2) -> min DCF: 0.141    act DCF: 0.158
+        Tied Covariance GMM (n_components = 4) -> min DCF: 0.146    act DCF: 0.169
+        Tied Covariance GMM (n_components = 8) -> min DCF: 0.154    act DCF: 0.165
+        Tied Covariance GMM (n_components = 16) -> min DCF: 0.143    act DCF: 0.162
+        Tied Diag Covariance GMM (n_components = 2) -> min DCF: 0.167    act DCF: 0.174      
+        Tied Diag Covariance GMM (n_components = 4) -> min DCF: 0.167    act DCF: 0.171      
+        Tied Diag Covariance GMM (n_components = 8) -> min DCF: 0.161    act DCF: 0.162 
+	  Tied Diag Covariance GMM (n_components = 16) -> min DCF: 0.159    act DCF: 0.161
+
+
+

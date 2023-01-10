@@ -1,0 +1,38 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+GMM classifiers on whole dataset (no PCA)
+        Full Covariance GMM classifier (2 components)-> min DCF: 0.156    act DCF: 0.18
+        Full Covariance GMM classifier (4 components)-> min DCF: 0.12    act DCF: 0.126
+        Full Covariance GMM classifier (8 components)-> min DCF: 0.11    act DCF: 0.114
+        Full Covariance GMM classifier (16 components)-> min DCF: 0.123    act DCF: 0.123
+        Tied Covariance GMM classifier (2 components)-> min DCF: 0.139    act DCF: 0.153
+        Tied Covariance GMM classifier (4 components)-> min DCF: 0.143    act DCF: 0.161
+        Tied Covariance GMM classifier (8 components)-> min DCF: 0.138    act DCF: 0.149
+        Tied Covariance GMM classifier (16 components)-> min DCF: 0.132    act DCF: 0.148
+-----------------------------------------------------
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+GMM classifiers on whole dataset (no PCA)
+        Full Covariance GMM classifier (2 components)-> min DCF: 0.256    act DCF: 0.259
+        Full Covariance GMM classifier (4 components)-> min DCF: 0.239    act DCF: 0.245
+        Full Covariance GMM classifier (8 components)-> min DCF: 0.218    act DCF: 0.229
+        Full Covariance GMM classifier (16 components)-> min DCF: 0.23    act DCF: 0.237
+        Tied Covariance GMM classifier (2 components)-> min DCF: 0.276    act DCF: 0.301
+        Tied Covariance GMM classifier (4 components)-> min DCF: 0.313    act DCF: 0.387
+        Tied Covariance GMM classifier (8 components)-> min DCF: 0.292    act DCF: 0.316
+        Tied Covariance GMM classifier (16 components)-> min DCF: 0.267    act DCF: 0.291
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+GMM classifiers on whole dataset (no PCA)
+        Full Covariance GMM classifier (2 components)-> min DCF: 0.764    act DCF: 1.042
+        Full Covariance GMM classifier (4 components)-> min DCF: 0.529    act DCF: 0.758
+        Full Covariance GMM classifier (8 components)-> min DCF: 0.586    act DCF: 0.673
+        Full Covariance GMM classifier (16 components)-> min DCF: 0.525    act DCF: 0.539
+        Tied Covariance GMM classifier (2 components)-> min DCF: 0.58    act DCF: 0.912
+        Tied Covariance GMM classifier (4 components)-> min DCF: 0.639    act DCF: 0.977
+        Tied Covariance GMM classifier (8 components)-> min DCF: 0.609    act DCF: 0.905
+        Tied Covariance GMM classifier (16 components)-> min DCF: 0.6    act DCF: 0.938
+-----------------------------------------------------
