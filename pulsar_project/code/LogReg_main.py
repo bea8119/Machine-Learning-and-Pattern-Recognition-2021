@@ -38,23 +38,23 @@ def main():
         for m in PCA_list:
             # Single Fold
             pca_msg = '(no PCA)' if m is None else f'(PCA m = {m})'
-            if m is not None:
-                DTR_PCA_fold = u.split_dataset(DTR, LTR, idxTrain_s, idxTest_s)[0][0] # Retrieve single fold train subset
-                PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
-                DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
+            # if m is not None:
+            #     DTR_PCA_fold = u.split_dataset(DTR, LTR, idxTrain_s, idxTest_s)[0][0] # Retrieve single fold train subset
+            #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
+            #     DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            print('Single Fold ({}-to-1) {} Log Reg {}'.format(
-                n, 'Quadratic' if quadratic else 'Linear', pca_msg
-                ))
-            for params in LR_param_list:
-                LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, *params, idxTrain_s, idxTest_s, triplet, quad=quadratic)
-            print('-----------------------------------------------------')
+            # print('Single Fold ({}-to-1) {} Log Reg {}'.format(
+            #     n, 'Quadratic' if quadratic else 'Linear', pca_msg
+            #     ))
+            # for params in LR_param_list:
+            #     LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, *params, idxTrain_s, idxTest_s, triplet, quad=quadratic)
+            # print('-----------------------------------------------------')
 
             # K-fold
-            print('{}-Fold cross-validation {} Log Reg {}'.format(K, 'Quadratic' if quadratic else 'Linear', pca_msg))
-            for params in LR_param_list:
-                LR.K_fold_LogReg(DTR, LTR, K, *params, triplet, m, quad=quadratic)
-            print('-----------------------------------------------------')
+            # print('{}-Fold cross-validation {} Log Reg {}'.format(K, 'Quadratic' if quadratic else 'Linear', pca_msg))
+            # for params in LR_param_list:
+            #     LR.K_fold_LogReg(DTR, LTR, K, *params, triplet, m, quad=quadratic)
+            # print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
             if m is not None:

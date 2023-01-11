@@ -7,13 +7,13 @@ import matplotlib.pyplot as plt
 
 CSF_type_list = [(False, False), (False, True), (True, False), (True, True)] # (Tied, Diag) flags
 
-PCA_list = [None, 7]
+PCA_list = [7]
 
-n_splits = 6
+n_splits = 4
 
 application_points = [(0.5, 1, 1)]#, (0.1, 1, 1), (0.9, 1, 1)]
 
-plot = True
+plot = False
 
 def main():
 
@@ -43,8 +43,8 @@ def main():
 
     for triplet in application_points:
         print('\nApplication point (pi_eff: {}, C_fn: {}, C_fp: {})'.format(*triplet))
-        print('****************************************************')        
-        if plot: 
+        print('****************************************************')
+        if plot:
             dcf_min_single = [] 
             dcf_min_kfold = []
         for i, m in enumerate(PCA_list):
@@ -70,7 +70,8 @@ def main():
             # K-fold
             print('{}-Fold cross-validation GMM classifiers {}'.format(K, '(no PCA)' if m is None else f'(PCA m = {m})')) 
             for j, tied_diag_pair in enumerate(CSF_type_list):
-                dcf_min_kfold[i].append(np.array([]))
+                if plot:
+                    dcf_min_kfold[i].append(np.array([]))
                 for n in range(1, n_splits + 1):
                     dcf_min = GMM.K_fold_GMM(DTR, LTR, k, K, delta, alpha, psi, n, *tied_diag_pair, triplet, m, show=True)
                     if plot:

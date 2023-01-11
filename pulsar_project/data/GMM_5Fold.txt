@@ -52,7 +52,7 @@ Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
         Tied Diag Covariance GMM (n_components = 2) -> min DCF: 0.167    act DCF: 0.174      
         Tied Diag Covariance GMM (n_components = 4) -> min DCF: 0.167    act DCF: 0.171      
         Tied Diag Covariance GMM (n_components = 8) -> min DCF: 0.161    act DCF: 0.162 
-	  Tied Diag Covariance GMM (n_components = 16) -> min DCF: 0.159    act DCF: 0.161
+	Tied Diag Covariance GMM (n_components = 16) -> min DCF: 0.159    act DCF: 0.161
 
 
 
