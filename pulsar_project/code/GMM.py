@@ -219,17 +219,17 @@ def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet,
             GMM_type += 'Full '
         GMM_type += 'Covariance '
 
-    nTest = int(D.shape[1] / K)
     np.random.seed(seed)
     idx = np.random.permutation(D.shape[1])
 
-    startTest = 0
+    even_increase = [round(x) for x in np.linspace(0, D.shape[1], K + 1)]
+
     # For DCF computation
     scores_all = np.array([])
     for j in range(K):
         if printStatus:
             print('fold {} start...'.format(j + 1))
-        idxTest = idx[startTest: (startTest + nTest)]
+        idxTest = idx[even_increase[j]: even_increase[j + 1]]
         idxTrain = np.setdiff1d(idx, idxTest)
         if PCA_m is not None:
             DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
@@ -240,7 +240,6 @@ def K_fold_GMM(D, L, k, K, delta, alpha, psi, n_splits, tied, diag, app_triplet,
             scores = GMM_wrapper(D, L, k, idxTrain, idxTest, delta, alpha, psi, n_splits, tied, diag, app_triplet, False, show)
 
         scores_all = np.concatenate((scores_all, scores))
-        startTest += nTest
         
     # DCF computation (compute)
     trueL_ordered = L[idx] # idx was computed randomly before

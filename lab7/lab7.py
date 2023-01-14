@@ -8,10 +8,12 @@ from utility.vrow_vcol import vcol, vrow
 from lab2.load_plot import load
 from lab5.lab5 import split_db_2to1, split_dataset
 
-# 2 methods: 
-# 1) Numerical approx. of the gradient of f (MUCH more expensive)
-# 2) Explicitly passed gradient (solved computing the gradient of f manually)
-#   - Better
+'''
+2 methods: 
+1) Numerical approx. of the gradient of f (MUCH more expensive)
+2) Explicitly passed gradient (solved computing the gradient of f manually)
+  - Better
+'''
 
 def f_1(y_z):
     return (y_z[0] + 3)**2 + np.sin(y_z[0]) + (y_z[1] + 1)**2

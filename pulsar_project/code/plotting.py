@@ -239,7 +239,7 @@ def plotGMM(n_splits, dcf_min_list, eff_prior, tied_diag_pairs, colors, PCA_list
             GMM_type += 'Tied '
         if diag:
             GMM_type += 'Diag '
-        if not diag and not tied:
+        if not diag:
             GMM_type += 'Full '
         GMM_type += 'Covariance '
 

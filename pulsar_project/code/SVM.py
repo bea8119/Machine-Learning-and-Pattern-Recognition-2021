@@ -83,7 +83,7 @@ def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=
         bounds_list = [(0, C_T if LTR[i] == 1 else C_F) for i in range(DTR.shape[1])]
 
     scores = SVM_obj.SVM_scores(DTE, kern, Poly_RBF, bounds_list, c, d, gamma)
-
+    
     if calibrate:
         scores, w, b = calibrate_scores(scores, LTE, 0.5)
 
@@ -152,30 +152,29 @@ def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, sho
         else:
             type_SVM = 'Linear'
 
-    nTest = int(D.shape[1] / K)
     np.random.seed(seed)
-    idx = np.random.permutation(D.shape[1]) 
+    idx = np.random.permutation(D.shape[1])
 
-    startTest = 0
+    even_increase = [round(x) for x in np.linspace(0, D.shape[1], K + 1)]
+
     # For DCF computation
     scores_all = np.array([])
     for j in range(K):
         if printStatus:
             print('fold {} start...'.format(j + 1))
-        idxTest = idx[startTest: (startTest + nTest)]
+        idxTest = idx[even_increase[j]: even_increase[j + 1]]
         idxTrain = np.setdiff1d(idx, idxTest)
         if PCA_m is not None:
             DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
             PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
             D_PCA = np.dot(PCA_P.T, D)
             scores = SVM_wrapper(D_PCA, L, K_svm, C, priorT_b, idxTrain, idxTest, app_triplet,
-                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF, calibrate=calibrate)
+                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF)
         else:
             scores = SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, app_triplet,
-                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF, calibrate=calibrate)
+                c, d, gamma, single_fold=False, show=show, kern=kern, Poly_RBF=Poly_RBF)
 
         scores_all = np.concatenate((scores_all, scores))
-        startTest += nTest
 
     # DCF computation (compute)
     trueL_ordered = L[idx] # idx was computed randomly before

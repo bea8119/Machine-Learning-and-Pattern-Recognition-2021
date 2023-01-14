@@ -1,0 +1,37 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+Quadratic Log Reg on whole dataset (no PCA)
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.108    act DCF: 0.111
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.1    act DCF: 0.174
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.115    act DCF: 0.281
+-----------------------------------------------------
+Quadratic Log Reg on whole dataset (PCA m = 7)
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.112    act DCF: 0.116
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.115    act DCF: 0.193
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.114    act DCF: 0.314
+-----------------------------------------------------
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+Quadratic Log Reg on whole dataset (no PCA)
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.207    act DCF: 0.214
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.206    act DCF: 0.316
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.215    act DCF: 0.378
+-----------------------------------------------------
+Quadratic Log Reg on whole dataset (PCA m = 7)
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.208    act DCF: 0.234
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.203    act DCF: 0.34
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.224    act DCF: 0.347
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+Quadratic Log Reg on whole dataset (no PCA)
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.422    act DCF: 0.434
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.457    act DCF: 0.649
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.441    act DCF: 0.701
+-----------------------------------------------------
+Quadratic Log Reg on whole dataset (PCA m = 7)
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.5) -> min DCF: 0.481    act DCF: 0.526
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.1) -> min DCF: 0.492    act DCF: 0.781
+        Quadratic Log Reg (lambda = 1e-05, priorT = 0.9) -> min DCF: 0.473    act DCF: 0.777

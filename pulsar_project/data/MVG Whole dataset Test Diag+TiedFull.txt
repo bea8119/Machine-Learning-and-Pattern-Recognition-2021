@@ -1,0 +1,43 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+MVG classifiers on whole dataset (no PCA)
+        Diag Covariance Gaussian classifier -> min DCF: 0.185    act DCF: 0.191
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.11    act DCF: 0.202
+-----------------------------------------------------
+MVG classifiers on whole dataset (PCA m = 7)
+        Diag Covariance Gaussian classifier -> min DCF: 0.217    act DCF: 0.234
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.147    act DCF: 0.253
+-----------------------------------------------------
+MVG classifiers on whole dataset (PCA m = 6)
+        Diag Covariance Gaussian classifier -> min DCF: 0.215    act DCF: 0.242
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.147    act DCF: 0.257
+-----------------------------------------------------
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+MVG classifiers on whole dataset (no PCA)
+        Diag Covariance Gaussian classifier -> min DCF: 0.33    act DCF: 0.541
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.207    act DCF: 0.278
+-----------------------------------------------------
+MVG classifiers on whole dataset (PCA m = 7)
+        Diag Covariance Gaussian classifier -> min DCF: 0.626    act DCF: 0.66
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.268    act DCF: 0.358
+-----------------------------------------------------
+MVG classifiers on whole dataset (PCA m = 6)
+        Diag Covariance Gaussian classifier -> min DCF: 0.648    act DCF: 0.674
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.268    act DCF: 0.36
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+MVG classifiers on whole dataset (no PCA)
+        Diag Covariance Gaussian classifier -> min DCF: 0.621    act DCF: 1.178
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.591    act DCF: 1.338
+-----------------------------------------------------
+MVG classifiers on whole dataset (PCA m = 7)
+        Diag Covariance Gaussian classifier -> min DCF: 0.678    act DCF: 0.941
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.622    act DCF: 1.509
+-----------------------------------------------------
+MVG classifiers on whole dataset (PCA m = 6)
+        Diag Covariance Gaussian classifier -> min DCF: 0.687    act DCF: 0.922
+        Tied Full-Cov Gaussian classifier -> min DCF: 0.607    act DCF: 1.543
