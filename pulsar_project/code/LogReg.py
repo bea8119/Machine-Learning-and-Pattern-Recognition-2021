@@ -123,7 +123,7 @@ def K_fold_LogReg(D, L, K, l, priorT, app_triplet, PCA_m=None, seed=0, show=True
 def calibrate_scores(scores_D, L, eff_prior, w=None, b=None):
     '''This function takes the scores (1D) of the classifiers (whatever the model yields as scores) and returns
     the calibrated scores after applying a LogReg with lambda = 0 (no regularization) and a given effective
-    prior to use as the "prior" of the LogReg model. This LogReg will return a new set of scores (applying the 
+    prior to use as the "priorT" of the LogReg model. This LogReg will return a new set of scores (applying the 
     optimal w and b to the same scores used for training the data) that are the transformed (hopefully optimal)
     scores and also returns the corresponding w, b pair. If you pass w and b, instead, the calibration will 
     happen by applying the transformation given (skipping the training)'''

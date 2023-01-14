@@ -13,7 +13,7 @@ n_splits = 6
 
 application_points = [(0.5, 1, 1)]#, (0.1, 1, 1), (0.9, 1, 1)]
 
-plot = True
+plot = True # To properly plot, PCA_list must contain 2 elements only!
 
 def main():
 
