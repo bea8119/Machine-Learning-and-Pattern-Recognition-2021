@@ -13,3 +13,20 @@ Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
 ****************************************************
 Quadratic Kernel SVM on whole dataset (no PCA)
         Quadratic Kernel SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.204    act DCF: 0.462
+        Quadratic Kernel SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.205    act DCF: 0.282
+-----------------------------------------------------
+Quadratic Kernel SVM on whole dataset (PCA m = 7)
+        Quadratic Kernel SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.215    act DCF: 0.446
+        Quadratic Kernel SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.218    act DCF: 0.295
+-----------------------------------------------------
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+Quadratic Kernel SVM on whole dataset (no PCA)
+        Quadratic Kernel SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.522    act DCF: 0.963
+        Quadratic Kernel SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.451    act DCF: 0.847
+-----------------------------------------------------
+Quadratic Kernel SVM on whole dataset (PCA m = 7)
+        Quadratic Kernel SVM (K = 1, C = 0.1, priorT = unb) -> min DCF: 0.559    act DCF: 0.988
+        Quadratic Kernel SVM (K = 1, C = 0.1, priorT = 0.5) -> min DCF: 0.477    act DCF: 0.896
+-----------------------------------------------------

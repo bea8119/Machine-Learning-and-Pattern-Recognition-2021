@@ -13,6 +13,10 @@ CSF_list = [
 
 PCA_list = [None, 7, 6, 5]
 
+printStatus = False
+
+calibrate = True
+
 def main():
 
     DTR, LTR = u.load('../data/Train.txt')
@@ -46,13 +50,13 @@ def main():
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
                 DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            print('Single Fold ({}-to-1) MVG classifiers {}'.format(n, pca_msg))
-            for classifier in CSF_list:
-                classifier[0](DTR if m is None else DTR_PCA, LTR, k, idxTrain_s, idxTest_s, triplet, show=True)
-            print('-----------------------------------------------------')
+            # print('Single Fold ({}-to-1) MVG classifiers {}'.format(n, pca_msg))
+            # for classifier in CSF_list:
+            #     classifier[0](DTR if m is None else DTR_PCA, LTR, k, idxTrain_s, idxTest_s, triplet, show=True)
+            # print('-----------------------------------------------------')
 
             # K-fold
-            MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet, m)
+            MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, triplet, m, calibrate=calibrate, printStatus=printStatus)
             print('-----------------------------------------------------')
 
             # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------

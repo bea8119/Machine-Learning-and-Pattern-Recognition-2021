@@ -5,7 +5,7 @@ import SVM
 
 PCA_list = [None, 7]
 
-kernel_SVM = True # False for Linear SVM, regardless of the next flag
+kernel_SVM = False # False for Linear SVM, regardless of the next flag
 Poly_RBF = True # True for polynomial, False for RBF kernel SVM (assuming kernel flag == True)
 K_svm = 1 # Value of sqrt(psi)
 
@@ -14,7 +14,8 @@ SVM_param_list = [
     (0.1, None),
     (0.1, 0.5),
 ]
-calibrate = False
+
+calibrate = True
 
 # (x1T_x2 + c)^2 Polynomial kernel params
 c = 1
@@ -71,10 +72,10 @@ def main():
             # print('-----------------------------------------------------')
 
             # K-fold
-            # print('{}-Fold cross-validation {} SVM {} {}'.format(K, type_SVM, pca_msg, cal_msg))
-            # for params in SVM_param_list:
-            #     SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma, printStatus=printStatus)
-            # print('-----------------------------------------------------')
+            print('{}-Fold cross-validation {} SVM {} {}'.format(K, type_SVM, pca_msg, cal_msg))
+            for params in SVM_param_list:
+                SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma, printStatus=printStatus, calibrate=calibrate)
+            print('-----------------------------------------------------')
 
             # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
             if m is not None:

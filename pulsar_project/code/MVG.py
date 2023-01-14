@@ -46,7 +46,7 @@ def testDCF_MVG(LTE, classifierName, scores, triplet):
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)
     print(f'\t{classifierName}Gaussian classifier -> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
 
-def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
+def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show, calibrate=False):
     '''
     Returns the class-posterior log-likelihood (not probability) matrix (S) or just prints the min DCF 
     '''
@@ -55,6 +55,9 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show):
     for i in range(k):
         S[i, :] = vrow(np.array(logpdf_GAU_ND(DTE, mu_arr[i], C_arr[i])))
     scores = S[1, :] - S[0, :] # Log-likelihood ratios
+
+    if calibrate:
+        scores, w, b = calibrate_scores(scores, LTE, 0.5)
 
     if show:
         testDCF_MVG(LTE, CSF_name, scores, triplet)
@@ -85,9 +88,10 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibra
         msg = ' (no PCA)'
     print(f'{K}-Fold cross-validation MVG Classifiers{msg}')
 
-    nTest = int(D.shape[1] / K)
     np.random.seed(seed)
     idx = np.random.permutation(D.shape[1]) 
+
+    even_increase = [round(x) for x in np.linspace(0, D.shape[1], K + 1)]
 
     for i in range(len(classifiers)):
         startTest = 0
@@ -96,7 +100,7 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibra
         for j in range(K):
             if printStatus:
                 print('fold {} start...'.format(j + 1))
-            idxTest = idx[startTest: (startTest + nTest)]
+            idxTest = idx[even_increase[j]: even_increase[j + 1]]
             idxTrain = np.setdiff1d(idx, idxTest)
             if PCA_m is not None:
                 DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
@@ -107,13 +111,12 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibra
                 scores = classifiers[i][0](D, L, k, idxTrain, idxTest, app_triplet, show=False)
 
             scores_all = np.concatenate((scores_all, scores))
-            startTest += nTest
         
         # DCF computation (compute)
         trueL_ordered = L[idx] # idx was computed randomly before
 
         if calibrate:
-            scores_all = calibrate_scores(scores_all, trueL_ordered, 0.5)
+            scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
 
         if printStatus:
             print('calculating minDCF...')
