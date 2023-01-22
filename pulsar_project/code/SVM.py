@@ -145,7 +145,7 @@ class SVM_class:
             scores = np.dot(w_star.T, DTE) # Acts as llrs for min DCF but actually not probabilistic so need to calibrate 
             return scores.ravel() # Return as 1D array
 
-def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, show=True, kern=False, Poly_RBF=True, c=None, d=None, gamma=None, calibrate=False, printStatus=False):
+def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, show=True, kern=False, Poly_RBF=True, c=None, d=None, gamma=None, calibrate=False, printStatus=False, returnScores=False):
     if show:
         if kern:
             type_SVM = '{} Kernel'.format('Quadratic' if Poly_RBF else 'RBF')
@@ -181,6 +181,9 @@ def K_fold_SVM(D, L, K, K_svm, C, priorT_b, app_triplet, PCA_m=None, seed=0, sho
 
     if calibrate:
         scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
+
+    if returnScores:
+        return scores_all
 
     if printStatus:
         print('calculating minDCF...')

@@ -50,6 +50,7 @@ def DCF_unnormalized_normalized_min_binary(scores, trueL, triplet):
 	dcf_norm = dcf_u / B_dummy
 	# Minimum DCF (with score calibration)
 	# Create a new object (ndarray), otherwise in-place sorting will mess up the following computations of the confusion matrix
+
 	thresholds = np.array(scores)
 	thresholds.sort()
 	thresholds = np.concatenate([np.array([-np.inf]), thresholds, np.array([np.inf])])

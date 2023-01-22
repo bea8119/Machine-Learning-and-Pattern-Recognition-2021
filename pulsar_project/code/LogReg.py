@@ -148,7 +148,7 @@ def calibrate_scores(scores_D, L, eff_prior, w=None, b=None):
         return calibrated_scores, w, b
     else:
         calibrated_scores = np.dot(w.T, scores_D) + b
-        return calibrated_scores
+        return calibrated_scores.ravel()
 
 
 def fusionModel(csf_1_scores, csf_2_scores, L, eff_prior, w=None, b=None):
@@ -167,4 +167,4 @@ def fusionModel(csf_1_scores, csf_2_scores, L, eff_prior, w=None, b=None):
         return fused_scores, w, b
     else:
         fused_scores = np.dot(w.T, scores_D) + b
-        return fused_scores
+        return fused_scores.ravel()

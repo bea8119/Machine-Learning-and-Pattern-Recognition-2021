@@ -42,11 +42,11 @@ def classifierSetup(D, L, k, idxTrain, idxTest, tied=False):
         C_arr = [C_tied for i in range(k)]
     return (DTE, LTE), mu_arr, C_arr 
 
-def testDCF_MVG(LTE, classifierName, scores, triplet):
+def testDCF_MVG(LTE, scores, triplet):
     (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)
-    print(f'\t{classifierName}Gaussian classifier -> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
+    print(f'\tpi_eff = {triplet[0]}\tmin DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
 
-def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show, calibrate=False):
+def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplets, show, calibrate=False):
     '''
     Returns the class-posterior log-likelihood (not probability) matrix (S) or just prints the min DCF 
     '''
@@ -60,7 +60,9 @@ def gaussianCSF(DTE, LTE, k, mu_arr, C_arr, CSF_name, triplet, show, calibrate=F
         scores, w, b = calibrate_scores(scores, LTE, 0.5)
 
     if show:
-        testDCF_MVG(LTE, CSF_name, scores, triplet)
+        print(f'{CSF_name}Gaussian classifier')
+        for triplet in triplets:
+            testDCF_MVG(LTE, scores, triplet)
     return scores
 
 def gaussianCSF_wrapper(D, L, k, idxTrain, idxTest, triplet=None, show=True):
@@ -81,20 +83,23 @@ def tiedNaiveBayesGaussianCSF(D, L, k, idxTrain, idxTest, triplet=None, show=Tru
     C_naive_arr = [C_arr[i] * np.identity(C_arr[i].shape[0]) for i in range(k)] # element by element mult.
     return gaussianCSF(DTE, LTE, k, mu_arr, C_naive_arr, "Tied Diag-Cov ", triplet, show)
 
-def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibrate=False, printStatus=False):
-    if PCA_m is not None:
-        msg = f' (PCA m = {PCA_m})'
-    else: 
-        msg = ' (no PCA)'
-    print(f'{K}-Fold cross-validation MVG Classifiers{msg}')
+def K_fold_MVG(D, L, k, K, classifiers, app_triplets, PCA_m=None, show=True, seed=0, calibrate=False, printStatus=False, returnScores=False):
+    if show:
+        if PCA_m is not None:
+            msg = f' (PCA m = {PCA_m})'
+        else: 
+            msg = ' (no PCA)'
+        print(f'\n{K}-Fold cross-validation MVG Classifiers{msg}')
+        print('****************************************************')
 
     np.random.seed(seed)
-    idx = np.random.permutation(D.shape[1]) 
+    idx = np.random.permutation(D.shape[1])
 
     even_increase = [round(x) for x in np.linspace(0, D.shape[1], K + 1)]
 
     for i in range(len(classifiers)):
-        startTest = 0
+        if show:
+            print(f'{classifiers[i][1]} classifier')
         # For DCF computation
         scores_all = np.array([])
         for j in range(K):
@@ -106,9 +111,9 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibra
                 DTR_PCA_fold = split_dataset(D, L, idxTrain, idxTest)[0][0]
                 PCA_P = PCA_givenM(DTR_PCA_fold, PCA_m)
                 D_PCA = np.dot(PCA_P.T, D)
-                scores = classifiers[i][0](D_PCA, L, k, idxTrain, idxTest, app_triplet, show=False)
+                scores = classifiers[i][0](D_PCA, L, k, idxTrain, idxTest, app_triplets, show=False)
             else:
-                scores = classifiers[i][0](D, L, k, idxTrain, idxTest, app_triplet, show=False)
+                scores = classifiers[i][0](D, L, k, idxTrain, idxTest, app_triplets, show=False)
 
             scores_all = np.concatenate((scores_all, scores))
         
@@ -117,10 +122,15 @@ def K_fold_MVG(D, L, k, K, classifiers, app_triplet, PCA_m=None, seed=0, calibra
 
         if calibrate:
             scores_all, w, b = calibrate_scores(scores_all, trueL_ordered, 0.5)
+        
+        if returnScores:
+            return scores_all
 
         if printStatus:
             print('calculating minDCF...')
-            
-        (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, app_triplet)
-        print(f'\t{classifiers[i][1]} classifier -> min DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
+        
+        for triplet in app_triplets:
+            (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(scores_all, trueL_ordered, triplet)
+            print(f'\tpi_eff = {triplet[0]}\tmin DCF: {round(dcf_min, 3)}    act DCF: {round(dcf_norm, 3)}')
+        print('-----------------------------------------------------')
 

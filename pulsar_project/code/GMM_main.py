@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 CSF_type_list = [(False, False), (False, True), (True, False), (True, True)] # (Tied, Diag) flags
 
-PCA_list = [7]
+PCA_list = [None, 7]
 
 n_splits = 4
 
