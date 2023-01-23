@@ -25,7 +25,7 @@ loadTestFusion = False
 scoresPath = '../data_npy/scores_'
 fusionPath = '../data_npy/fusion_'
 
-evaluation = False
+evaluation = True
 seed = 0 # To use in each K-fold function and in this file to ensure same ordering of samples
 
 PCA_list = [None, 7]
@@ -58,7 +58,7 @@ def main():
     DTE, LTE = u.load('../data/Test.txt')
 
     # Reduced dataset (less samples) for testing only -> Comment for full training set use
-    # DTR, LTR = u.reduced_dataset(DTR, LTR, 500, seed=0)
+    # DTR, LTR = u.reduced_dataset(DTR, LTR, 2000, seed=0)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
@@ -115,7 +115,7 @@ def main():
                 if printStatus:
                     print('calculating minDCF...')
                 (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(fused_scores, trueL_ordered, triplet)
-                print('\tpi_eff = {}\tmin DCF: {}    act DCF: {}'.format(triplet[0], SVM_params[1], round(dcf_min, 3), round(dcf_norm, 3)))
+                print('\tpi_eff = {}\tmin DCF: {}    act DCF: {}'.format(triplet[0], round(dcf_min, 3), round(dcf_norm, 3)))
         
         else:
             # ------- Using whole Train.txt dataset and classifying Test.txt (applying [w, b] learned before) ----------------
