@@ -10,11 +10,11 @@ from DCF import DCF_unnormalized_normalized_min_binary
 '''
 This script assumes that a fusion of Tied Full Covariance MVG and Quadratic kernel SVM (C=0.1, priorT=0.1) scores will be used
 '''
-saveTrainScores = True
-loadTrainScores = False
+saveTrainScores = False
+loadTrainScores = True
 
-saveTrainFusion = True
-loadTrainFusion = False
+saveTrainFusion = False
+loadTrainFusion = True
 
 saveTestScores = True
 loadTestScores = False
@@ -161,7 +161,7 @@ def main():
                 if printStatus:
                     print('calculating minDCF...')
                 (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(fused_test_scores, L_merged, triplet)
-                print('\tpi_eff = {}\tmin DCF: {}    act DCF: {}'.format(triplet[0], SVM_params[1], round(dcf_min, 3), round(dcf_norm, 3)))
+                print('\tpi_eff = {}\tmin DCF: {}    act DCF: {}'.format(triplet[0], round(dcf_min, 3), round(dcf_norm, 3)))
 
 
 if __name__ == '__main__':
