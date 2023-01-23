@@ -25,7 +25,7 @@ loadTestFusion = False
 scoresPath = '../data_npy/scores_'
 fusionPath = '../data_npy/fusion_'
 
-evaluation =True
+evaluation = False
 seed = 0 # To use in each K-fold function and in this file to ensure same ordering of samples
 
 PCA_list = [None, 7]
