@@ -61,7 +61,7 @@ def kernel_SVM_scores(DTR, DTE, alpha_star, encodedLTR, kern_f, K, c, d, gamma):
             scores[i] += alpha_star[j] * encodedLTR[j] * kern_f(DTR[:, j], DTE[:, i], K, c, d, gamma)
     return scores
 
-def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=None, gamma=None, single_fold=True, show=True, kern=False, Poly_RBF=True, calibrate=False):
+def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=None, gamma=None, single_fold=True, show=True, kern=False, Poly_RBF=True, calibrate=False, saveCalibration=False):
     
     (DTR, LTR), (DTE, LTE) = split_dataset(D, L, idxTrain, idxTest)
 
@@ -86,6 +86,9 @@ def SVM_wrapper(D, L, K_svm, C, priorT_b, idxTrain, idxTest, triplet, c=None, d=
     
     if calibrate:
         scores, w, b = calibrate_scores(scores, LTE, 0.5)
+
+    if saveCalibration:
+        return w, b
 
     if single_fold:
         return DCF_SVM(LTE, K_svm, C, scores, triplet, show, kern, Poly_RBF, priorT_b)

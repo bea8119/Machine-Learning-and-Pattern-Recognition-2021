@@ -74,12 +74,12 @@ def main():
             # K-fold
             print('{}-Fold cross-validation {} SVM {} {}'.format(K, type_SVM, pca_msg, cal_msg))
             for params in SVM_param_list:
-                scores = SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma, printStatus=printStatus, calibrate=calibrate, returnScores=True)
+                scores = SVM.K_fold_SVM(DTR, LTR, K, K_svm, *params, triplet, m, kern=kernel_SVM, Poly_RBF=Poly_RBF, c=c, d=d, gamma=gamma, printStatus=printStatus, calibrate=calibrate, returnScores=True if saveScores else False)
                 if saveScores:
                     np.save('../data_npy/scores_SVM_K_fold_PCA_{}_calibrated.npy'.format(m if m is not None else 'None'), scores)
             print('-----------------------------------------------------')
 
-            # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
+            # # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
             # if m is not None:
             #     DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
             #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
