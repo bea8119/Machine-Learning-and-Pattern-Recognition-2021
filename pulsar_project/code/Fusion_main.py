@@ -58,7 +58,7 @@ def main():
     DTE, LTE = u.load('../data/Test.txt')
 
     # Reduced dataset (less samples) for testing only -> Comment for full training set use
-    # DTR, LTR = u.reduced_dataset(DTR, LTR, 500, seed=0)
+    # DTR, LTR = u.reduced_dataset(DTR, LTR, 2000, seed=0)
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 

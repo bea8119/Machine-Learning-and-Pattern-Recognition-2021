@@ -16,6 +16,7 @@ PCA_list = [None, 7, 6, 5]
 printStatus = False
 
 calibrate = True
+saveScores = True
 
 def main():
 

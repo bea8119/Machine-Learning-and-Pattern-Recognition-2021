@@ -131,7 +131,7 @@ def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b
             plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
 
 def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, c_list, save_fig=False):
-    '''Tuning of C jointly with c (in linear scale), take three different values of c on the same application point'''
+    '''Tuning of C jointly with c (in linear scale), take different values of c on the same application point'''
     if min_DCF_single_arr:
         fig_name_single = 'Single-fold ({}-to-1) Quadratic Kernel SVM -> C - c tuning {}'.format(
             n, '(no PCA)' if m_PCA is None else f'(PCA m = {m_PCA})')
@@ -256,6 +256,36 @@ def plotGMM(n_splits, dcf_min_list, eff_prior, tied_diag_pairs, colors, PCA_list
         plt.tight_layout()
         plt.grid(visible=True)
     
+def ROC_curves(FPR_list, TPR_list, csf_names):
+    plt.figure('ROC')
+    for FPR, TPR, name in zip(FPR_list, TPR_list, csf_names):
+        plt.plot(FPR, TPR, label=name)
+    plt.xlabel('FPR')
+    plt.ylabel('TPR')
+    plt.grid()
+    plt.legend(loc='best')
+    # plt.show()
+
+def DET_curves(FPR_list, FNR_list, csf_names):
+    plt.figure('DET')
+    for FPR, FNR, name in zip(FPR_list, FNR_list, csf_names):
+        plt.plot(FPR, FNR, label=name)
+    plt.xlabel('FPR')
+    plt.ylabel('FNR')
+    plt.grid()
+    plt.legend(loc='best')
+    # plt.show()
+
+def bayes_error_plots(effPriors, DCF_list, param_list):
+    plt.figure('Bayes error plots')
+    for DCF, (label, dashed, color) in zip(DCF_list, param_list):
+        plt.plot(effPriors, DCF, label=label, linestyle='dashed' if dashed else None, color=color)
+    plt.xlim([-3, 3])
+    plt.xlabel('Prior log-odds')
+    plt.ylim([0, 1.1])
+    plt.ylabel('DCF value')
+    plt.grid()
+    plt.legend(loc='best')
 
 def main():
 

@@ -43,14 +43,16 @@ def ROC_TPR_vs_FPR(llrs, trueL):
 	thresholds = np.array(llrs)
 	thresholds.sort()
 	thresholds = np.concatenate([np.array([-np.inf]), thresholds, np.array([np.inf])])
+	FNR_arr = np.zeros(thresholds.shape[0])
 	TPR_arr = np.zeros(thresholds.shape[0])
 	FPR_arr = np.zeros(thresholds.shape[0])
 	for idx, t in enumerate(thresholds):
 		conf_m_temp = compute_confusion_matrix(compute_optBayes_decisions(llrs, given_threshold=t), trueL, 2)
 		FNR_temp, FPR_temp = FNR_FPR(conf_m_temp)
+		FNR_arr[idx] = FNR_temp
 		TPR_arr[idx] = 1 - FNR_temp
 		FPR_arr[idx] = FPR_temp
-	return TPR_arr, FPR_arr
+	return TPR_arr, FPR_arr, FNR_arr
 
 def DCF_unnormalized_normalized_min_binary(llrs, trueL, triplet):
 	# Un-normalized
@@ -170,13 +172,22 @@ def main():
 	# ---------------------- ROC curves ----------------------
 
 	# Outside of the for loop because this does not depend on the the application (triplet) but just on the threshold
-	TPR_arr, FPR_arr = ROC_TPR_vs_FPR(llr_infpar, labels_infpar)
+	TPR_arr, FPR_arr, _ = ROC_TPR_vs_FPR(llr_infpar, labels_infpar)
 
 	plt.figure('ROC')
 	plt.plot(FPR_arr, TPR_arr)
 	plt.grid()
 	plt.xlabel('FPR')
 	plt.ylabel('TPR')
+
+	# -------------------- DET curves --------------------
+
+	_, FPR_arr, FNR_arr = ROC_TPR_vs_FPR(llr_infpar, labels_infpar)
+	plt.figure('DET')
+	plt.plot(FPR_arr, FNR_arr)
+	plt.grid()
+	plt.xlabel('FPR')
+	plt.ylabel('FNR')
 
 	# ------------------- Bayes error plots -------------------
 

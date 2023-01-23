@@ -28,26 +28,34 @@ def FNR_FPR(confusion_m):
 	return confusion_m[0, 1] / (confusion_m[0, 1] + confusion_m[1, 1]), confusion_m[1, 0] / (confusion_m[0, 0] + confusion_m[1, 0])
 
 
-def ROC_TPR_vs_FPR(llrs, trueL):
-	thresholds = np.array(llrs)
+def ROC_DET_arrays(scores, trueL):
+	'''
+	Receives scores, labels and returns three arrays:\n 
+	FNR, FPR and TPR
+	'''
+	thresholds = np.array(scores)
 	thresholds.sort()
 	thresholds = np.concatenate([np.array([-np.inf]), thresholds, np.array([np.inf])])
-	TPR_arr = np.zeros(thresholds.shape[0])
+	FNR_arr = np.zeros(thresholds.shape[0])
 	FPR_arr = np.zeros(thresholds.shape[0])
+	TPR_arr = np.zeros(thresholds.shape[0])
 	for idx, t in enumerate(thresholds):
-		conf_m_temp = compute_confusion_matrix(compute_optBayes_decisions(llrs, given_threshold=t), trueL, 2)
+		conf_m_temp = compute_confusion_matrix(compute_optBayes_decisions(scores, given_threshold=t), trueL, 2)
 		FNR_temp, FPR_temp = FNR_FPR(conf_m_temp)
-		TPR_arr[idx] = 1 - FNR_temp
+		FNR_arr[idx] = FNR_temp
 		FPR_arr[idx] = FPR_temp
-	return TPR_arr, FPR_arr
+		TPR_arr[idx] = 1 - FNR_temp
+	return FNR_arr, FPR_arr, TPR_arr
 
-def DCF_unnormalized_normalized_min_binary(scores, trueL, triplet):
+def DCF_unnormalized_normalized_min_binary(scores, trueL, triplet, actualOnly=False):
 	# Un-normalized
 	dcf_u = DCF_binary(compute_confusion_matrix(compute_optBayes_decisions(scores, *triplet), trueL, 2), *triplet)
 	# Bayesian risk (with dummy system)
 	B_dummy = min(triplet[0] * triplet[1], (1 - triplet[0]) * triplet[2])
 	# Normalized Detection Cost Function (wrt. to dummy system)
 	dcf_norm = dcf_u / B_dummy
+	if actualOnly:
+		return (0, dcf_norm, 0)
 	# Minimum DCF (with score calibration)
 	# Create a new object (ndarray), otherwise in-place sorting will mess up the following computations of the confusion matrix
 
@@ -65,13 +73,13 @@ def DCF_unnormalized_normalized_min_binary(scores, trueL, triplet):
 
 	return (dcf_u, dcf_norm, dcf_min)
 
-def DCF_vs_priorLogOdds(effPriorLogOdds, scores, trueL):
+def DCF_vs_priorLogOdds(effPriorLogOdds, scores, trueL, actualOnly=False):
 	'''Returns normalized and min DCF for a given set of effective prior log-odds'''
 	dcf_arr = np.zeros(effPriorLogOdds.shape[0])
 	dcfmin_arr = np.zeros(effPriorLogOdds.shape[0])
 	for idx, p in enumerate(effPriorLogOdds):
 		eff_pi = 1 / (1 + np.exp(-p))
-		dcfs = DCF_unnormalized_normalized_min_binary(scores, trueL, (eff_pi, 1, 1))
+		dcfs = DCF_unnormalized_normalized_min_binary(scores, trueL, (eff_pi, 1, 1), actualOnly=actualOnly)
 		dcf_arr[idx] = dcfs[1]
 		dcfmin_arr[idx] = dcfs[2]
 	return dcf_arr, dcfmin_arr
