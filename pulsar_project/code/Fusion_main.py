@@ -8,13 +8,13 @@ import LogReg
 from DCF import DCF_unnormalized_normalized_min_binary
 
 '''
-This script assumes that a fusion of Tied Full Covariance MVG and Quadratic kernel SVM (C=0.1, priorT=0.1) scores will be used
+This script assumes that a fusion of Tied Full Covariance MVG and Quadratic kernel SVM (C=0.1, priorT=0.5) scores will be used
 '''
-saveTrainScores = False
-loadTrainScores = True
+saveTrainScores = True
+loadTrainScores = False
 
-saveTrainFusion = False
-loadTrainFusion = True
+saveTrainFusion = True
+loadTrainFusion = False
 
 saveTestScores = True
 loadTestScores = False
@@ -25,7 +25,7 @@ loadTestFusion = False
 scoresPath = '../data_npy/scores_'
 fusionPath = '../data_npy/fusion_'
 
-evaluation = True
+evaluation = False
 seed = 0 # To use in each K-fold function and in this file to ensure same ordering of samples
 
 PCA_list = [None, 7]
@@ -39,7 +39,7 @@ Poly_RBF = True # True for polynomial, False for RBF kernel SVM (assuming kernel
 K_svm = 1 # Value of sqrt(psi)
 
 # Pair of (C, priorT_balance)
-SVM_params = (0.1, 0.1)
+SVM_params = (0.1, 0.5)
 
 # (x1T_x2 + c)^2 Polynomial kernel params
 c = 1
