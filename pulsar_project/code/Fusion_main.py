@@ -148,7 +148,7 @@ def main():
                 # Pass w and b as arguments for applying transformation instead of performing the logreg
                 if printStatus:
                     print('Computing test Fusion model scores...')
-                fused_test_scores = LogReg.fusionModel(MVG_test_scores, SVM_test_scores, L_merged, application_points[0][0], w, b)
+                fused_test_scores = LogReg.fusionModel(MVG_test_scores, SVM_test_scores, LTE, application_points[0][0], w, b)
                 
                 if saveTestFusion:
                     np.save(scoresPath + 'Fusion_Test_PCA_{}.npy'.format(m if m is not None else 'None'), fused_test_scores)
@@ -160,7 +160,7 @@ def main():
             for triplet in application_points:
                 if printStatus:
                     print('calculating minDCF...')
-                (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(fused_test_scores, L_merged, triplet)
+                (dcf_u, dcf_norm, dcf_min) = DCF_unnormalized_normalized_min_binary(fused_test_scores, LTE, triplet)
                 print('\tpi_eff = {}\tmin DCF: {}    act DCF: {}'.format(triplet[0], round(dcf_min, 3), round(dcf_norm, 3)))
 
 
