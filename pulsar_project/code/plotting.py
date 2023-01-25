@@ -257,17 +257,18 @@ def plotGMM(n_splits, dcf_min_list, eff_prior, tied_diag_pairs, colors, PCA_list
         plt.grid(visible=True)
     
 def ROC_curves(FPR_list, TPR_list, csf_names):
-    plt.figure('ROC')
+    fig = plt.figure('ROC')
     for FPR, TPR, name in zip(FPR_list, TPR_list, csf_names):
         plt.plot(FPR, TPR, label=name)
     plt.xlabel('FPR')
     plt.ylabel('TPR')
     plt.grid()
     plt.legend(loc='best')
+    return fig
     # plt.show()
 
 def DET_curves(FPR_list, FNR_list, csf_names):
-    plt.figure('DET')
+    fig = plt.figure('DET')
     for FPR, FNR, name in zip(FPR_list, FNR_list, csf_names):
         plt.plot(FPR, FNR, label=name)
     plt.xlabel('FPR')
@@ -275,9 +276,10 @@ def DET_curves(FPR_list, FNR_list, csf_names):
     plt.grid()
     plt.legend(loc='best')
     # plt.show()
+    return fig
 
 def bayes_error_plots(effPriors, DCF_list, param_list):
-    plt.figure('Bayes error plots')
+    fig = plt.figure('Bayes error plots')
     for DCF, (label, dashed, color) in zip(DCF_list, param_list):
         plt.plot(effPriors, DCF, label=label, linestyle='dashed' if dashed else None, color=color)
     plt.xlim([-3, 3])
@@ -286,6 +288,7 @@ def bayes_error_plots(effPriors, DCF_list, param_list):
     plt.ylabel('DCF value')
     plt.grid()
     plt.legend(loc='best')
+    return fig
 
 def main():
 

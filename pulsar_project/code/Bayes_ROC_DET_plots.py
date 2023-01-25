@@ -2,7 +2,9 @@ import DCF
 import numpy as np
 import utils as u
 from plotting import DET_curves, ROC_curves, bayes_error_plots
-from matplotlib.pyplot import show
+from matplotlib.pyplot import show, savefig, figure
+
+saveFigure = True
 
 _, LTR = u.load('../data/Train.txt')
 np.random.seed(0)
@@ -35,13 +37,19 @@ for scores in scores_list:
     TPR_list.append(TPR)
 
 print('Plotting...')
-ROC_curves(FPR_list, TPR_list, csf_names)
-DET_curves(FPR_list, FNR_list, csf_names)
+roc_fig = ROC_curves(FPR_list, TPR_list, csf_names)
+det_fig = DET_curves(FPR_list, FNR_list, csf_names)
 print('Plotting done.')
 
+if saveFigure:
+    figure(roc_fig)
+    savefig('../plot/ROC_Training.png')
+    figure(det_fig)
+    savefig('../plot/DET_Training.png')
+    print('Saved.')
 print()
 
-# Bayes error plots
+# Bayes error plots for training set
 print('Bayes Error plots part starting...')
 effPriorLogOdds = np.linspace(-3, 3, 21) # Common for all the plots
 
@@ -66,8 +74,13 @@ param_list = [
 ]
 
 print('Bayes error plotting...')
-bayes_error_plots(effPriorLogOdds, dcf_list, param_list)
+bayes_fig = bayes_error_plots(effPriorLogOdds, dcf_list, param_list)
 print('Plotting done.\n')
+
+if savefig:
+    figure(bayes_fig)
+    savefig('../plots/Bayes_Train_MVG_SVM_uncalibrated.png')
+    print('Saved.')
 
 # For showing effects of calibration (minDCF and actualDCF) of MVG and SVM
 dcf_list = []
@@ -88,8 +101,13 @@ param_list = [
     ('SVM minDCF (cal)', True, 'b'),
 ]
 print('Bayes error plotting...')
-bayes_error_plots(effPriorLogOdds, dcf_list, param_list)
+bayes_fig = bayes_error_plots(effPriorLogOdds, dcf_list, param_list)
 print('Plotting done.\n')
+
+if savefig:
+    figure(bayes_fig)
+    savefig('../plots/Bayes_Train_MVG_SVM_calibrated.png')
+    print('Saved.')
 
 # For showing calibrated scores's actual DCF and Fusion model min and actual DCFs
 dcf_list = []
@@ -106,6 +124,11 @@ param_list = [
     ('Fusion actDCF', False, 'g'),
     ('Fusion minDCF', True, 'g'),
 ]
-bayes_error_plots(effPriorLogOdds, dcf_list, param_list)
+bayes_fig = bayes_error_plots(effPriorLogOdds, dcf_list, param_list)
+
+if savefig:
+    figure(bayes_fig)
+    savefig('../plots/Bayes_Train_MVG_SVM_Fusion.png')
+    print('Saved.')
 
 show()
