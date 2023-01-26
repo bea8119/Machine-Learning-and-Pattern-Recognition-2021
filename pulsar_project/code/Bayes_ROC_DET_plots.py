@@ -43,9 +43,9 @@ print('Plotting done.')
 
 if saveFigure:
     figure(roc_fig)
-    savefig('../plot/ROC_Training.png')
+    savefig('../plots/ROC_Training.png')
     figure(det_fig)
-    savefig('../plot/DET_Training.png')
+    savefig('../plots/DET_Training.png')
     print('Saved.')
 print()
 

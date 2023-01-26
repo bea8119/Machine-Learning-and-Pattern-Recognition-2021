@@ -14,8 +14,6 @@ def main():
 
     # DTR, LTR = u.reduced_dataset(DTR, LTR, 4000, seed=0)
 
-    D_merged, L_merged, idxTR_merged, idxTE_merged = u.split_db_after_merge(DTR, DTE, LTR, LTE) # Merged split
-
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
     ''' Retrieve calibration parameters from the K_fold training scores to apply them onto the test set '''
