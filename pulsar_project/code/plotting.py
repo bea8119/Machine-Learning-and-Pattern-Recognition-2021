@@ -271,6 +271,7 @@ def DET_curves(FPR_list, FNR_list, csf_names):
     fig = plt.figure('DET')
     for FPR, FNR, name in zip(FPR_list, FNR_list, csf_names):
         plt.plot(FPR, FNR, label=name)
+    plt.xscale('log')
     plt.xlabel('FPR')
     plt.ylabel('FNR')
     plt.grid()
