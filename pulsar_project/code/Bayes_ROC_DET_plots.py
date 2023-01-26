@@ -12,47 +12,6 @@ idx = np.random.permutation(LTR.shape[0])
 trueL_ordered = LTR[idx]
 
 # DET and ROC curves on Training set
-<<<<<<< HEAD
-scores_list = [
-    np.load('../data_npy/scores_MVG_K_fold_PCA_None.npy'),
-    np.load('../data_npy/scores_SVM_K_fold_PCA_None.npy'),
-    np.load('../data_npy/scores_Fusion_K_fold_PCA_None.npy'),
-]
-
-csf_names = [
-    'MVG',
-    'SVM',
-    'Fusion',
-]
-
-FNR_list = []
-FPR_list = []
-TPR_list = []
-
-print('Calculating ROC and DET plot values...')
-
-for scores in scores_list:
-    FNR, FPR, TPR = DCF.ROC_DET_arrays(scores, trueL_ordered)
-    FNR_list.append(FNR)
-    FPR_list.append(FPR)
-    TPR_list.append(TPR)
-
-print('Plotting...')
-roc_fig = ROC_curves(FPR_list, TPR_list, csf_names)
-det_fig = DET_curves(FPR_list, FNR_list, csf_names)
-print('Plotting done.')
-
-if saveFigure:
-    figure(roc_fig)
-    savefig('../plots/ROC_Training.png')
-    figure(det_fig)
-    savefig('../plots/DET_Training.png')
-    print('Saved.')
-print()
-
-# Bayes error plots for training set
-print('Bayes Error plots part starting...')
-=======
 #scores_list = [
 #    np.load('../data_npy/scores_MVG_K_fold_PCA_None.npy'),
 #    np.load('../data_npy/scores_SVM_K_fold_PCA_None.npy'),
@@ -92,7 +51,6 @@ print('Bayes Error plots part starting...')
 #
 ## Bayes error plots for training set
 #print('Bayes Error plots part starting...')
->>>>>>> ca792a61c051297aee9d2b06c4452714e8bb6c12
 effPriorLogOdds = np.linspace(-3, 3, 21) # Common for all the plots
 #
 ## For showing lack of calibration (minDCF and actualDCF) of MVG and SVM
