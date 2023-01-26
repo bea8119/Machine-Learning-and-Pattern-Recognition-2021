@@ -5,13 +5,13 @@ import GMM
 import numpy as np
 import matplotlib.pyplot as plt
 
-CSF_type_list = [(False, False), (False, True), (True, False), (True, True)] # (Tied, Diag) flags
+CSF_type_list = [(False, False), (False, True),(True, False), (True, True)] # (Tied, Diag) flags
 
 PCA_list = [None, 7]
 
 n_splits = 4
 
-application_points = [(0.5, 1, 1)]#, (0.1, 1, 1), (0.9, 1, 1)]
+application_points = [(0.5, 1, 1),(0.1, 1, 1), (0.9, 1, 1)] #,
 
 plot = True # To properly plot, PCA_list must contain 2 elements only!
 
@@ -57,15 +57,15 @@ def main():
                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
                 DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            # print('Single Fold ({}-to-1) GMM classifiers {}'.format(n, '(no PCA)' if m is None else f'(PCA m = {m})'))
-            # for j, tied_diag_pair in enumerate(CSF_type_list):
-            #     dcf_min_single[i].append(np.array([]))
-            #     for n in range(1, n_splits + 1):
-            #         dcf_min = GMM.GMM_wrapper(DTR if m is None else DTR_PCA, LTR, k, idxTrain_s, idxTest_s, 
-            #             delta, alpha, psi, n, *tied_diag_pair, triplet, single_fold=True)
-            #         if plot:
-            #             dcf_min_single[i][j] = np.append(dcf_min_single[i][j], dcf_min)
-            # print('-----------------------------------------------------')
+            print('Single Fold ({}-to-1) GMM classifiers {}'.format(n, '(no PCA)' if m is None else f'(PCA m = {m})'))
+            for j, tied_diag_pair in enumerate(CSF_type_list):
+                 dcf_min_single[i].append(np.array([]))
+                 for n in range(1, n_splits + 1):
+                     dcf_min = GMM.GMM_wrapper(DTR if m is None else DTR_PCA, LTR, k, idxTrain_s, idxTest_s, 
+                         delta, alpha, psi, n, *tied_diag_pair, triplet, single_fold=True)
+                     if plot:
+                         dcf_min_single[i][j] = np.append(dcf_min_single[i][j], dcf_min)
+            print('-----------------------------------------------------')
 
             # K-fold
             print('{}-Fold cross-validation GMM classifiers {}'.format(K, '(no PCA)' if m is None else f'(PCA m = {m})')) 
@@ -76,20 +76,20 @@ def main():
                     dcf_min = GMM.K_fold_GMM(DTR, LTR, k, K, delta, alpha, psi, n, *tied_diag_pair, triplet, m, show=True)
                     if plot:
                         dcf_min_kfold[i][j] = np.append(dcf_min_kfold[i][j], dcf_min)
-
+#
             print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
-            # if m is not None:
-            #     DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
-            #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
-            #     D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            # print('GMM classifiers on whole dataset {}'.format('(no PCA)' if m is None else f'(PCA m = {m})'))
-            # for tied_diag_pair in CSF_type_list:
-            #     for n in range(1, n_splits + 1):
-            #         GMM.GMM_wrapper(D_merged if m is None else D_merged_PCA, L_merged, k, idxTR_merged, idxTE_merged, 
-            #             delta, alpha, psi, n, *tied_diag_pair, triplet, single_fold=True, show=True)
-            # print('-----------------------------------------------------')
+            #if m is not None:
+            #      DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
+            #      PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
+            #      D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
+            #print('GMM classifiers on whole dataset {}'.format('(no PCA)' if m is None else f'(PCA m = {m})'))
+            #for tied_diag_pair in CSF_type_list:
+            #      for n in range(1, n_splits + 1):
+            #          GMM.GMM_wrapper(D_merged if m is None else D_merged_PCA, L_merged, k, idxTR_merged, idxTE_merged, 
+            #              delta, alpha, psi, n, *tied_diag_pair, triplet, single_fold=True, show=True)
+            #print('-----------------------------------------------------')
 
         if plot:
             # plotting.plotGMM(n_splits, dcf_min_single, triplet[0], CSF_type_list, colors, PCA_list)
