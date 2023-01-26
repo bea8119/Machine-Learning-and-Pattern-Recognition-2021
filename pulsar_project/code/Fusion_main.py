@@ -10,11 +10,11 @@ from DCF import DCF_unnormalized_normalized_min_binary
 '''
 This script assumes that a fusion of Tied Full Covariance MVG and Quadratic kernel SVM (C=0.1, priorT=0.5) scores will be used
 '''
-saveTrainScores = True
-loadTrainScores = False
+saveTrainScores = False
+loadTrainScores = True
 
-saveTrainFusion = True
-loadTrainFusion = False
+saveTrainFusion = False
+loadTrainFusion = True
 
 saveTestScores = True
 loadTestScores = False
@@ -25,7 +25,7 @@ loadTestFusion = False
 scoresPath = '../data_npy/scores_'
 fusionPath = '../data_npy/fusion_'
 
-evaluation = False
+evaluation = True
 seed = 0 # To use in each K-fold function and in this file to ensure same ordering of samples
 
 PCA_list = [None, 7]

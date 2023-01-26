@@ -1,0 +1,47 @@
+Application point (pi_eff: 0.5, C_fn: 1, C_fp: 1)
+****************************************************
+GMM classifiers on whole dataset (no PCA)
+        Diag Covariance GMM classifier (2 components)-> min DCF: 0.173    act DCF: 0.208
+        Diag Covariance GMM classifier (4 components)-> min DCF: 0.162    act DCF: 0.168
+        Diag Covariance GMM classifier (8 components)-> min DCF: 0.131    act DCF: 0.137
+        Diag Covariance GMM classifier (16 components)-> min DCF: 0.134    act DCF: 0.135
+        Tied Diag Covariance GMM classifier (2 components)-> min DCF: 0.162    act DCF: 0.163
+        Tied Diag Covariance GMM classifier (4 components)-> min DCF: 0.169    act DCF: 0.171
+        Tied Diag Covariance GMM classifier (8 components)-> min DCF: 0.152    act DCF: 0.158
+        Tied Diag Covariance GMM classifier (16 components)-> min DCF: 0.151    act DCF: 0.156
+-----------------------------------------------------
+GMM classifiers on whole dataset (PCA m = 7)
+        Diag Covariance GMM classifier (2 components)-> min DCF: 0.185    act DCF: 0.213
+        Diag Covariance GMM classifier (4 components)-> min DCF: 0.199    act DCF: 0.205
+        Diag Covariance GMM classifier (8 components)-> min DCF: 0.166    act DCF: 0.168
+        Diag Covariance GMM classifier (16 components)-> min DCF: 0.149    act DCF: 0.156
+        Tied Diag Covariance GMM classifier (2 components)-> min DCF: 0.205    act DCF: 0.215
+        Tied Diag Covariance GMM classifier (4 components)-> min DCF: 0.192    act DCF: 0.195
+
+
+
+
+Application point (pi_eff: 0.1, C_fn: 1, C_fp: 1)
+****************************************************
+GMM classifiers on whole dataset (no PCA)
+        Diag Covariance GMM classifier (2 components)-> min DCF: 0.317    act DCF: 0.349
+        Diag Covariance GMM classifier (4 components)-> min DCF: 0.328    act DCF: 0.393
+        Diag Covariance GMM classifier (8 components)-> min DCF: 0.26    act DCF: 0.268
+        Diag Covariance GMM classifier (16 components)-> min DCF: 0.256    act DCF: 0.273
+        Tied Diag Covariance GMM classifier (2 components)-> min DCF: 0.281    act DCF: 0.447
+        Tied Diag Covariance GMM classifier (4 components)-> min DCF: 0.282    act DCF: 0.394
+        Tied Diag Covariance GMM classifier (8 components)-> min DCF: 0.287    act DCF: 0.399
+        Tied Diag Covariance GMM classifier (16 components)-> min DCF: 0.326    act DCF: 0.393
+
+
+Application point (pi_eff: 0.9, C_fn: 1, C_fp: 1)
+****************************************************
+GMM classifiers on whole dataset (no PCA)
+        Diag Covariance GMM classifier (2 components)-> min DCF: 0.64    act DCF: 1.249
+        Diag Covariance GMM classifier (4 components)-> min DCF: 0.581    act DCF: 0.913
+        Diag Covariance GMM classifier (8 components)-> min DCF: 0.553    act DCF: 0.772
+        Diag Covariance GMM classifier (16 components)-> min DCF: 0.568    act DCF: 0.729
+        Tied Diag Covariance GMM classifier (2 components)-> min DCF: 0.609    act DCF: 0.997
+        Tied Diag Covariance GMM classifier (4 components)-> min DCF: 0.797    act DCF: 1.036
+        Tied Diag Covariance GMM classifier (8 components)-> min DCF: 0.695    act DCF: 0.88
+        Tied Diag Covariance GMM classifier (16 components)-> min DCF: 0.581    act DCF: 0.866
