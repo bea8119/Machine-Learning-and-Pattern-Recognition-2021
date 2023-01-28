@@ -1,0 +1,4 @@
+Quad SVM (candidate model) (No PCA) on Test dataset
+pi_eff = 0.5    minDCF: 0.09811012133750521    actDCF: 0.09933261522503575
+pi_eff = 0.1    minDCF: 0.20458887400079012    actDCF: 0.2810152143571266
+pi_eff = 0.9    minDCF: 0.45061190685949404    actDCF: 0.8476704524832178
