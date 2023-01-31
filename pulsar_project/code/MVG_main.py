@@ -16,7 +16,7 @@ PCA_list = [None]
 printStatus = False
 
 calibrate = True
-saveCalScores = True
+saveCalScores = False
 
 def main():
 
@@ -55,7 +55,7 @@ def main():
         #     print('-----------------------------------------------------')
 
         # K-fold
-        scores = MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, application_points, m, calibrate=calibrate, printStatus=printStatus, returnScores=True if saveScores else False)
+        scores = MVG.K_fold_MVG(DTR, LTR, k, K, CSF_list, application_points, m, calibrate=calibrate, printStatus=printStatus, returnScores=True if saveCalScores else False)
         if saveCalScores:
             np.save('../data_npy/scores_MVG_K_fold_PCA_{}_calibrated.npy'.format(m if m is not None else 'None'), scores)
 

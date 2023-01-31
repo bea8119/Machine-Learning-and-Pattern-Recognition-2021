@@ -11,11 +11,11 @@ K_svm = 1 # Value of sqrt(psi)
 
 # Pair of (C, priorT_balance)
 SVM_param_list = [
-    (0.1, 0.1),
+    (0.1, 0.5),
 ]
 
 calibrate = True
-saveScores = True
+saveScores = False
 
 # (x1T_x2 + c)^2 Polynomial kernel params
 c = 1
