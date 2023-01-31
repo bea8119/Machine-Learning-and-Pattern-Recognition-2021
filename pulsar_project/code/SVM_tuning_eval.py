@@ -6,7 +6,6 @@ import plotting as p
 import numpy as np
 import matplotlib.pyplot as plt
 
-PCA_list = [None]
 colors = ['red', 'green', 'blue', 'orange']
 
 priorT_b = None
@@ -48,6 +47,8 @@ def main():
     #         minDCF_arr[i] = np.append(minDCF_arr[i],
     #             DCF.DCF_unnormalized_normalized_min_binary(scores, LTE, triplet)[2]
     #         )
+    # if printStatus:
+    #     print('Finished tuning!\n')
     # p.plotDCFmin_vs_C_linearSVM_eval(C_arr, minDCF_arr, priorT_b, colors, application_points, saveFig=True)
     
     # ------------ Quadratic kernel SVM, tune C and c jointly, same application point (0.5, 1, 1) (unbalanced) ----
@@ -63,6 +64,8 @@ def main():
             if printStatus:
                 print(f'\tDone training. Calculating minDCFs...')
             minDCF_arr[j] = np.append(minDCF_arr[j], DCF.DCF_unnormalized_normalized_min_binary(scores, LTE, application_points[0])[2])
+    if printStatus:
+        print('Finished tuning!\n')
     p.plotDCFmin_vs_C_quadSVM_eval(C_arr, minDCF_arr, priorT_b, colors, application_points[0], c_list, saveFig=True)
 
     # ------------ RBF kernel SVM, tune C and gamma jointly, same appplication point (0.5, 1, 1) (unbalanced) ------
@@ -78,8 +81,9 @@ def main():
             if printStatus:
                 print(f'\tDone training. Calculating minDCFs...')
             minDCF_arr[j] = np.append(minDCF_arr[j], DCF.DCF_unnormalized_normalized_min_binary(scores, LTE, application_points[0])[2])
+    if printStatus:
+        print('Finished tuning!\n')
     p.plotDCFmin_vs_C_RBFSVM_eval(C_arr, minDCF_arr, priorT_b, colors, application_points[0], gamma_list, saveFig=True)
-    plt.show()
 
 if __name__ == '__main__':
     main()
