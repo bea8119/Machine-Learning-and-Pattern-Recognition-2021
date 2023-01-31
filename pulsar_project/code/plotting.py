@@ -336,7 +336,6 @@ def ROC_curves(FPR_list, TPR_list, csf_names):
     plt.grid()
     plt.legend(loc='best')
     return fig
-    # plt.show()
 
 def DET_curves(FPR_list, FNR_list, csf_names):
     fig = plt.figure('DET')
@@ -348,7 +347,6 @@ def DET_curves(FPR_list, FNR_list, csf_names):
     plt.ylabel('FNR')
     plt.grid()
     plt.legend(loc='best')
-    # plt.show()
     return fig
 
 def bayes_error_plots(effPriors, DCF_list, param_list, title):
@@ -363,7 +361,7 @@ def bayes_error_plots(effPriors, DCF_list, param_list, title):
     plt.legend(loc='best')
     return fig
 
-def main():
+def heatmap():
 
     DTR, LTR = u.load('../data/Train.txt')
     DTE, LTE = u.load('../data/Test.txt')
@@ -381,4 +379,4 @@ def main():
     plt.savefig()
 
 if __name__ == '__main__':
-    main()
+    heatmap()
