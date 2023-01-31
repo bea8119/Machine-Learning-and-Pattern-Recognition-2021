@@ -89,6 +89,24 @@ def plotDCFmin_vs_lambda(l_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n,
             plt.figure(fig_kfold)
             plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
 
+def plotDCFmin_vs_lambda_eval(l_arr, minDCF_arr, priorT, colors, eff_priors, quad=False, saveFig=False):
+    ''' Tuning of lambda hyperparameter alone, on every application point '''
+    fig_name = 'Test set {} LogReg -> l tuning (pi_T = {})'.format('Quadratic' if quad else 'Linear', priorT)
+    plt.figure(fig_name)
+
+    for i in range(len(eff_priors)):
+        if minDCF_arr:
+            plt.plot(l_arr, minDCF_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', eff_priors[i][0]))
+            plt.xlim([min(l_arr), max(l_arr)])
+            plt.xscale('log')
+            plt.xlabel(r'$\lambda$')
+            plt.ylabel('DCF')
+            plt.legend(loc='best')
+            plt.tight_layout()
+            plt.grid(visible=True)
+    if saveFig:
+        plt.savefig('../plots/' + fig_name.replace('>', '-') + '.png')
+
 def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b, m_PCA, n, K, colors, eff_priors, save_fig=False):
     '''Tuning of C parameter alone, on every application point'''
     if min_DCF_single_arr:
@@ -250,6 +268,24 @@ def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, 
         if min_DCF_kfold_arr:
             plt.figure(fig_kfold)
             plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
+
+def plotDCFmin_vs_C_RBFSVM_eval(C_arr, minDCF_arr, pi_b, colors, app_point, gamma_list, saveFig=False):
+    ''' Tuning of C and gamma jointly for RBF kernel SVM (using the test set) '''
+    fig_name = 'Test set RBF SVM -> C and gamma tuning (pi_T = {})'.format('unbalanced' if pi_b is None else pi_b)
+    plt.figure(fig_name)
+    for i in range(len(gamma_list)):
+        plt.figure(fig_name)
+        plt.plot(C_arr, minDCF_arr[i], color=colors[i], label='min DCF {} = {}, log {} = {}'.format(
+            r'$\tilde{\pi}$', app_point[0], r'$\gamma$', int(np.log10(gamma_list[i]))))
+        plt.xlim([min(C_arr), max(C_arr)])
+        plt.xscale('log')
+        plt.xlabel('C')
+        plt.ylabel('DCF')
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.grid(visible=True)
+    if saveFig:
+        plt.savefig('../plots/' + fig_name.replace('>', '-') + '.png')
 
 def create_GMM_figure(tied, diag):
     '''Receives tied and diag flags and n=4, returns a list of figure objects with the appropriate names'''
