@@ -251,6 +251,24 @@ def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, 
             plt.figure(fig_kfold)
             plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
 
+def plotDCFmin_vs_C_RBFSVM_eval(C_arr, minDCF_arr, pi_b, colors, app_point, gamma_list, saveFig=False):
+    ''' Tuning of C and gamma jointly for RBF kernel SVM (using the test set) '''
+    fig_name = 'Test set RBF SVM -> C and gamma tuning (pi_T = {})'.format('unbalanced' if pi_b is None else pi_b)
+    plt.figure(fig_name)
+    for i in range(len(gamma_list)):
+        plt.figure(fig_name)
+        plt.plot(C_arr, minDCF_arr[i], color=colors[i], label='min DCF {} = {}, log {} = {}'.format(
+            r'$\tilde{\pi}$', app_point[0], r'$\gamma$', int(np.log10(gamma_list[i]))))
+        plt.xlim([min(C_arr), max(C_arr)])
+        plt.xscale('log')
+        plt.xlabel('C')
+        plt.ylabel('DCF')
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.grid(visible=True)
+    if saveFig:
+        plt.savefig('../plots/' + fig_name.replace('>', '-') + '.png')
+
 def create_GMM_figure(tied, diag):
     '''Receives tied and diag flags and n=4, returns a list of figure objects with the appropriate names'''
     GMM_type = ''
