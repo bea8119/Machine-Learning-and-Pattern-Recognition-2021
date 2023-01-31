@@ -53,36 +53,36 @@ print()
 # Bayes error plots for training set
 print('Bayes Error plots part starting...')
 effPriorLogOdds = np.linspace(-3, 3, 21) # Common for all the plots
-#
-## For showing lack of calibration (minDCF and actualDCF) of MVG and SVM
-#
-#dcf_list = []
-#print('Calculating DCF and minDCF for uncalibrated MVG...')
-#dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_MVG_K_fold_PCA_None.npy'), trueL_ordered)
-#print('Done.\n')
-#dcf_list.append(dcf_norm)
-#dcf_list.append(dcf_min)
-#print('Calculating DCF and minDCF for uncalibrated SVM...')
-#dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_SVM_K_fold_PCA_None.npy'), trueL_ordered)
-#print('Done.\n')
-#dcf_list.append(dcf_norm)
-#dcf_list.append(dcf_min)
-#param_list = [
-#   ('MVG actDCF', False, 'r'),
-#   ('MVG minDCF', True, 'r'),
-#   ('SVM actDCF', False, 'b'),
-#   ('SVM minDCF', True, 'b'),
-#]
-#
-#print('Bayes error plotting...')
-#bayes_fig = bayes_error_plots(effPriorLogOdds, dcf_list, param_list, 'no calibration')
-#print('Plotting done.\n')
-#
-#if savefig:
-#   figure(bayes_fig)
-#   savefig('../plots/Bayes_Train_MVG_SVM_uncalibrated.png')
-#   print('Saved.')
-#
+
+# For showing lack of calibration (minDCF and actualDCF) of MVG and SVM
+
+dcf_list = []
+print('Calculating DCF and minDCF for uncalibrated MVG...')
+dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_MVG_K_fold_PCA_None.npy'), trueL_ordered)
+print('Done.\n')
+dcf_list.append(dcf_norm)
+dcf_list.append(dcf_min)
+print('Calculating DCF and minDCF for uncalibrated SVM...')
+dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_SVM_K_fold_PCA_None.npy'), trueL_ordered)
+print('Done.\n')
+dcf_list.append(dcf_norm)
+dcf_list.append(dcf_min)
+param_list = [
+  ('MVG actDCF', False, 'r'),
+  ('MVG minDCF', True, 'r'),
+  ('SVM actDCF', False, 'b'),
+  ('SVM minDCF', True, 'b'),
+]
+
+print('Bayes error plotting...')
+bayes_fig = bayes_error_plots(effPriorLogOdds, dcf_list, param_list, 'no calibration')
+print('Plotting done.\n')
+
+if savefig:
+  figure(bayes_fig)
+  savefig('../plots/Bayes_Train_MVG_SVM_uncalibrated.png')
+  print('Saved.')
+
 # For showing effects of calibration (minDCF and actualDCF) of MVG and SVM
 dcf_list = []
 print('Calculating DCF and minDCF for calibrated MVG...')

@@ -1,4 +1,9 @@
-Quad SVM (candidate model) (No PCA) on Test dataset
-pi_eff = 0.5    minDCF: 0.09811012133750521    actDCF: 0.09933261522503575
-pi_eff = 0.1    minDCF: 0.20458887400079012    actDCF: 0.2810152143571266
-pi_eff = 0.9    minDCF: 0.45061190685949404    actDCF: 0.8476704524832178
+Tied Full MVG (candidate model) (No PCA) on Test dataset after calibration with (w, b) obtained from training scores
+        pi_eff = 0.5    minDCF: 0.11    actDCF: 0.115
+        pi_eff = 0.1    minDCF: 0.207    actDCF: 0.222
+        pi_eff = 0.9    minDCF: 0.591    actDCF: 0.611
+        
+Quad SVM (candidate model) (No PCA) on Test dataset after calibration with (w, b) obtained from training scores
+        pi_eff = 0.5    minDCF: 0.098    actDCF: 0.101
+        pi_eff = 0.1    minDCF: 0.205    actDCF: 0.215
+        pi_eff = 0.9    minDCF: 0.451    actDCF: 0.476
