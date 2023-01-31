@@ -16,13 +16,14 @@ def main():
 
     application_points = [(0.5, 1, 1), (0.1, 1, 1), (0.9, 1, 1)]
 
-    ''' Retrieve calibration parameters from the K_fold training scores to apply them onto the test set '''
-    K_fold_SVM_scores = np.load('../data_npy/scores_SVM_K_fold_PCA_None_calibrated.npy')
+    ''' Retrieve calibration parameters from the K_fold training scores (uncalibrated) to apply them onto the test set '''
+    K_fold_SVM_scores = np.load('../data_npy/scores_SVM_K_fold_PCA_None.npy')
 
     np.random.seed(0)
     idx = np.random.permutation(DTR.shape[1])
     trueL_ordered = LTR[idx] # idx was computed randomly before
 
+    
     calibratedScores, w, b = calibrate_scores(K_fold_SVM_scores, trueL_ordered, 0.5)
 
     '''
@@ -39,10 +40,10 @@ def main():
         calibratedScores = np.load('../data_npy/scores_SVM_Test_PCA_None_calibrated.npy')
         
     # Compute the actual DCF
-    print('Quad SVM (candidate model) (No PCA) on Test dataset')
+    print('Quad SVM (candidate model) (No PCA) on Test dataset after calibration with (w, b) obtained from training scores')
     for triplet in application_points:
         (_, dcf_norm, dcf_min) = DCF.DCF_unnormalized_normalized_min_binary(calibratedScores, LTE, triplet)
-        print(f'pi_eff = {triplet[0]}\tminDCF: {dcf_min}    actDCF: {dcf_norm}')
+        print(f'pi_eff = {triplet[0]}\tminDCF: {round(dcf_min, 3)}    actDCF: {round(dcf_norm, 3)}')
 
 
 if __name__ == '__main__':

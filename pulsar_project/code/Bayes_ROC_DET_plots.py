@@ -37,7 +37,7 @@ for scores in scores_list:
    TPR_list.append(TPR)
 
 print('Plotting...')
-# roc_fig = ROC_curves(FPR_list, TPR_list, csf_names)
+roc_fig = ROC_curves(FPR_list, TPR_list, csf_names)
 det_fig = DET_curves(FPR_list, FNR_list, csf_names)
 show()
 print('Plotting done.')

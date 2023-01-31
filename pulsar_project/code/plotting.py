@@ -130,6 +130,23 @@ def plotDCFmin_vs_C_linearSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, pi_b
             plt.figure(fig_kfold)
             plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
 
+def plotDCFmin_vs_C_linearSVM_eval(C_arr, minDCF_arr, pi_b, colors, app_points, saveFig=False):
+    ''' Tuning of C alone for linear SVM (using the test set) '''
+    fig_name = 'Test set Linear SVM -> C tuning (pi_T = {})'.format('unbalanced' if pi_b is None else pi_b)
+    plt.figure(fig_name)
+    for i in range(len(app_points)):
+        plt.plot(C_arr, minDCF_arr[i], color=colors[i], label='min DCF {} = {}'.format(r'$\tilde{\pi}$', app_points[i][0]))
+        plt.xlim([min(C_arr), max(C_arr)])
+        plt.xscale('log')
+        plt.xlabel('C')
+        plt.ylabel('DCF')
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.grid(visible=True)
+    if saveFig:
+        plt.savefig('../plots/' + fig_name.replace('>', '-') + '.png')
+
+
 def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, c_list, save_fig=False):
     '''Tuning of C jointly with c (in linear scale), take different values of c on the same application point'''
     if min_DCF_single_arr:
@@ -172,6 +189,24 @@ def plotDCFmin_vs_C_quadSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA,
         if min_DCF_kfold_arr:
             plt.figure(fig_kfold)
             plt.savefig('../plots/' + fig_name_kfold.replace('>', '-') + '.png')
+
+def plotDCFmin_vs_C_quadSVM_eval(C_arr, minDCF_arr, pi_b, colors, app_point, c_list, saveFig=False):
+    ''' Tuning of C and c jointly for quad SVM (using the test set) '''
+    fig_name = 'Test set Quad SVM -> C and c tuning (pi_T = {})'.format('unbalanced' if pi_b is None else pi_b)
+    plt.figure(fig_name)
+    for i in range(len(c_list)):
+        plt.figure(fig_name)
+        plt.plot(C_arr, minDCF_arr[i], color=colors[i], label='min DCF {} = {}, c = {}'.format(
+            r'$\tilde{\pi}$', app_point[0], c_list[i]))
+        plt.xlim([min(C_arr), max(C_arr)])
+        plt.xscale('log')
+        plt.xlabel('C')
+        plt.ylabel('DCF')
+        plt.legend(loc='best')
+        plt.tight_layout()
+        plt.grid(visible=True)
+    if saveFig:
+        plt.savefig('../plots/' + fig_name.replace('>', '-') + '.png')
 
 def plotDCFmin_vs_C_RBFSVM(C_arr, min_DCF_single_arr, min_DCF_kfold_arr, m_PCA, n, K, colors, app_point, gamma_list, save_fig=False):
     '''Tuning of C jointly with gamma (in log scale), take different values of gamma on the same application point'''

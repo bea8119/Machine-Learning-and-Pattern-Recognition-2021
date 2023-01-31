@@ -5,14 +5,14 @@ import plotting as p
 import numpy as np
 import matplotlib.pyplot as plt
 
-PCA_list = [None, 7]
-colors = ['red', 'green', 'blue', 'orange', 'black']
+PCA_list = [None]
+colors = ['red', 'green', 'blue', 'orange']
 
-priorT_b = [None, 0.5]
+priorT_b = [None]
 K_svm = 1 # Value of sqrt(psi)
 
-c_list = [1, 5, 10, 20, 30]
-gamma_list = [1e-2, 1e-1, 1e-0, 1e1, 1e2]
+c_list = [1, 5, 10, 20]
+gamma_list = [1e-2, 1e-1, 1e-0, 1e1]
 
 printStatus = True
 
