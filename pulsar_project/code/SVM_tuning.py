@@ -50,11 +50,11 @@ def main():
                 min_DCF_kfold.append(np.array([]))
                 for C in C_arr:
                     # ----------------- Using validation set (single fold or K-fold) ----------------------
-                    # # Single Fold
-                    # print('\tSingle Fold')
-                    # min_DCF_single[i] = np.append(min_DCF_single[i], 
-                    #     SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, C, pi_b, idxTrain, idxTest, triplet, show=False, kern=False)
-                    # )
+                    # Single Fold
+                    print('\tSingle Fold')
+                    min_DCF_single[i] = np.append(min_DCF_single[i], 
+                        SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, C, pi_b, idxTrain, idxTest, triplet, show=False, kern=False)
+                    )
 
                     print('\tKfold')
                     # K-fold
@@ -84,10 +84,10 @@ def main():
             min_DCF_kfold.append(np.array([]))
             for C in C_arr:
                 # ----------------- Using validation set (single fold or K-fold) ----------------------
-                # # Single Fold
-                # min_DCF_single[i] = np.append(min_DCF_single[i], 
-                #     SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, C, priorT_b[0], idxTrain, idxTest, application_points[0], show=False, kern=True, c=c, d=d)
-                # )
+                # Single Fold
+                min_DCF_single[i] = np.append(min_DCF_single[i], 
+                    SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, C, priorT_b[0], idxTrain, idxTest, application_points[0], show=False, kern=True, c=c, d=d)
+                )
 
                 # K-fold
                 print('\tKfold')
@@ -113,11 +113,11 @@ def main():
             min_DCF_kfold.append(np.array([]))
             for C in C_arr:
                 # ----------------- Using validation set (single fold or K-fold) ----------------------
-                # # Single Fold
-                # print('\tSingle Fold')
-                # min_DCF_single[i] = np.append(min_DCF_single[i], 
-                #     SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, C, priorT_b[0], idxTrain, idxTest, application_points[0], show=False, kern=True, gamma=gamma, Poly_RBF=False)
-                # )
+                # Single Fold
+                print('\tSingle Fold')
+                min_DCF_single[i] = np.append(min_DCF_single[i], 
+                    SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, C, priorT_b[0], idxTrain, idxTest, application_points[0], show=False, kern=True, gamma=gamma, Poly_RBF=False)
+                )
 
                 # K-fold
                 print('\tKfold')

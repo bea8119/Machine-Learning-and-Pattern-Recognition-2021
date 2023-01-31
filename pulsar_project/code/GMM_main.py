@@ -80,16 +80,16 @@ def main():
             print('-----------------------------------------------------')
 
             # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
-            #if m is not None:
-            #      DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
-            #      PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
-            #      D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            #print('GMM classifiers on whole dataset {}'.format('(no PCA)' if m is None else f'(PCA m = {m})'))
-            #for tied_diag_pair in CSF_type_list:
-            #      for n in range(1, n_splits + 1):
-            #          GMM.GMM_wrapper(D_merged if m is None else D_merged_PCA, L_merged, k, idxTR_merged, idxTE_merged, 
-            #              delta, alpha, psi, n, *tied_diag_pair, triplet, single_fold=True, show=True)
-            #print('-----------------------------------------------------')
+            if m is not None:
+                 DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
+                 PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
+                 D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
+            print('GMM classifiers on whole dataset {}'.format('(no PCA)' if m is None else f'(PCA m = {m})'))
+            for tied_diag_pair in CSF_type_list:
+                 for n in range(1, n_splits + 1):
+                     GMM.GMM_wrapper(D_merged if m is None else D_merged_PCA, L_merged, k, idxTR_merged, idxTE_merged, 
+                         delta, alpha, psi, n, *tied_diag_pair, triplet, single_fold=True, show=True)
+            print('-----------------------------------------------------')
 
         if plot:
             # plotting.plotGMM(n_splits, dcf_min_single, triplet[0], CSF_type_list, colors, PCA_list)

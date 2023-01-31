@@ -58,18 +58,18 @@ def main():
             pca_msg = '(no PCA)' if m is None else f'(PCA m = {m})'
             # ----------------- Using validation set (single fold or K-fold) ----------------------
             # Single Fold
-            # if m is not None:
-            #     DTR_PCA_fold = u.split_dataset(DTR, LTR, idxTrain_s, idxTest_s)[0][0] # Retrieve single fold train subset
-            #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
-            #     DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
+            if m is not None:
+                DTR_PCA_fold = u.split_dataset(DTR, LTR, idxTrain_s, idxTest_s)[0][0] # Retrieve single fold train subset
+                PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over Training subset
+                DTR_PCA = np.dot(PCA_Proj.T, DTR) # Project both training and validation subsets with the output of the PCA
 
-            # print('Single Fold ({}-to-1) {} SVM {} {}'.format(
-            #     n, type_SVM, pca_msg, cal_msg
-            #     ))
-            # for params in SVM_param_list:
-            #     SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, *params, idxTrain_s, idxTest_s, triplet, c, d, gamma,
-            #         kern=kernel_SVM, Poly_RBF=Poly_RBF, calibrate=calibrate)
-            # print('-----------------------------------------------------')
+            print('Single Fold ({}-to-1) {} SVM {} {}'.format(
+                n, type_SVM, pca_msg, cal_msg
+                ))
+            for params in SVM_param_list:
+                SVM.SVM_wrapper(DTR if m is None else DTR_PCA, LTR, K_svm, *params, idxTrain_s, idxTest_s, triplet, c, d, gamma,
+                    kern=kernel_SVM, Poly_RBF=Poly_RBF, calibrate=calibrate)
+            print('-----------------------------------------------------')
 
             # K-fold
             print('{}-Fold cross-validation {} SVM {} {}'.format(K, type_SVM, pca_msg, cal_msg))
@@ -79,17 +79,17 @@ def main():
                     np.save('../data_npy/scores_SVM_K_fold_PCA_{}_calibrated.npy'.format(m if m is not None else 'None'), scores)
             print('-----------------------------------------------------')
 
-            # # # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
-            # if m is not None:
-            #     DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
-            #     PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
-            #     D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
-            # print('{} SVM on whole dataset {}'.format(type_SVM, pca_msg))
-            # for params in SVM_param_list:
-            #     SVM.SVM_wrapper(
-            #         D_merged if m is None else D_merged_PCA, L_merged, K_svm, *params, idxTR_merged, 
-            #         idxTE_merged, triplet, c, d, gamma, single_fold=True, show=True, kern=kernel_SVM, Poly_RBF=Poly_RBF)
-            # print('-----------------------------------------------------')
+            # ------------------ Using whole Train.txt dataset and classifying Test.txt (last thing to do) ----------------
+            if m is not None:
+                DTR_PCA_fold = u.split_dataset(D_merged, L_merged, idxTR_merged, idxTE_merged)[0][0]
+                PCA_Proj = f.PCA_givenM(DTR_PCA_fold, m) # Apply PCA over training subset
+                D_merged_PCA = np.dot(PCA_Proj.T, D_merged) # Project both training and validation subsets with the output of the PCA
+            print('{} SVM on whole dataset {}'.format(type_SVM, pca_msg))
+            for params in SVM_param_list:
+                SVM.SVM_wrapper(
+                    D_merged if m is None else D_merged_PCA, L_merged, K_svm, *params, idxTR_merged, 
+                    idxTE_merged, triplet, c, d, gamma, single_fold=True, show=True, kern=kernel_SVM, Poly_RBF=Poly_RBF)
+            print('-----------------------------------------------------')
 
 if __name__ == '__main__':
     main()

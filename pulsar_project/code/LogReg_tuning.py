@@ -49,12 +49,12 @@ def main():
 
                 # Single Fold
 
-                # if printStatus:
-                #     print(f'Step {step} (single-fold) of {total_steps}')
+                if printStatus:
+                    print(f'Step {step} (single-fold) of {total_steps}')
 
-                # min_DCF_single[i] = np.append(min_DCF_single[i], 
-                #     LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, l, priorT, idxTrain, idxTest, triplet, show=False, quad=quadratic)
-                # )
+                min_DCF_single[i] = np.append(min_DCF_single[i], 
+                    LR.logReg_wrapper(DTR if m is None else DTR_PCA, LTR, l, priorT, idxTrain, idxTest, triplet, show=False, quad=quadratic)
+                )
 
                 if printStatus:
                     # step += 1
