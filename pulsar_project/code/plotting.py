@@ -307,6 +307,7 @@ def DET_curves(FPR_list, FNR_list, csf_names):
     for FPR, FNR, name in zip(FPR_list, FNR_list, csf_names):
         plt.plot(FPR, FNR, label=name)
     plt.xscale('log')
+    plt.yscale('log')
     plt.xlabel('FPR')
     plt.ylabel('FNR')
     plt.grid()
@@ -314,8 +315,8 @@ def DET_curves(FPR_list, FNR_list, csf_names):
     # plt.show()
     return fig
 
-def bayes_error_plots(effPriors, DCF_list, param_list):
-    fig = plt.figure('Bayes error plots')
+def bayes_error_plots(effPriors, DCF_list, param_list, title):
+    fig = plt.figure('Bayes error plot - ' + title)
     for DCF, (label, dashed, color) in zip(DCF_list, param_list):
         plt.plot(effPriors, DCF, label=label, linestyle='dashed' if dashed else None, color=color)
     plt.xlim([-3, 3])
