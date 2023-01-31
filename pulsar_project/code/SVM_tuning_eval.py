@@ -52,21 +52,21 @@ def main():
     # p.plotDCFmin_vs_C_linearSVM_eval(C_arr, minDCF_arr, priorT_b, colors, application_points, saveFig=True)
     
     # ------------ Quadratic kernel SVM, tune C and c jointly, same application point (0.5, 1, 1) (unbalanced) ----
-    minDCF_arr = []
-    for j, c in enumerate(c_list):
-        minDCF_arr.append(np.array([]))
-        if printStatus:
-            print(f'Iteration of c: {j + 1}')
-        for i, C in enumerate(C_arr):
-            if printStatus:
-                print(f'\tIteration of C: {i + 1}')
-            scores = SVM.SVM_wrapper(D_merged, L_merged, K_svm, C, priorT_b, idxTrain, idxTest, application_points[0], c, d, single_fold=False, show=False, kern=True, Poly_RBF=True)
-            if printStatus:
-                print(f'\tDone training. Calculating minDCFs...')
-            minDCF_arr[j] = np.append(minDCF_arr[j], DCF.DCF_unnormalized_normalized_min_binary(scores, LTE, application_points[0])[2])
-    if printStatus:
-        print('Finished tuning!\n')
-    p.plotDCFmin_vs_C_quadSVM_eval(C_arr, minDCF_arr, priorT_b, colors, application_points[0], c_list, saveFig=True)
+    # minDCF_arr = []
+    # for j, c in enumerate(c_list):
+    #     minDCF_arr.append(np.array([]))
+    #     if printStatus:
+    #         print(f'Iteration of c: {j + 1}')
+    #     for i, C in enumerate(C_arr):
+    #         if printStatus:
+    #             print(f'\tIteration of C: {i + 1}')
+    #         scores = SVM.SVM_wrapper(D_merged, L_merged, K_svm, C, priorT_b, idxTrain, idxTest, application_points[0], c, d, single_fold=False, show=False, kern=True, Poly_RBF=True)
+    #         if printStatus:
+    #             print(f'\tDone training. Calculating minDCFs...')
+    #         minDCF_arr[j] = np.append(minDCF_arr[j], DCF.DCF_unnormalized_normalized_min_binary(scores, LTE, application_points[0])[2])
+    # if printStatus:
+    #     print('Finished tuning!\n')
+    # p.plotDCFmin_vs_C_quadSVM_eval(C_arr, minDCF_arr, priorT_b, colors, application_points[0], c_list, saveFig=True)
 
     # ------------ RBF kernel SVM, tune C and gamma jointly, same appplication point (0.5, 1, 1) (unbalanced) ------
     minDCF_arr = []

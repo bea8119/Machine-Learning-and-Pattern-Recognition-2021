@@ -36,7 +36,6 @@ for scores in scores_list:
 print('Plotting...')
 roc_fig = ROC_curves(FPR_list, TPR_list, csf_names)
 det_fig = DET_curves(FPR_list, FNR_list, csf_names)
-show()
 print('Plotting done.')
 
 if saveFigure:
@@ -47,19 +46,19 @@ if saveFigure:
    print('Saved.')
 print()
 
-# Bayes error plots for training set
+# Bayes error plots for test set
 print('Bayes Error plots part starting...')
 effPriorLogOdds = np.linspace(-3, 3, 21) # Common for all the plots
 
 
 # For showing lack of calibration (minDCF and actualDCF) of MVG and SVM
 dcf_list = []
-print('Calculating DCF and minDCF for uncalibrated MVG...')
+print('Calculating DCFs and minDCFs for uncalibrated MVG...')
 dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_MVG_Test_PCA_None.npy'), LTE)
-print('Done.\n')
+print('Done.')
 dcf_list.append(dcf_norm)
 dcf_list.append(dcf_min)
-print('Calculating DCF and minDCF for uncalibrated SVM...')
+print('Calculating DCFs and minDCFs for uncalibrated SVM...')
 dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_SVM_Test_PCA_None.npy'), LTE)
 print('Done.\n')
 dcf_list.append(dcf_norm)
@@ -82,12 +81,12 @@ if savefig:
 
 # For showing effects of calibration (minDCF and actualDCF) of MVG and SVM
 dcf_list = []
-print('Calculating DCF and minDCF for calibrated MVG...')
+print('Calculating DCFs and minDCFs for calibrated MVG...')
 dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_MVG_Test_PCA_None_calibrated.npy'), LTE) # Need to create
-print('Done.\n')
+print('Done.')
 dcf_list.append(dcf_norm)
 dcf_list.append(dcf_min)
-print('Calculating DCF and minDCF for calibrated SVM...')
+print('Calculating DCFs and minDCFs for calibrated SVM...')
 dcf_norm, dcf_min = DCF.DCF_vs_priorLogOdds(effPriorLogOdds, np.load('../data_npy/scores_SVM_Test_PCA_None_calibrated.npy'), LTE) # Need to create
 print('Done.\n')
 dcf_list.append(dcf_norm)
